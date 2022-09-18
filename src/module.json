@@ -1,8 +1,8 @@
 {
-	"name": "inventory-plus",
+	"id": "inventory-plus",
 	"title": "Inventory+",
 	"description": "Enhances the default dnd5e sheets inventory to allow for reorganization",
-	"version": "0.5.22",
+	"version": "0.6.0",
 	"authors": [
 		{ "name": "Felix#6196" },
 		{
@@ -22,6 +22,7 @@
 	"includes": [
 		"./assets/**",
 		"./lang/**",
+		"./languages/**",
 		"./scripts/**",
 		"./styles/**",
 		"./templates/**",
@@ -48,20 +49,37 @@
 		{
 			"lang": "en",
 			"name": "English",
-			"path": "./lang/en.json"
+			"path": "languages/en.json"
 		},
 		{
 			"lang": "pt-BR",
 			"name": "Português (Brasil)",
-			"path": "./lang/pt-BR.json"
+			"path": "languages/pt-BR.json"
 		},
 		{
 			"lang": "it",
 			"name": "Italian",
-			"path": "./lang/it.json"
+			"path": "languages/it.json"
 		}
 	],
 	"system": ["dnd5e", "sw5e"],
+	"scripts": ["module/lib/jquery.sumoselect.min.js"],
+	"esmodules": ["./main.js"],
+	"styles": ["styles/inventory-plus.css", "styles/sumoselect.css"],
+	"packs": [],
+	"compatibility": {
+		"minimum": 10,
+		"verified": 10,
+		"maximum": 10
+	},
+	"manifestPlusVersion": "1.2.0",
+	"url": "https://github.com/p4535992/foundryvtt-inventory-plus",
+	"manifest": "https://github.com/p4535992/foundryvtt-inventory-plus/releases/latest/download/module.json",
+	"download": "https://github.com/p4535992/foundryvtt-inventory-plus/releases/latest/download/module.zip",
+	"readme": "https://github.com/p4535992/foundryvtt-inventory-plus/blob/v0.6.0/README.md",
+	"changelog": "https://github.com/p4535992/foundryvtt-inventory-plus/blob/v0.6.0/CHANGELOG.md",
+	"bugs": "https://github.com/p4535992/foundryvtt-inventory-plus/issues",
+	"allowBugReporter": true,
 	"relationships": {
 		"systems": [
 			{
@@ -75,46 +93,26 @@
 				"id": "sw5e",
 				"type": "system"
 			}
-		]
-	},
-	"scripts": ["module/lib/jquery.sumoselect.min.js"],
-	"esmodules": ["./main.js"],
-	"styles": ["styles/inventory-plus.css", "styles/sumoselect.css"],
-	"packs": [],
-	"minimumCoreVersion": "9",
-	"compatibleCoreVersion": "9",
-	"compatibility": {
-		"minimum": 9,
-		"verified": 9,
-		"maximum": 9
-	},
-	"manifestPlusVersion": "1.2.0",
-	"url": "https://github.com/p4535992/inventory-plus",
-	"manifest": "https://github.com/p4535992/inventory-plus/releases/latest/download/module.json",
-	"download": "https://github.com/p4535992/inventory-plus/releases/latest/download/module.zip",
-	"readme": "https://github.com/p4535992/inventory-plus/blob/v0.5.22/README.md",
-	"changelog": "https://github.com/p4535992/inventory-plus/blob/v0.5.22/CHANGELOG.md",
-	"bugs": "https://github.com/p4535992/inventory-plus/issues",
-	"allowBugReporter": true,
-	"dependencies": [
-		{
-			"name": "lib-wrapper"
-		}
-	],
-	"flags": {
-		"manifestPlusVersion": "1.2.0",
-		"allowBugReporter": true,
+		],
+		"requires": [
+			{
+				"id": "lib-wrapper",
+				"type": "module",
+				"manifest": "https://github.com/ruipin/fvtt-lib-wrapper/releases/latest/download/module.json",
+				"compatibility": {}
+			}
+		],
 		"conflicts": [
 			{
-				"name": "transfer-stuff",
+				"id": "transfer-stuff",
 				"description": "Redundancy of features you can disable 'Transfer stuff' module if you want, but there is no conflict"
 			},
 			{
-				"name": "encumbrance-calculator-5e",
+				"id": "encumbrance-calculator-5e",
 				"description": "Redundancy of features you can disable 'Encumbrance calculator 5e' module if you want, but there is no conflict"
 			},
 			{
-				"name": "illandril-inventory-sorter",
+				"id": "illandril-inventory-sorter",
 				"description": "Redundancy of features you can disable 'Illandril's Inventory Sorter (5e)' module if you want, but there is no conflict"
 			}
 		]

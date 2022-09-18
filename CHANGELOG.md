@@ -1,3 +1,7 @@
+### 0.6.0
+
+- Update fvtt10
+
 ### 0.5.22
 
 - Add to the API the `addCategory` method
