@@ -875,7 +875,7 @@ export class InventoryPlus {
 		}
 
 		for (const section of inventory) {
-			for (const item of <ItemData[]>section.items) {
+			for (const item of <Item[]>section.items) {
 				let type = this.getItemType(item);
 				if (sections[type] === undefined) {
 					type = item.type;
@@ -887,13 +887,13 @@ export class InventoryPlus {
 		}
 		// TODO WHY THIS HIDE THE WEIGHT LABEL OF ITEMS ????
 		/*
-    const items = actor.data.items.contents;
+    const items = actor.items.contents;
     for (const section of inventory) {
       for (const item of <Item[]>items) {
         if(!item){
           continue;
         }
-        let type = this.getItemType(item.data);
+        let type = this.getItemType(item.system);
         if (sections[type] === undefined) {
           type = item.type;
         }
@@ -903,9 +903,9 @@ export class InventoryPlus {
           type = section.explicitTypes[0];
         }
         if (sections[type]) {
-          (<Category>sections[type]).items?.push(duplicateExtended(item.data));
+          (<Category>sections[type]).items?.push(duplicateExtended(item));
         }else{
-          warn(`Cannot retrieve a category for the type ${type}, for item ${item.data.name} make sure to create at least one category with that explicit type`);
+          warn(`Cannot retrieve a category for the type ${type}, for item ${item.name} make sure to create at least one category with that explicit type`);
         }
       }
     }
@@ -915,6 +915,7 @@ export class InventoryPlus {
 		for (const id in sections) {
 			const section = <Category>sections[id];
 			section.items?.sort((a, b) => {
+				//@ts-ignore
 				return a.sort - b.sort;
 			});
 		}
@@ -965,13 +966,13 @@ export class InventoryPlus {
 		//const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 		const changedItems: ItemData[] = [];
 		const items = API.getItemsFromCategory(this.actor, catType, this.customCategorys);
-		for (const i of items) {
+		for (const itemEntity of items) {
 			//for (const i of this.actor.items) {
-			const type = this.getItemType(i.data);
+			const type = this.getItemType(itemEntity);
 			if (type === catType) {
 				//await item.unsetFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlag.CATEGORY);
 				changedItems.push(<any>{
-					_id: <string>i.id,
+					_id: <string>itemEntity.id,
 					flags: {
 						"inventory-plus": null,
 					},
@@ -1079,11 +1080,11 @@ export class InventoryPlus {
 		return id;
 	}
 
-	getItemType(item: ItemData) {
+	getItemType(item: Item) {
 		let type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-		if (!type) {
-			type = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-		}
+		// if (!type) {
+		// 	type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+		// }
 		if (type === undefined || this.customCategorys[type] === undefined) {
 			type = item.type;
 		}
@@ -1096,7 +1097,7 @@ export class InventoryPlus {
 
 	getCategoryItemWeight(type: string) {
 		let totalCategoryWeight = 0;
-		const items = API.getItemsFromCategory(this.actor, type, this.customCategorys);
+		const items = <Item[]>API.getItemsFromCategory(this.actor, type, this.customCategorys);
 		if (
 			game.modules.get("variant-encumbrance-dnd5e")?.active &&
 			game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance")
@@ -1106,31 +1107,31 @@ export class InventoryPlus {
 			>game.modules.get("variant-encumbrance-dnd5e")?.api.calculateWeightOnActorWithItemsNoInventoryPlus(this.actor, items);
 			return encumbranceData.totalWeight;
 		} else {
-			for (const i of items) {
+			for (const itemEntity of items) {
 				//for (const i of this.actor.items) {
-				if (type === this.getItemType(i.data)) {
+				if (type === this.getItemType(itemEntity)) {
 					//@ts-ignore
-					let q = <number>i.data.data.quantity || 0;
+					let q = <number>itemEntity.system.quantity || 0;
 					//@ts-ignore
-					const w = <number>i.data.data.weight;
+					const w = <number>itemEntity.system.weight || 0;
 					let eqpMultiplyer = 1;
 					if (game.settings.get(CONSTANTS.MODULE_NAME, "enableEquipmentMultiplier")) {
 						eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, "equipmentMultiplier") || 1;
 					}
 					if (game.settings.get(CONSTANTS.MODULE_NAME, "doNotIncreaseWeightByQuantityForNoAmmunition")) {
 						//@ts-ignore
-						if (i.data?.data?.consumableType !== "ammo") {
+						if (itemEntity.system.consumableType !== "ammo") {
 							q = 1;
 						}
 					}
 					//@ts-ignore
-					const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
+					const e = <number>itemEntity.system.equipped ? eqpMultiplyer : 1;
 					if (is_real_number(w) && is_real_number(q)) {
 						//@ts-ignore
 						totalCategoryWeight += w * q * e;
 					} else {
 						debug(
-							`The item '${i.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `
+							`The item '${itemEntity.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `
 						);
 					}
 				}
@@ -1156,11 +1157,11 @@ export class InventoryPlus {
 		// }else{
 		//   for (const i of items) {
 		//   //for (const i of this.actor.items) {
-		//     if (type === this.getItemType(i.data)) {
+		//     if (type === this.getItemType(i)) {
 		//       //@ts-ignore
-		//       const q = <number>i.data.data.quantity;
+		//       const q = <number>i.system.quantity || 0;
 		//       //@ts-ignore
-		//       const bulk = <number>i.data.data.bulk;
+		//       const bulk = <number>i.system.bulk || 0;
 		//       if (!bulk || !is_real_number(bulk){
 		//         bulk = XXXX
 		//       }
@@ -1170,12 +1171,12 @@ export class InventoryPlus {
 		//       }
 		//       if(game.settings.get(CONSTANTS.MODULE_NAME,'doNotIncreaseWeightByQuantityForNoAmmunition')){
 		//         //@ts-ignore
-		//         if(i.data?.data?.consumableType !== "ammo"){
+		//         if(i.system.consumableType !== "ammo"){
 		//           q = 1;
 		//         }
 		//       }
 		//       //@ts-ignore
-		//       const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
+		//       const e = <number>i.system.equipped ? eqpMultiplyer : 1;
 		//       if (is_real_number(bulk) && is_real_number(q)) {
 		//         //@ts-ignore
 		//         totalCategoryWeight += bulk * q * e;
@@ -1191,7 +1192,7 @@ export class InventoryPlus {
 	}
 
 	// static getCSSName(element) {
-	//   const version = <string[]>game.system.data.version.split('.');
+	//   const version = <string[]>game.system.version.split('.');
 	//   if (element === 'sub-header') {
 	//     if (Number(version[0]) == 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
 	//       return 'inventory-header';
@@ -1217,7 +1218,7 @@ export class InventoryPlus {
 
 		// Check to make sure the newly created class doesn't take player over level cap
 		//@ts-ignore
-		if (type === "class" && this.actor.data.data.details.level + 1 > CONFIG.DND5E.maxLevel) {
+		if (type === "class" && this.actor.system.details.level + 1 > CONFIG.DND5E.maxLevel) {
 			return ui.notifications.error(
 				game.i18n.format(
 					"DND5E.MaxCharacterLevelExceededWarn",
@@ -1254,7 +1255,8 @@ export class InventoryPlus {
 			type: itemTypeTmp,
 			data: foundry.utils.deepClone(header.dataset),
 		};
-		delete itemData.data.type;
+		//@ts-ignore
+		delete itemData.type;
 		const items = <Item[]>await this.actor.createEmbeddedDocuments("Item", [itemData]);
 		const dropedItem = <Item>items[0];
 

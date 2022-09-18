@@ -8,7 +8,7 @@ export class Category {
 	maxWeight: number;
 	ownWeight: number;
 	collapsed: boolean;
-	items: ItemData[];
+	items: Item[];
 	explicitTypes: InventoryPlusItemType[];
 }
 

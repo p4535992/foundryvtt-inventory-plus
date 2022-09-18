@@ -70,12 +70,12 @@ export const readyHooks = async (): Promise<void> => {
         // DO NOTHING
       } else {
         if (encumbrance5e) {
-          sheetData.data.attributes.encumbrance = encumbrance5e;
+          sheetData.system.attributes.encumbrance = encumbrance5e;
         }
       }
       */
 			if (encumbrance5e) {
-				sheetData.data.attributes.encumbrance = encumbrance5e;
+				sheetData.system.attributes.encumbrance = encumbrance5e;
 			}
 			return sheetData;
 		},
@@ -97,7 +97,7 @@ export const readyHooks = async (): Promise<void> => {
 				return;
 			}
 
-			const itemId = data?.data?._id || data?.id; // || event.id || event.data?._id;
+			const itemId = data?.id;
 			if (!itemId) {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemid`));
 				return;
@@ -105,15 +105,18 @@ export const readyHooks = async (): Promise<void> => {
 			const dragAndDropFromCompendium = data.pack ? true : false;
 			const dragAndDropFromActorSource = data.actorId ? true : false;
 			const itemCurrent = await retrieveItemFromData(actor, itemId, "", data.pack, data.actorId);
-			let itemData: ItemData | null = null;
+			let itemData: Item | null = null;
 			if (!itemCurrent) {
 				// Start Patch Party Inventory
-				if (data.data && data.data.type && data.data._id) {
-					itemData = <ItemData>data.data;
+				if (data && data.type && data.id) {
+					itemData = <Item>data;
+					//@ts-ignore
 					if (!itemData.flags) {
 						setProperty(itemData, `flags`, {});
 					}
+					//@ts-ignore
 					if (!itemData.flags.core) {
+						//@ts-ignore
 						setProperty(itemData.flags, `core`, {});
 					}
 				}
@@ -123,7 +126,7 @@ export const readyHooks = async (): Promise<void> => {
 					return;
 				}
 			} else {
-				itemData = <ItemData>itemCurrent?.data;
+				itemData = <Item>itemCurrent;
 			}
 			if (!itemData) {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemdata`));
@@ -144,7 +147,7 @@ export const readyHooks = async (): Promise<void> => {
 				} else if (targetLi.className.trim().indexOf("item") !== -1) {
 					const itemId = <string>targetLi.dataset.itemId;
 					const item = <Item>this.object.items.get(itemId);
-					targetType = this.inventoryPlus.getItemType(item.data);
+					targetType = this.inventoryPlus.getItemType(item);
 				}
 			}
 
@@ -414,7 +417,7 @@ export const readyHooks = async (): Promise<void> => {
 			}
 
 			// changing item list
-			let itemType = this.inventoryPlus.getItemType(itemData); // data.data
+			let itemType = this.inventoryPlus.getItemType(itemData);
 			if (itemType !== targetType) {
 				// START WEIGHT CONTROL
 				if (API.isCategoryFulled(actor, targetType, itemData)) {
@@ -448,19 +451,19 @@ export const readyHooks = async (): Promise<void> => {
 			// Get the drag source and its siblings
 
 			const siblings = <Item[]>this.object.items.filter((i: Item) => {
-				const type = <string>this.inventoryPlus.getItemType(i.data);
-				return type === itemType && i.data._id !== dropedItem.data._id;
+				const type = <string>this.inventoryPlus.getItemType(i);
+				return type === itemType && i.id !== dropedItem.id;
 			});
 			// Get the drop target
 			const dropTarget = event.target.closest(".item");
 			const targetId: string | null = dropTarget ? <string>dropTarget.dataset.itemId : null;
-			const target = <Item>siblings.find((s) => s.data._id === targetId);
+			const target = <Item>siblings.find((s) => s.id === targetId);
 
 			// Perform the sort
 			const sortUpdates = SortingHelpers.performIntegerSort(dropedItem, { target: target, siblings });
 			let updateData: any[] = sortUpdates.map((u) => {
 				const update: any = u.update;
-				update._id = u.target.data._id;
+				update._id = u.target.id;
 				return update;
 			});
 
@@ -527,11 +530,11 @@ const module = {
 		}
 
 		if (data.type === "Item" && data.actorId) {
-			if (!targetActor.data._id) {
+			if (!targetActor.id) {
 				warn(`target has no data._id? ${targetActor}`);
 				return false;
 			}
-			if (targetActor.data._id === data.actorId) {
+			if (targetActor.id === data.actorId) {
 				return false; // ignore dropping on self
 			}
 			let sourceSheet: ActorSheet;
@@ -546,19 +549,19 @@ const module = {
 			const sourceActor = game.actors?.get(data.actorId);
 			if (sourceActor) {
 				/* if both source and target have the same type then allow deleting original item. this is a safety check because some game systems may allow dropping on targets that don't actually allow the GM or player to see the inventory, making the item inaccessible. */
-				if (checkCompatible(sourceActor.data.type, targetActor.data.type, data)) {
-					const originalQuantity = data.data.data.quantity;
-					const targetActorId = targetActor.data._id;
+				if (checkCompatible(sourceActor.type, targetActor.type, data)) {
+					const originalQuantity = data.system.quantity;
+					const targetActorId = targetActor.id;
 					const sourceActorId = data.actorId;
 					if (
 						game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyTransfer") &&
-						data.data.name === "Currency"
+						data.name === "Currency"
 					) {
 						showCurrencyTransferDialog(sourceSheet, targetSheet);
 						return false;
 					} else if (originalQuantity >= 1) {
 						// game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
-						showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, data.data._id, data);
+						showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, data.id, data);
 						return false;
 					}
 				}
@@ -581,7 +584,8 @@ const module = {
 					changes.sort = itemSort.sort;
 				}
 			}
-			if (item.data.sort === changes.sort && Object.keys(changes).length === 2) {
+			//@ts-ignore
+			if (item.sort === changes.sort && Object.keys(changes).length === 2) {
 				return false;
 			}
 		}

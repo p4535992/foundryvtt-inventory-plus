@@ -20,10 +20,14 @@ export function getOwnedTokens(priorityToControlledIfGM: boolean): Token[] {
 			return <Token[]>canvas.tokens?.placeables;
 		}
 	}
-	let ownedTokens = <Token[]>canvas.tokens?.placeables.filter((token) => token.isOwner && (!token.data.hidden || gm));
+	let ownedTokens = <Token[]>(
+		canvas.tokens?.placeables.filter((token) => token.isOwner && (!token.document.hidden || gm))
+	);
 	if (ownedTokens.length === 0 || !canvas.tokens?.controlled[0]) {
 		ownedTokens = <Token[]>(
-			canvas.tokens?.placeables.filter((token) => (token.observer || token.isOwner) && (!token.data.hidden || gm))
+			canvas.tokens?.placeables.filter(
+				(token) => (token.observer || token.isOwner) && (!token.document.hidden || gm)
+			)
 		);
 	}
 	return ownedTokens;
@@ -69,7 +73,7 @@ export function getActiveGMs() {
 
 export function isResponsibleGM() {
 	if (!game.user?.isGM) return false;
-	return !getActiveGMs()?.some((other) => other.data._id < <string>game.user?.data._id);
+	return !getActiveGMs()?.some((other) => other.id < <string>game.user?.id);
 }
 
 // ================================
@@ -232,9 +236,9 @@ export function getFirstPlayerTokenSelected(): Token | null {
 		return null;
 	}
 	if (!selectedTokens || selectedTokens.length === 0) {
-		//if(game.user.character.data.token){
+		//if(game.user.character.token){
 		//  //@ts-ignore
-		//  return game.user.character.data.token;
+		//  return game.user.character.token;
 		//}else{
 		return null;
 		//}
@@ -260,9 +264,9 @@ export function getFirstPlayerToken(): Token | null {
 	if (!token) {
 		if (!controlled.length || controlled.length === 0) {
 			// If no token is selected use the token of the users character
-			token = <Token>(
-				canvas.tokens?.placeables.find((token) => token.data._id === game.user?.character?.data?._id)
-			);
+			token = <
+				Token //@ts-ignore
+			>canvas.tokens?.placeables.find((token) => token.document.actorId === game.user?.character.id);
 		}
 		// If no token is selected use the first owned token of the users character you found
 		if (!token) {
@@ -272,43 +276,44 @@ export function getFirstPlayerToken(): Token | null {
 	return token;
 }
 
-function getElevationToken(token: Token): number {
-	const base = token.document.data;
-	return getElevationPlaceableObject(base);
-}
+// function getElevationToken(token: Token): number {
+// 	const base = token.document;
+// 	return getElevationPlaceableObject(base);
+// }
 
-function getElevationWall(wall: Wall): number {
-	const base = wall.document.data;
-	return getElevationPlaceableObject(base);
-}
+// function getElevationWall(wall: Wall): number {
+// 	const base = wall.document;
+// 	return getElevationPlaceableObject(base);
+// }
 
-function getElevationPlaceableObject(placeableObject: any): number {
-	let base = placeableObject;
-	if (base.document) {
-		base = base.document.data;
-	}
-	const base_elevation =
-		//@ts-ignore
-		typeof _levels !== "undefined" &&
-		//@ts-ignore
-		_levels?.advancedLOS &&
-		(placeableObject instanceof Token || placeableObject instanceof TokenDocument)
-			? //@ts-ignore
-			  _levels.getTokenLOSheight(placeableObject)
-			: base.elevation ??
-			  base.flags["levels"]?.elevation ??
-			  base.flags["levels"]?.rangeBottom ??
-			  base.flags["wallHeight"]?.wallHeightBottom ??
-			  0;
-	return base_elevation;
-}
+// function getElevationPlaceableObject(placeableObject: any): number {
+// 	let base = placeableObject;
+// 	if (base.document) {
+// 		base = base.document;
+// 	}
+// 	const base_elevation =
+// 		//@ts-ignore
+// 		typeof _levels !== "undefined" &&
+// 		//@ts-ignore
+// 		_levels?.advancedLOS &&
+// 		(placeableObject instanceof Token || placeableObject instanceof TokenDocument)
+// 			? //@ts-ignore
+// 			  _levels.getTokenLOSheight(placeableObject)
+// 			: base.elevation ??
+// 			  base.flags["levels"]?.elevation ??
+// 			  base.flags["levels"]?.rangeBottom ??
+// 			  base.flags["wallHeight"]?.wallHeightBottom ??
+// 			  0;
+// 	return base_elevation;
+// }
 
 // =============================
 // Module specific function
 // =============================
 
 export function getCSSName(element): string | undefined {
-	const version = <string[]>game.system.data.version.split(".");
+	//@ts-ignore
+	const version = <string[]>game.system.version.split(".");
 	if (element === "sub-header") {
 		if (Number(version[0]) === 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
 			return "inventory-header";
@@ -368,10 +373,10 @@ export function isAlt() {
 export function checkCompatible(actorTypeName1: string, actorTypeName2: string, item: Item) {
 	info(
 		'Check Compatibility: Dragging Item:"' +
-			String(item.data.type) +
-			'" from sourceActor.data.type:"' +
+			String(item.type) +
+			'" from sourceActor.type:"' +
 			String(actorTypeName1) +
-			'" to dragTarget.data.type:"' +
+			'" to dragTarget.type:"' +
 			String(actorTypeName2) +
 			'".'
 	);
@@ -404,12 +409,12 @@ export function deleteItem(sheet: ActorSheet, itemId: string) {
 }
 
 export function deleteItemIfZero(sheet: ActorSheet, itemId: string) {
-	const item = sheet.actor?.data.items.get(itemId);
+	const item = sheet.actor?.items.get(itemId);
 	if (item === undefined) {
 		return;
 	}
 	//@ts-ignore
-	if (item.data?.data?.quantity <= 0) {
+	if (item.system.quantity <= 0) {
 		deleteItem(sheet, itemId);
 	}
 }
@@ -434,35 +439,35 @@ export function transferItem(
 		let stacked = false; // will be true if a stack of item has been found and items have been stacked in it
 		if (stackItems) {
 			const potentialStacks = <Item[]>(
-				targetSheet.actor?.data.items.filter(
-					(i) =>
-						i.name === originalItem.name &&
-						diffObject(createdItem, i) &&
-						i.data._id !== createdItem.data._id
+				targetSheet.actor?.items.filter(
+					(itemEntity) =>
+						itemEntity.name === originalItem.name &&
+						diffObject(createdItem, itemEntity) &&
+						itemEntity.id !== createdItem.id
 				)
 			);
 			if (potentialStacks.length >= 1) {
 				//@ts-ignore
-				const newQuantity = <number>potentialStacks[0].data.data.quantity + transferedQuantity;
-				potentialStacks[0]?.update({ "data.quantity": newQuantity });
-				deleteItemIfZero(targetSheet, <string>createdItem.data._id);
+				const newQuantity = <number>potentialStacks[0].system.quantity + transferedQuantity;
+				potentialStacks[0]?.update({ "system.quantity": newQuantity });
+				deleteItemIfZero(targetSheet, <string>createdItem.id);
 				stacked = true;
 			}
 		}
 
-		originalItem.update({ "data.quantity": newOriginalQuantity }).then((i: Item | undefined) => {
-			if (i) {
+		originalItem.update({ "system.quantity": newOriginalQuantity }).then((itemEntity: Item | undefined) => {
+			if (itemEntity) {
 				const sh = <FormApplication<FormApplicationOptions, FormApplication.Data<{}, FormApplicationOptions>>>(
-					i.actor?.sheet
+					itemEntity.actor?.sheet
 				);
 				//@ts-ignore
-				deleteItemIfZero(<ActorSheet>sh, <string>i.data._id);
+				deleteItemIfZero(<ActorSheet>sh, <string>itemEntity.id);
 			}
 		});
 		if (stacked === false) {
 			//@ts-ignore
-			createdItem.data.data.quantity = transferedQuantity;
-			targetSheet.actor?.createEmbeddedDocuments("Item", [<any>createdItem.data]);
+			createdItem.system.quantity = transferedQuantity;
+			targetSheet.actor?.createEmbeddedDocuments("Item", [<any>createdItem]);
 		}
 	} else {
 		error("could not transfer " + transferedQuantity + " items", true);
@@ -475,7 +480,7 @@ export function transferCurrency(html: JQuery<HTMLElement>, sourceSheet, targetS
 	const errors: string[] = [];
 	for (const c of currencies) {
 		const amount = parseInt(<string>html.find("." + c).val(), 10);
-		if (amount < 0 || amount > sourceSheet.actor.data.data.currency[c]) {
+		if (amount < 0 || amount > sourceSheet.actor.system.currency[c]) {
 			errors.push(c);
 		}
 	}
@@ -485,9 +490,9 @@ export function transferCurrency(html: JQuery<HTMLElement>, sourceSheet, targetS
 	} else {
 		for (const c of currencies) {
 			const amount = parseInt(<string>html.find("." + c + " input").val(), 10);
-			const key = "data.currency." + c;
-			sourceSheet.actor.update({ [key]: sourceSheet.actor.data.data.currency[c] - amount });
-			targetSheet.actor.update({ [key]: targetSheet.actor.data.data.currency[c] + amount }); // key is between [] to force its evaluation
+			const key = "system.currency." + c;
+			sourceSheet.actor.update({ [key]: sourceSheet.actor.system.currency[c] - amount });
+			targetSheet.actor.update({ [key]: targetSheet.actor.system.currency[c] + amount }); // key is between [] to force its evaluation
 		}
 	}
 }
@@ -566,15 +571,15 @@ export function disabledIfZero(n: number): "disabled" | "" {
 
 export function showCurrencyTransferDialog(sourceSheet: ActorSheet, targetSheet: ActorSheet) {
 	//@ts-ignore
-	const pp = sourceSheet.actor?.data.data.currency.pp;
+	const pp = sourceSheet.actor?.system.currency.pp;
 	//@ts-ignore
-	const gp = sourceSheet.actor?.data.data.currency.gp;
+	const gp = sourceSheet.actor?.system.currency.gp;
 	//@ts-ignore
-	const ep = sourceSheet.actor?.data.data.currency.ep;
+	const ep = sourceSheet.actor?.system.currency.ep;
 	//@ts-ignore
-	const sp = sourceSheet.actor?.data.data.currency.sp;
+	const sp = sourceSheet.actor?.system.currency.sp;
 	//@ts-ignore
-	const cp = sourceSheet.actor?.data.data.currency.cp;
+	const cp = sourceSheet.actor?.system.currency.cp;
 
 	const contentDialog = `
   <form class="inventory-plus currency">
@@ -662,24 +667,17 @@ export function getItemsToSort(actor: Actor) {
 	if (!actor) {
 		return [];
 	}
-	const itemsToCheck = actor.items
-		? actor.items // fvtt10
-		: actor.data.items; // fvtt9
+	const itemsToCheck = actor.items;
 	return itemsToCheck.map((item) => {
-		// const item = itemEntity.data;
 		const type = item.type;
 		const name = item.name;
 		let subtype = 0;
 		if (type === "spell") {
 			const prepMode =
 				//@ts-ignore
-				item.preparation && item.preparation.mode
+				item.system.preparation && item.system.preparation.mode
 					? //@ts-ignore
-					  item.preparation.mode //fvtt10
-					: //@ts-ignore
-					item.data.preparation && item.data.preparation.mode
-					? //@ts-ignore
-					  item.data.preparation.mode //fvtt9
+					  item.system.preparation.mode
 					: undefined;
 			if (prepMode === "atwill") {
 				subtype = 10;
@@ -689,25 +687,17 @@ export function getItemsToSort(actor: Actor) {
 				subtype = 12;
 			} else {
 				//@ts-ignore
-				const level = item.level
+				const level = item.system.level
 					? //@ts-ignore
-					  item.level //fvtt10
-					: //@ts-ignore
-					  item.data.level; //fvtt9
+					  item.system.level //fvtt10
+					: "";
 				subtype = parseInt(level, 10) || 0;
 			}
 		} else if (type === "feat") {
 			let foundSubType = false;
 			//@ts-ignore
 			// fvtt10
-			if (!item.data && (!item.activation || item.activation.type === "")) {
-				// Passive feats
-				subtype = 0;
-				foundSubType = true;
-			}
-			//@ts-ignore
-			// fvtt9
-			if (item.data && (!item.data.activation || item.data.activation.type === "")) {
+			if (item.system && (!item.system.activation || item.system.activation.type === "")) {
 				// Passive feats
 				subtype = 0;
 				foundSubType = true;
@@ -774,20 +764,12 @@ export function sortItems(actor: Actor) {
 	const itemUpdates: any[] = [];
 	for (const itemSort of itemSorts.values()) {
 		const item = <Item>actor.items.get(itemSort._id);
-		// fvtt10
 		//@ts-ignore
 		if (item.sort) {
 			//@ts-ignore
 			if (item.sort !== itemSort.sort) {
 				//@ts-ignore
 				debug(`item sort mismatch  id = ${item.id}, current = ${item.sort}, new = ${itemSort.sort}`);
-				itemUpdates.push(itemSort);
-			}
-		}
-		// fvtt9
-		if (item.data.sort) {
-			if (item.data.sort !== itemSort.sort) {
-				debug(`item sort mismatch  id = ${item.id}, current = ${item.data.sort}, new = ${itemSort.sort}`);
 				itemUpdates.push(itemSort);
 			}
 		}
@@ -829,17 +811,17 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData: any): {
 	const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
 	let weight = actorData.items.reduce((weight, i) => {
 		if (!physicalItems.includes(i.type)) return weight;
-		const q = <number>i.data.data.quantity || 0;
-		const w = <number>i.data.data.weight || 0;
-		const e = <number>i.data.data.equipped ? eqpMultiplyer : 1;
+		const q = <number>i.system.quantity || 0;
+		const w = <number>i.system.weight || 0;
+		const e = <number>i.system.equipped ? eqpMultiplyer : 1;
 		return weight + q * w * e;
 	}, 0);
 
 	// [Optional] add Currency Weight (for non-transformed actors)
-	if (game.settings.get("dnd5e", "currencyWeight") && actorData.data.currency) {
-		const currency = actorData.data.currency;
+	if (game.settings.get("dnd5e", "currencyWeight") && actorData.system.currency) {
+		const currency = actorData.system.currency;
 		const numCoins = <number>(
-			// Object.values(currency).reduce((val: number, denom: number) => (val += Math.max(denom, 0)), 0) //fvtt9
+			// Object.values(currency).reduce((val: number, denom: number) => (val += Math.max(denom, 0)), 0)
 			Object.values(currency).reduce((val: unknown, denom: unknown) => {
 				val = <number>val + Math.max(<number>denom, 0);
 				return <number>val;
@@ -864,7 +846,7 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData: any): {
 			lg: 2,
 			huge: 4,
 			grg: 8,
-		}[actorData.data.traits.size] || 1;
+		}[actorData.system.traits.size] || 1;
 	if (this.getFlag("dnd5e", "powerfulBuild")) mod = Math.min(mod * 2, 8);
 
 	// Compute Encumbrance percentage
@@ -881,14 +863,14 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData: any): {
 	}
 
 	const modStr =
-		actorData.data.abilities.str.value && is_real_number(actorData.data.abilities.str.value)
-			? actorData.data.abilities.str.value
+		actorData.system.abilities.str.value && is_real_number(actorData.system.abilities.str.value)
+			? actorData.system.abilities.str.value
 			: 1;
 	const maxValue = modStr * strengthMultiplier * mod;
 
 	const max =
 		//@ts-ignore
-		maxValue && is_real_number(maxValue) ? maxValue.toNearest(0.1) : actorData.data.attributes.encumbrance.max;
+		maxValue && is_real_number(maxValue) ? maxValue.toNearest(0.1) : actorData.system.attributes.encumbrance.max;
 	const pct = Math.clamped((weight * 100) / max, 0, 100);
 	return { value: weight, max, pct, encumbered: pct > 200 / 3 };
 }
@@ -900,36 +882,36 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData: any): {
 export function calcWeight(
 	item: Item,
 	useEquippedUnequippedItemCollectionFeature: boolean,
+	ignoreCurrency: boolean,
 	{ ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }
 ) {
-	if (item.type !== "backpack" || !item.data.flags.itemcollection) return calcItemWeight(item);
-	// if (item.parent instanceof Actor && !item.data.data.equipped) return 0;
+	//@ts-ignore
+	if (item.type !== "backpack" || !item.flags.itemcollection) return calcItemWeight(item, ignoreCurrency);
 	// MOD 4535992 Removed variant encumbrance take care of this
-	// const useEquippedUnequippedItemCollectionFeature = game.settings.get(
-	//   CONSTANTS.MODULE_NAME,
-	//   'useEquippedUnequippedItemCollectionFeature',
-	// );
+	// if (this.parent instanceof Actor && !item.system.equipped) return 0;
+	// const weightless = getProperty(this, "system.capacity.weightless") ?? false;
+	// if (weightless) return getProperty(this, "flags.itemcollection.bagWeight") ?? 0;
 	const isEquipped: boolean =
 		//@ts-ignore
-		(item.data.equipped && item.data.equipped !== item.data.data?.equipped
-			? //@ts-ignore
-			  item.data.equipped
-			: //@ts-ignore
-			  item.data.data?.equipped) || false;
+		item.system.equipped ? true : false;
 	//@ts-ignore
 	if (useEquippedUnequippedItemCollectionFeature && !isEquipped) {
 		return 0;
 	}
 	// END MOD 4535992
-	const weightless = getProperty(item, "data.data.capacity.weightless") ?? false;
-	if (weightless) return getProperty(item, "data.flags.itemcollection.bagWeight") ?? 0;
+	const weightless = getProperty(item, "system.capacity.weightless") ?? false;
+	if (weightless) return getProperty(item, "flags.itemcollection.bagWeight") ?? 0;
 	return (
-		calcItemWeight(item, { ignoreItems, ignoreTypes }) +
-		(getProperty(item, "data.flags.itemcollection.bagWeight") ?? 0)
+		calcItemWeight(item, ignoreCurrency, { ignoreItems, ignoreTypes }) +
+		(getProperty(item, "flags.itemcollection.bagWeight") ?? 0)
 	);
 }
 
-function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }) {
+function calcItemWeight(
+	item: Item,
+	ignoreCurrency: boolean,
+	{ ignoreItems, ignoreTypes } = { ignoreItems: undefined, ignoreTypes: undefined }
+) {
 	//@ts-ignore
 	if (item.type !== "backpack" || item.items === undefined) return _calcItemWeight(item);
 	//@ts-ignore
@@ -941,27 +923,29 @@ function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems
 		return acc + (item.calcWeight() ?? 0); // TODO convert this in a static method ???
 	}, (item.type === "backpack" ? 0 : _calcItemWeight(item)) ?? 0);
 	// [Optional] add Currency Weight (for non-transformed actors)
-	//@ts-ignore
-	if (game.settings.get("dnd5e", "currencyWeight") && item.data.data.currency) {
+	if (
+		!ignoreCurrency &&
+		game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyWeight") &&
+		game.settings.get("dnd5e", "currencyWeight") &&
 		//@ts-ignore
-		const currency = item.data.data.currency ?? {};
+		item.system.currency
+	) {
+		//@ts-ignore
+		const currency = item.system.currency ?? {};
 		const numCoins = <number>(
 			Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0)
 		);
 
-		let currencyPerWeight = 0;
-		if (game.settings.get("dnd5e", "metricWeightUnits")) {
-			//@ts-ignore
-			currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.metric;
-		} else {
-			//@ts-ignore
-			currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
-		}
+		const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
+			? game.settings.get(CONSTANTS.MODULE_NAME, "fakeMetricSystem")
+				? <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeight")
+				: <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeightMetric")
+			: <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeight");
 
 		weight = Math.round(weight + numCoins / currencyPerWeight);
 	} else {
 		//@ts-ignore
-		const currency = item.data.data.currency ?? {};
+		const currency = item.system.currency ?? {};
 		const numCoins = currency ? Object.keys(currency).reduce((val, denom) => val + currency[denom], 0) : 0;
 		weight = Math.round(weight + numCoins / 50);
 	}
@@ -969,21 +953,13 @@ function calcItemWeight(item: Item, { ignoreItems, ignoreTypes } = { ignoreItems
 }
 
 function _calcItemWeight(item: Item) {
-	// const quantity = item.data.data.quantity || 1;
-	// const weight = item.data.data.weight || 0;
-	const quantity =
+	// const quantity = item.system.quantity || 1;
+	// const weight = item.system.weight || 0;
+	const quantity: number =
 		//@ts-ignore
-		(is_real_number(item.data.quantity) && item.data.quantity !== item.data.data?.quantity
-			? //@ts-ignore
-			  item.data.quantity
-			: //@ts-ignore
-			  item.data.data?.quantity) || 0;
-	const weight =
+		is_real_number(item.system.quantity) ? item.system.quantity : 0;
+	const weight: number =
 		//@ts-ignore
-		(is_real_number(item.data.weight) && item.data.weight !== item.data.data?.weight
-			? //@ts-ignore
-			  item.data.weight
-			: //@ts-ignore
-			  item.data.data?.weight) || 0;
+		is_real_number(item.system.weight) ? item.system.weight : 0;
 	return Math.round(weight * quantity * 100) / 100;
 }

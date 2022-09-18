@@ -42,7 +42,7 @@ const API = {
 		const inventoryItems: Item[] = [];
 		// const isAlreadyInActor = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
 		const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
-		for (const im of actorEntity.data.items.contents) {
+		for (const im of actorEntity.items.contents) {
 			if (im && physicalItems.includes(im.type)) {
 				inventoryItems.push(im);
 			}
@@ -59,7 +59,7 @@ const API = {
 		// START TOTAL WEIGHT
 		// Get the total weight from items
 		// const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-		// let totalWeight: number = actorEntity.data.items.reduce((weight, item) => {
+		// let totalWeight: number = actorEntity.items.reduce((weight, item) => {
 		let totalWeight: number = inventoryItems.reduce((weight, item) => {
 			if (!physicalItems.includes(item.type)) {
 				return weight;
@@ -67,19 +67,11 @@ const API = {
 
 			let itemQuantity =
 				//@ts-ignore
-				(is_real_number(item.data.quantity) && item.data.quantity !== item.data.data?.quantity
-					? //@ts-ignore
-					  item.data.quantity
-					: //@ts-ignore
-					  item.data.data?.quantity) || 0;
+				is_real_number(item.system.quantity) ? item.system.quantity : 0;
 
 			let itemWeight =
 				//@ts-ignore
-				(is_real_number(item.data.weight) && item.data.weight !== item.data.data?.weight
-					? //@ts-ignore
-					  item.data.weight
-					: //@ts-ignore
-					  item.data.data?.weight) || 0;
+				is_real_number(item.system.weight) ? item.system.weight : 0;
 
 			let ignoreEquipmentCheck = false;
 
@@ -87,19 +79,19 @@ const API = {
 
 			// Start Item container check
 			if (
-				getProperty(item, "data.flags.itemcollection.bagWeight") !== null &&
-				getProperty(item, "data.flags.itemcollection.bagWeight") !== undefined
+				getProperty(item, "flags.itemcollection.bagWeight") !== null &&
+				getProperty(item, "flags.itemcollection.bagWeight") !== undefined
 			) {
-				const weightless = getProperty(item, "data.data.capacity.weightless") ?? false;
+				const weightless = getProperty(item, "system.capacity.weightless") ?? false;
 				if (weightless) {
-					itemWeight = getProperty(item, "data.flags.itemcollection.bagWeight");
+					itemWeight = getProperty(item, "flags.itemcollection.bagWeight");
 				} else {
 					// itemWeight = calcItemWeight(item) + getProperty(item, 'data.flags.itemcollection.bagWeight');
 					// MOD 4535992 Removed variant encumbrance take care of this
 					const useEquippedUnequippedItemCollectionFeature = <boolean>(
 						game.settings.get(CONSTANTS.MODULE_NAME, "useEquippedUnequippedItemCollectionFeature")
 					);
-					itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature);
+					itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature, false);
 					//@ts-ignore
 					if (useEquippedUnequippedItemCollectionFeature) {
 						ignoreEquipmentCheck = true;
@@ -119,18 +111,11 @@ const API = {
 					for (const categoryId in inventoryPlusCategories) {
 						const section = inventoryPlusCategories[categoryId];
 						if (
-							// This is a error from the inventory plus developer flags stay on 'item.data' not on the 'item'
+							// This is a error from the inventory plus developer flags stay on 'item' not on the 'item'
 							//@ts-ignore
-							(item.flags &&
-								//@ts-ignore
-								item.flags[CONSTANTS.MODULE_NAME]?.category === categoryId) ||
-							(item.data?.flags &&
-								//@ts-ignore
-								item.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId) ||
+							item.flags &&
 							//@ts-ignore
-							(item.data?.data?.flags &&
-								//@ts-ignore
-								item.data?.data?.flags[CONSTANTS.MODULE_NAME]?.category === categoryId)
+							item.flags[CONSTANTS.MODULE_NAME]?.category === categoryId
 						) {
 							// Ignore weight
 							if (section?.ignoreWeight === true) {
@@ -179,7 +164,7 @@ const API = {
 
 			if (game.settings.get(CONSTANTS.MODULE_NAME, "doNotIncreaseWeightByQuantityForNoAmmunition")) {
 				//@ts-ignore
-				if (item.data?.data?.consumableType !== "ammo") {
+				if (item.system.consumableType !== "ammo") {
 					itemQuantity = 1;
 				}
 			}
@@ -190,11 +175,7 @@ const API = {
 			}
 			const isEquipped: boolean =
 				//@ts-ignore
-				(item.data.equipped && item.data.equipped !== item.data.data?.equipped
-					? //@ts-ignore
-					  item.data.equipped
-					: //@ts-ignore
-					  item.data.data?.equipped) || false;
+				item.system.equipped ? true : false;
 			if (isEquipped) {
 				let eqpMultiplyer = 1;
 				if (game.settings.get(CONSTANTS.MODULE_NAME, "enableEquipmentMultiplier")) {
@@ -219,9 +200,9 @@ const API = {
 
 		// [Optional] add Currency Weight (for non-transformed actors)
 		//@ts-ignore
-		if (game.settings.get("dnd5e", "currencyWeight") && actorEntity.data.data.currency) {
+		if (game.settings.get("dnd5e", "currencyWeight") && actorEntity.system.currency) {
 			//@ts-ignore
-			const currency = actorEntity.data.data.currency;
+			const currency = actorEntity.system.currency;
 			const numCoins = <number>(
 				Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0)
 			);
@@ -240,13 +221,13 @@ const API = {
 
 		// Compute Encumbrance percentage
 		//@ts-ignore
-		const max = actorEntity.data.data.attributes.encumbrance.max;
+		const max = actorEntity.system.attributes.encumbrance.max;
 		const pct = Math.clamped((totalWeight * 100) / max, 0, 100);
 		const value = totalWeight && is_real_number(totalWeight) ? totalWeight.toNearest(0.1) : 0;
 		const encumbered = pct > 200 / 3;
 
 		//@ts-ignore
-		return ((<EncumbranceDnd5e>actorEntity.data.data.attributes.encumbrance) = {
+		return ((<EncumbranceDnd5e>actorEntity.system.attributes.encumbrance) = {
 			value: value,
 			//@ts-ignore
 			max: max,
@@ -255,12 +236,12 @@ const API = {
 		});
 	},
 
-	isCategoryFulled(actor: Actor, categoryType: string, itemData: ItemData): boolean {
+	isCategoryFulled(actor: Actor, categoryType: string, itemData: Item): boolean {
 		//@ts-ignore
 		const inventoryPlus = actor.sheet?.inventoryPlus;
 		const categoryWeight = inventoryPlus.getCategoryItemWeight(categoryType);
 		//@ts-ignore
-		const itemWeight = itemData.data.weight * itemData.data.quantity;
+		const itemWeight = itemData.system.weight * itemData.system.quantity;
 		const maxWeight = Number(
 			inventoryPlus.customCategorys[categoryType].maxWeight
 				? inventoryPlus.customCategorys[categoryType].maxWeight
@@ -274,7 +255,7 @@ const API = {
 		}
 	},
 
-	isAcceptableType(categoryRef: Category, itemData: ItemData) {
+	isAcceptableType(categoryRef: Category, itemData: Item) {
 		if (categoryRef.explicitTypes && categoryRef.explicitTypes.length > 0) {
 			const acceptableTypes = categoryRef.explicitTypes.filter((i) => {
 				return i.isSelected;
@@ -299,12 +280,12 @@ const API = {
 	},
 
 	getItemsFromCategory(actor: Actor, categoryDatasetType: string, customCategorys: Record<string, any>): Item[] {
-		return actor.data.items.filter((item) => {
+		return actor.items.filter((item) => {
 			// Ripreso da getItemType
 			let type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-			if (!type) {
-				type = getProperty(item, `data.flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-			}
+			// if (!type) {
+			// 	type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+			// }
 			if (type === undefined || customCategorys[type] === undefined) {
 				type = item.type;
 			}
@@ -318,7 +299,7 @@ const API = {
 		ignoreWeight: boolean | undefined,
 		maxWeight: number | undefined,
 		ownWeight: number | undefined,
-		items: ItemData[] | undefined,
+		items: Item[] | undefined,
 		explicitTypes: InventoryPlusItemType[] | undefined
 	): Promise<void> {
 		if (!actorId) {
@@ -353,8 +334,8 @@ const API = {
 		inventoryPlus.saveCategorys();
 		if (items && items.length > 0) {
 			for (const itmData of items) {
-				let itemOnActor = <Item>actorEntityTmp.items.find((i: Item) => {
-					return i.data._id === itmData._id;
+				let itemOnActor = <Item>actorEntityTmp.items.find((itemEntity: Item) => {
+					return itemEntity.id === itmData.id;
 				});
 				if (!itemOnActor) {
 					//@ts-ignore
