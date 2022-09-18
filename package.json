@@ -2,7 +2,7 @@
   "name": "inventory-plus",
   "title": "Inventory+",
   "description": "Enhances the default dnd5e sheets inventory to allow for reorganization",
-  "version": "0.5.22",
+  "version": "0.6.0",
   "main": "main.js",
   "scripts": {
     "publish": "gulp publish --update",
@@ -15,7 +15,7 @@
     "clean": "gulp clean && gulp link --clean",
     "test": "jest",
     "update": "npm install --save-dev @league-of-foundry-developers/foundry-vtt-types@9",
-    "prettier-format": "prettier --config .prettierrc.js --write \"./src/**/*.{ts,js,json,scss,css,html}\""
+    "prettier-format": "prettier --config .prettierrc.js --write \"./src/**/*.{ts,js,json,scss,css}\""
   },
   "keywords": [
     "foundryvtt",
