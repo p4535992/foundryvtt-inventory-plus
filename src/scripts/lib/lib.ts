@@ -307,7 +307,7 @@ function getElevationPlaceableObject(placeableObject: any): number {
 // Module specific function
 // =============================
 
-export function getCSSName(element):string|undefined {
+export function getCSSName(element): string | undefined {
 	const version = <string[]>game.system.data.version.split(".");
 	if (element === "sub-header") {
 		if (Number(version[0]) === 0 && Number(version[1]) <= 9 && Number(version[2]) <= 8) {
@@ -316,7 +316,7 @@ export function getCSSName(element):string|undefined {
 			return "items-header";
 		}
 	}
-    return undefined;
+	return undefined;
 }
 
 export async function retrieveItemFromData(
@@ -450,14 +450,14 @@ export function transferItem(
 			}
 		}
 
-		originalItem.update({ "data.quantity": newOriginalQuantity }).then((i: Item|undefined) => {
-            if(i){
-                const sh = <FormApplication<FormApplicationOptions, FormApplication.Data<{}, FormApplicationOptions>>>(
-                    i.actor?.sheet
-                );
-                //@ts-ignore
-                deleteItemIfZero(<ActorSheet>sh, <string>i.data._id);
-            }
+		originalItem.update({ "data.quantity": newOriginalQuantity }).then((i: Item | undefined) => {
+			if (i) {
+				const sh = <FormApplication<FormApplicationOptions, FormApplication.Data<{}, FormApplicationOptions>>>(
+					i.actor?.sheet
+				);
+				//@ts-ignore
+				deleteItemIfZero(<ActorSheet>sh, <string>i.data._id);
+			}
 		});
 		if (stacked === false) {
 			//@ts-ignore
@@ -534,8 +534,11 @@ export function showItemTransferDialog(
 			transfer: {
 				//icon: "<i class='fas fa-check'></i>",
 				label: i18n(CONSTANTS.MODULE_NAME + ".transfer"),
-				callback: (html: HTMLElement|JQuery<HTMLElement>):void => {
-					const transferedQuantity = parseInt(<string>(<JQuery<HTMLElement>>html).find("input.transferedQuantity").val(), 10);
+				callback: (html: HTMLElement | JQuery<HTMLElement>): void => {
+					const transferedQuantity = parseInt(
+						<string>(<JQuery<HTMLElement>>html).find("input.transferedQuantity").val(),
+						10
+					);
 					const stackItems = (<JQuery<HTMLElement>>html).find("input.stack").is(":checked");
 					transferItem(
 						sourceSheet,
@@ -626,7 +629,7 @@ export function showCurrencyTransferDialog(sourceSheet: ActorSheet, targetSheet:
 			transfer: {
 				//icon: "<i class='fas fa-check'></i>",
 				label: `Transfer`,
-				callback: (html: HTMLElement|JQuery<HTMLElement>) => {
+				callback: (html: HTMLElement | JQuery<HTMLElement>) => {
 					transferCurrency(<JQuery<HTMLElement>>html, sourceSheet, targetSheet);
 				},
 			},
@@ -811,7 +814,12 @@ export function delayedSort(actor: Actor) {
 
 // ========================================================
 
-export function calculateEncumbranceWithEquippedMultiplier(actorData:any): {value: any;max: any;pct: number;encumbered: boolean;} {
+export function calculateEncumbranceWithEquippedMultiplier(actorData: any): {
+	value: any;
+	max: any;
+	pct: number;
+	encumbered: boolean;
+} {
 	let eqpMultiplyer = 1;
 	if (game.settings.get(CONSTANTS.MODULE_NAME, "enableEquipmentMultiplier")) {
 		eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, "equipmentMultiplier") || 1;
@@ -832,10 +840,10 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData:any): {valu
 		const currency = actorData.data.currency;
 		const numCoins = <number>(
 			// Object.values(currency).reduce((val: number, denom: number) => (val += Math.max(denom, 0)), 0) //fvtt9
-            Object.values(currency).reduce((val: unknown, denom: unknown) => {
-                val = <number>val + Math.max(<number>denom, 0);
-                return <number>val;
-            },0)
+			Object.values(currency).reduce((val: unknown, denom: unknown) => {
+				val = <number>val + Math.max(<number>denom, 0);
+				return <number>val;
+			}, 0)
 		);
 
 		const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
@@ -880,9 +888,7 @@ export function calculateEncumbranceWithEquippedMultiplier(actorData:any): {valu
 
 	const max =
 		//@ts-ignore
-		maxValue && is_real_number(maxValue)
-			? maxValue.toNearest(0.1)
-			: actorData.data.attributes.encumbrance.max;
+		maxValue && is_real_number(maxValue) ? maxValue.toNearest(0.1) : actorData.data.attributes.encumbrance.max;
 	const pct = Math.clamped((weight * 100) / max, 0, 100);
 	return { value: weight, max, pct, encumbered: pct > 200 / 3 };
 }

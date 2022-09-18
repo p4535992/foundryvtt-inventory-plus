@@ -513,7 +513,7 @@ const module = {
 		// }
 		app.inventoryPlus.addInventoryFunctions(html);
 	},
-	dropActorSheetDataTransferStuff(targetActor: Actor, targetSheet: ActorSheet, data: any):boolean {
+	dropActorSheetDataTransferStuff(targetActor: Actor, targetSheet: ActorSheet, data: any): boolean {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer")) {
 			return false;
 		}
@@ -563,13 +563,13 @@ const module = {
 					}
 				}
 			}
-            return true;
+			return true;
 		}
-        warn(`You can't transfer no items document here"`);
-        return false;
+		warn(`You can't transfer no items document here"`);
+		return false;
 	},
 
-	preUpdateItemInventorySorter(item: Item, changes: any, options: any, ...args):boolean {
+	preUpdateItemInventorySorter(item: Item, changes: any, options: any, ...args): boolean {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableInventorySorter")) {
 			return false;
 		}
@@ -585,7 +585,7 @@ const module = {
 				return false;
 			}
 		}
-        return true;
+		return true;
 	},
 
 	createItemInventorySorter(item: Item, options: any, userId: string, ...args) {

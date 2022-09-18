@@ -312,7 +312,7 @@ export class InventoryPlus {
 						accept: {
 							icon: '<i class="fas fa-check"></i>',
 							label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-							callback: async (html: HTMLElement|JQuery<HTMLElement>) => {
+							callback: async (html: HTMLElement | JQuery<HTMLElement>) => {
 								const f =
 									flagDisableDefaultCategories && String(flagDisableDefaultCategories) === "true"
 										? true
@@ -463,9 +463,11 @@ export class InventoryPlus {
 					accept: {
 						icon: '<i class="fas fa-check"></i>',
 						label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-						callback: async (html: HTMLElement|JQuery<HTMLElement>) => {
+						callback: async (html: HTMLElement | JQuery<HTMLElement>) => {
 							const input = (<JQuery<HTMLElement>>html).find("input");
-							const selectExplicitTypes = $(<HTMLElement>(<JQuery<HTMLElement>>html).find('select[name="explicitTypes"')[0]);
+							const selectExplicitTypes = $(
+								<HTMLElement>(<JQuery<HTMLElement>>html).find('select[name="explicitTypes"')[0]
+							);
 							this.createCategory(input, selectExplicitTypes); // ,selectDefaultType
 						},
 					},
@@ -474,7 +476,7 @@ export class InventoryPlus {
 						label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
 					},
 				},
-				render: (html: HTMLElement|JQuery<HTMLElement>) => {
+				render: (html: HTMLElement | JQuery<HTMLElement>) => {
 					$(<HTMLElement>(<JQuery<HTMLElement>>html).find(`select[name="explicitTypes"]`)[0])
 						//@ts-ignore
 						.SumoSelect({
@@ -563,7 +565,7 @@ export class InventoryPlus {
 						accept: {
 							icon: '<i class="fas fa-check"></i>',
 							label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-							callback: async (html: HTMLElement|JQuery<HTMLElement>) => {
+							callback: async (html: HTMLElement | JQuery<HTMLElement>) => {
 								this.removeCategory(catType);
 							},
 						},
@@ -675,7 +677,7 @@ export class InventoryPlus {
 						accept: {
 							icon: '<i class="fas fa-check"></i>',
 							label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.accept`),
-							callback: async (html: HTMLElement|JQuery<HTMLElement>) => {
+							callback: async (html: HTMLElement | JQuery<HTMLElement>) => {
 								const inputs = (<JQuery<HTMLElement>>html).find("input");
 								for (const input of inputs) {
 									const value = input.type === "checkbox" ? input.checked : input.value;
@@ -688,7 +690,9 @@ export class InventoryPlus {
 								}
 
 								const currentTypeSelectedS = <string[]>(
-									$(<HTMLElement>(<JQuery<HTMLElement>>html).find('select[name="explicitTypes"')[0])?.val()
+									$(
+										<HTMLElement>(<JQuery<HTMLElement>>html).find('select[name="explicitTypes"')[0]
+									)?.val()
 								);
 								if (!currentTypeSelectedS || currentTypeSelectedS.length === 0) {
 									currentCategory.explicitTypes = [];
@@ -716,7 +720,7 @@ export class InventoryPlus {
 							label: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.cancel`),
 						},
 					},
-					render: (html: HTMLElement|JQuery<HTMLElement>) => {
+					render: (html: HTMLElement | JQuery<HTMLElement>) => {
 						$(<HTMLElement>(<JQuery<HTMLElement>>html).find(`select[name="explicitTypes"]`)[0])
 							//@ts-ignore
 							.SumoSelect({
@@ -1147,8 +1151,8 @@ export class InventoryPlus {
 			>game.modules.get("variant-encumbrance-dnd5e")?.api.calculateBulkOnActorWithItems(this.actor, items);
 			return encumbranceData.totalWeight;
 		} else {
-            return 0;
-        }
+			return 0;
+		}
 		// }else{
 		//   for (const i of items) {
 		//   //for (const i of this.actor.items) {
