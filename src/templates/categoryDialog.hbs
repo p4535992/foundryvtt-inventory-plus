@@ -1,0 +1,35 @@
+<dl class="inv-plus-dialog">
+    <dt>{{localize "inventory-plus.inv-plus-dialog.categoryname"}} </dt>
+    <dd><input name="label" type="text" value="{{label}}"></dd>
+    <dt title="{{localize "inventory-plus.inv-plus-dialog.maxweightdescription"}}">{{localize "inventory-plus.inv-plus-dialog.maxweightprefix"}} </dt>
+    <dd title="{{localize "inventory-plus.inv-plus-dialog.maxweightprefix"}}">
+        <input name="maxWeight" type="text" data-dType="Number" value="{{maxWeight}}">
+    </dd>
+    <dt title="{{localize "inventory-plus.inv-plus-dialog.inherentweightdescription"}}">{{localize "inventory-plus.inv-plus-dialog.inherentweightprefix"}} </dt>
+    <dd title="{{localize "inventory-plus.inv-plus-dialog.inherentweightdescription"}}">
+        <input name="ownWeight" type="text" data-dType="Number" value="{{ownWeight}}">
+    </dd>
+    <dt title="{{localize "inventory-plus.inv-plus-dialog.ignoreweightdescription"}}">{{localize "inventory-plus.inv-plus-dialog.ignoreweightprefix"}} </dt>
+    <dd title="{{localize "inventory-plus.inv-plus-dialog.ignoreweightdescription"}}">
+        <input name="ignoreWeight" type="checkbox" {{#if ignoreWeight}}checked{{/if}}>
+    </dd>
+    {{!-- 
+    <dt title="{{localize "inventory-plus.inv-plus-dialog.defaulttypedescription"}}">{{localize "inventory-plus.inv-plus-dialog.defaulttypeprefix"}} </dt>
+    <dd title="{{localize "inventory-plus.inv-plus-dialog.defaulttypedescription"}}">
+        <select id="defaultType" name="defaultType" is="ms-dropdown-inventory-plus">
+            {{#each defaultTypes as |defaultType|}}
+                <option data-image="{{defaultType.img}}" value="{{defaultType.id}}" {{#if defaultType.isSelected}}selected{{/if}}>{{localize defaultType.name}}</option>
+            {{/each}}
+        </select>
+    </dd> 
+    --}}
+    <dt title="{{localize "inventory-plus.inv-plus-dialog.explicittypesdescription"}}">{{localize "inventory-plus.inv-plus-dialog.explicittypesprefix"}} </dt>
+    <dd title="{{localize "inventory-plus.inv-plus-dialog.explicittypesdescription"}}">
+        <select id="explicitTypes" name="explicitTypes" is="ms-dropdown-inventory-plus" multiple>
+            {{#each explicitTypes as |type|}}
+                <option data-image="{{type.img}}" value="{{type.id}}" {{#if type.isSelected}}selected{{/if}}>{{localize type.name}}</option>
+            {{/each}}
+        </select>
+    </dd>
+</dl>
+
