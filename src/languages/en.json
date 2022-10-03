@@ -29,7 +29,7 @@
 	"inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.name": "Feature: Integration with Item Collection",
 	"inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Use equipped/unequipped feature of the 'ItemCollection/Item Container' module for the backpack. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.",
 
-	"inventory-plus.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name": "Homebrew Rule: Do Not increase weight by quantity for no ammunition item",
+	"inventory-plus.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name": "Feature: Do Not increase weight by quantity for no ammunition item",
 	"inventory-plus.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint": "This is a homebrew rule, for non-ammunition items don't increase weight by quantity (so 5 potions = 1 item weight for example)",
 
 	"inventory-plus.setting.hideButtonDefaultCategories.name": "Hide button for manage default categories",
