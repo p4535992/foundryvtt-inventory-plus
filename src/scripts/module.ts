@@ -53,9 +53,9 @@ export const readyHooks = async (): Promise<void> => {
 	//@ts-ignore
 	libWrapper.register(
 		CONSTANTS.MODULE_NAME,
-		"game.dnd5e.applications.ActorSheet5eCharacter.prototype.getData",
-		function (wrapper, ...args) {
-			const sheetData = wrapper(...args);
+		"game.dnd5e.applications.actor.ActorSheet5eCharacter.prototype.getData",
+		async function (wrapper, ...args) {
+			const sheetData = await wrapper(...args);
 
 			// let app = this;
 			const actor = <Actor>this.actor;
@@ -85,7 +85,7 @@ export const readyHooks = async (): Promise<void> => {
 	//@ts-ignore
 	libWrapper.register(
 		CONSTANTS.MODULE_NAME,
-		"game.dnd5e.applications.ActorSheet5eCharacter.prototype._onDropItem",
+		"game.dnd5e.applications.actor.ActorSheet5eCharacter.prototype._onDropItem",
 		async function (wrapped, ...args) {
 			const [event, itemDropped] = args;
 			const actor = <Actor>this.actor;
