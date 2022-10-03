@@ -64,7 +64,7 @@
 	],
 	"system": ["dnd5e", "sw5e"],
 	"scripts": ["module/lib/jquery.sumoselect.min.js"],
-	"esmodules": ["./main.js"],
+	"esmodules": ["main.js"],
 	"styles": ["styles/inventory-plus.css", "styles/sumoselect.css"],
 	"packs": [],
 	"compatibility": {

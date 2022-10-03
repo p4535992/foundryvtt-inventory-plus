@@ -87,29 +87,29 @@ export const readyHooks = async (): Promise<void> => {
 		CONSTANTS.MODULE_NAME,
 		"game.dnd5e.applications.ActorSheet5eCharacter.prototype._onDropItem",
 		async function (wrapped, ...args) {
-			const [event, data] = args;
+			const [event, itemDropped] = args;
 			const actor = <Actor>this.actor;
 			const targetActor = actor;
-			const itemTypeCurrent = data?.type; // || event.type;
+			const itemTypeCurrent = itemDropped?.type; // || event.type;
 
 			if (itemTypeCurrent !== "Item") {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemtypecurrent`));
 				return;
 			}
 
-			const itemId = data?.id;
+			const itemId = itemDropped?.id;
 			if (!itemId) {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemid`));
 				return;
 			}
-			const dragAndDropFromCompendium = data.pack ? true : false;
-			const dragAndDropFromActorSource = data.actorId ? true : false;
-			const itemCurrent = await retrieveItemFromData(actor, itemId, "", data.pack, data.actorId);
+			const dragAndDropFromCompendium = itemDropped.pack ? true : false;
+			const dragAndDropFromActorSource = itemDropped.actorId ? true : false;
+			const itemCurrent = await retrieveItemFromData(actor, itemId, "", itemDropped.pack, itemDropped.actorId);
 			let itemData: Item | null = null;
 			if (!itemCurrent) {
 				// Start Patch Party Inventory
-				if (data && data.type && data.id) {
-					itemData = <Item>data;
+				if (itemDropped && itemDropped.type && itemDropped.id) {
+					itemData = <Item>itemDropped;
 					//@ts-ignore
 					if (!itemData.flags) {
 						setProperty(itemData, `flags`, {});
@@ -134,7 +134,7 @@ export const readyHooks = async (): Promise<void> => {
 			}
 
 			// Yea i hate my life
-			const actorId = data.actorId;
+			const actorId = itemDropped.actorId;
 			let createdItem: Item | undefined = undefined;
 
 			// dropping item outside inventory list, but ignore if already owned item
@@ -155,22 +155,22 @@ export const readyHooks = async (): Promise<void> => {
 				// No type founded use standard system
 
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(data);
+				const item = <Item>await Item.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(data)) &&
+					!(await this._isFromSameActor(itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -184,22 +184,22 @@ export const readyHooks = async (): Promise<void> => {
 				targetType === "subclass"
 			) {
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(data);
+				const item = <Item>await Item.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(data)) &&
+					!(await this._isFromSameActor(itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -210,22 +210,22 @@ export const readyHooks = async (): Promise<void> => {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
 
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(data);
+				const item = <Item>await Item.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(data)) &&
+					!(await this._isFromSameActor(itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -239,22 +239,22 @@ export const readyHooks = async (): Promise<void> => {
 				);
 
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(data);
+				const item = <Item>await Item.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(data)) &&
+					!(await this._isFromSameActor(itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -271,22 +271,22 @@ export const readyHooks = async (): Promise<void> => {
 			if (!categoryRef.label) {
 				error(`Can't find a label on category with the type '${targetType}'`, true);
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(data);
+				const item = <Item>await Item.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(data)) return this._onSortItem(event, itemData);
+				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(data)) &&
+					!(await this._isFromSameActor(itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -326,19 +326,19 @@ export const readyHooks = async (): Promise<void> => {
 					// const itemData = item.toObject();
 
 					// Handle item sorting within the same Actor
-					if (await this._isFromSameActor(data)) {
+					if (await this._isFromSameActor(itemDropped)) {
 						// return this._onSortItem(event, itemData);
 					} else {
 						// Create the owned item
 						if (
 							game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-							!(await this._isFromSameActor(data)) &&
+							!(await this._isFromSameActor(itemDropped)) &&
 							!isAlt() &&
 							!dragAndDropFromCompendium &&
 							dragAndDropFromActorSource
 						) {
 							//@ts-ignore
-							module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+							module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
 						} else {
 							const items: Item[] = await this._onDropItemCreate(itemData);
 							createdItem = items[0];
@@ -381,19 +381,19 @@ export const readyHooks = async (): Promise<void> => {
 						// const itemData = item.toObject();
 
 						// Handle item sorting within the same Actor
-						if (await this._isFromSameActor(data)) {
+						if (await this._isFromSameActor(itemDropped)) {
 							// return this._onSortItem(event, itemData);
 						} else {
 							// Create the owned item
 							if (
 								game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-								!(await this._isFromSameActor(data)) &&
+								!(await this._isFromSameActor(itemDropped)) &&
 								!isAlt() &&
 								!dragAndDropFromCompendium &&
 								dragAndDropFromActorSource
 							) {
 								//@ts-ignore
-								module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, data);
+								module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
 							} else {
 								const items: Item[] = await this._onDropItemCreate(itemData);
 								createdItem = items[0];
@@ -504,19 +504,19 @@ export const readyHooks = async (): Promise<void> => {
 };
 
 const module = {
-	async manageInventoryPlus(targetActor: Actor, targetSheet: ActorSheet, data: any) {
+	async manageInventoryPlus(targetActor: Actor, targetSheet: ActorSheet, actorData: any) {
 		// TODO THE HOOK IS BETTER OF THE WRAPPER INTERCEPTOR...
 	},
 	async renderActorSheet5eCharacterInventoryPlus(...args) {
-		const [app, html, data] = args;
-		const actorEntityTmp: any = <Actor>game.actors?.get(data.actor._id);
+		const [app, html, actorData] = args;
+		const actorEntityTmp: any = <Actor>game.actors?.get(actorData.actor._id);
 		// if (!app.inventoryPlus) {
 		app.inventoryPlus = new InventoryPlus();
 		app.inventoryPlus.init(actorEntityTmp);
 		// }
 		app.inventoryPlus.addInventoryFunctions(html);
 	},
-	dropActorSheetDataTransferStuff(targetActor: Actor, targetSheet: ActorSheet, data: any): boolean {
+	dropActorSheetDataTransferStuff(targetActor: Actor, targetSheet: ActorSheet, actorData: any): boolean {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer")) {
 			return false;
 		}
@@ -529,39 +529,39 @@ const module = {
 			return false;
 		}
 
-		if (data.type === "Item" && data.actorId) {
+		if (actorData.type === "Item" && actorData.actorId) {
 			if (!targetActor.id) {
-				warn(`target has no data._id? ${targetActor}`);
+				warn(`target has no actorData._id? ${targetActor}`);
 				return false;
 			}
-			if (targetActor.id === data.actorId) {
+			if (targetActor.id === actorData.actorId) {
 				return false; // ignore dropping on self
 			}
 			let sourceSheet: ActorSheet;
-			if (data.tokenId !== null) {
+			if (actorData.tokenId !== null) {
 				//game.scenes.get("hyfUtn3VVPnVUpJe").tokens.get("OYwRVJ7crDyid19t").sheet.actor.items
 				//@ts-ignore
-				sourceSheet = <ActorSheet>game.scenes?.get(data.sceneId)!.tokens.get(data.tokenId)!.sheet;
+				sourceSheet = <ActorSheet>game.scenes?.get(actorData.sceneId)!.tokens.get(actorData.tokenId)!.sheet;
 			} else {
 				//@ts-ignore
-				sourceSheet = <ActorSheet>game.actors?.get(data.actorId)!.sheet;
+				sourceSheet = <ActorSheet>game.actors?.get(actorData.actorId)!.sheet;
 			}
-			const sourceActor = game.actors?.get(data.actorId);
+			const sourceActor = game.actors?.get(actorData.actorId);
 			if (sourceActor) {
 				/* if both source and target have the same type then allow deleting original item. this is a safety check because some game systems may allow dropping on targets that don't actually allow the GM or player to see the inventory, making the item inaccessible. */
-				if (checkCompatible(sourceActor.type, targetActor.type, data)) {
-					const originalQuantity = data.system.quantity;
+				if (checkCompatible(sourceActor.type, targetActor.type, actorData)) {
+					const originalQuantity = actorData.system.quantity;
 					const targetActorId = targetActor.id;
-					const sourceActorId = data.actorId;
+					const sourceActorId = actorData.actorId;
 					if (
 						game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyTransfer") &&
-						data.name === "Currency"
+						actorData.name === "Currency"
 					) {
 						showCurrencyTransferDialog(sourceSheet, targetSheet);
 						return false;
 					} else if (originalQuantity >= 1) {
 						// game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
-						showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, data.id, data);
+						showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, actorData.id, actorData);
 						return false;
 					}
 				}

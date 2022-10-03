@@ -86,7 +86,7 @@ const API = {
 				if (weightless) {
 					itemWeight = getProperty(item, "flags.itemcollection.bagWeight");
 				} else {
-					// itemWeight = calcItemWeight(item) + getProperty(item, 'data.flags.itemcollection.bagWeight');
+					// itemWeight = calcItemWeight(item) + getProperty(item, 'flags.itemcollection.bagWeight');
 					// MOD 4535992 Removed variant encumbrance take care of this
 					const useEquippedUnequippedItemCollectionFeature = <boolean>(
 						game.settings.get(CONSTANTS.MODULE_NAME, "useEquippedUnequippedItemCollectionFeature")
