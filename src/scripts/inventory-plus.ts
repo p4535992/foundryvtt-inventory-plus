@@ -1249,7 +1249,7 @@ export class InventoryPlus {
 				type: game.i18n.localize(`DND5E.ItemType${itemTypeTmp.capitalize()}`),
 			});
 		}
-
+		/*
 		const itemData = {
 			name: myName,
 			type: itemTypeTmp,
@@ -1257,6 +1257,12 @@ export class InventoryPlus {
 		};
 		//@ts-ignore
 		delete itemData.type;
+		*/
+		const itemData = {
+			name: myName,
+			type: itemTypeTmp,
+			// dataset: foundry.utils.deepClone(header.dataset),
+		};
 		const items = <Item[]>await this.actor.createEmbeddedDocuments("Item", [itemData]);
 		const dropedItem = <Item>items[0];
 

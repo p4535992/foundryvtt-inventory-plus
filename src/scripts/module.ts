@@ -97,7 +97,7 @@ export const readyHooks = async (): Promise<void> => {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemtypecurrent`));
 				return;
 			}
-
+			/*
 			const itemId = itemDropped?.uuid
 				? itemDropped?.uuid.includes("Item.")
 					? itemDropped?.uuid.replace("Item.", "")
@@ -109,7 +109,18 @@ export const readyHooks = async (): Promise<void> => {
 			}
 			const dragAndDropFromCompendium = itemDropped.pack ? true : false;
 			const dragAndDropFromActorSource = itemDropped.actorId ? true : false;
-			const itemCurrent = await retrieveItemFromData(actor, itemId, "", itemDropped.pack, itemDropped.actorId);
+			*/
+			const dragAndDropFromCompendium = itemDropped?.uuid.includes("Compendium");
+			const dragAndDropFromActorSource = itemDropped?.uuid.includes("Actor");
+			const itemCurrent = await retrieveItemFromData(
+				actor,
+				itemDropped.uuid,
+				"",
+				itemDropped.pack,
+				itemDropped.actorId,
+				itemDropped
+			);
+			const itemId = itemCurrent.id;
 			let itemData: Item | null = null;
 			if (!itemCurrent) {
 				// Start Patch Party Inventory

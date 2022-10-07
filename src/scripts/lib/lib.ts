@@ -329,9 +329,15 @@ export async function retrieveItemFromData(
 	itemId: string,
 	itemName: string,
 	currentCompendium: string,
-	sourceActorId: string
+	sourceActorId: string,
+	itemReference: any
 ): Promise<Item> {
 	let itemFounded: Item | null = null;
+	//@ts-ignore
+	itemFounded = await Item.implementation.fromDropData(itemReference);
+	if (itemFounded) {
+		return itemFounded;
+	}
 	if (currentCompendium) {
 		const pack = game.packs.get(currentCompendium);
 		if (pack) {
