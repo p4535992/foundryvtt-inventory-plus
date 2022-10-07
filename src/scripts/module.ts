@@ -18,6 +18,7 @@ import {
 	delayedSort,
 	sortedActors,
 	getItemSorts,
+	_isFromSameActor,
 } from "./lib/lib";
 
 export const initHooks = async (): Promise<void> => {
@@ -97,7 +98,11 @@ export const readyHooks = async (): Promise<void> => {
 				return;
 			}
 
-			const itemId = itemDropped?.id;
+			const itemId = itemDropped?.uuid
+				? itemDropped?.uuid.includes("Item.")
+					? itemDropped?.uuid.replace("Item.", "")
+					: itemDropped?.uuid
+				: itemDropped?.id;
 			if (!itemId) {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemid`));
 				return;
@@ -155,16 +160,17 @@ export const readyHooks = async (): Promise<void> => {
 				// No type founded use standard system
 
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(itemDropped);
+				//@ts-ignore
+				const item = <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
+				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(itemDropped)) &&
+					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
@@ -184,16 +190,17 @@ export const readyHooks = async (): Promise<void> => {
 				targetType === "subclass"
 			) {
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(itemDropped);
+				//@ts-ignore
+				const item = <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
+				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(itemDropped)) &&
+					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
@@ -210,16 +217,17 @@ export const readyHooks = async (): Promise<void> => {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
 
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(itemDropped);
+				//@ts-ignore
+				const item = <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
+				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(itemDropped)) &&
+					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
@@ -239,16 +247,17 @@ export const readyHooks = async (): Promise<void> => {
 				);
 
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(itemDropped);
+				//@ts-ignore
+				const item = <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
+				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(itemDropped)) &&
+					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
@@ -271,16 +280,17 @@ export const readyHooks = async (): Promise<void> => {
 			if (!categoryRef.label) {
 				error(`Can't find a label on category with the type '${targetType}'`, true);
 				if (!this.actor.isOwner) return false;
-				const item = <Item>await Item.fromDropData(itemDropped);
+				//@ts-ignore
+				const item = <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await this._isFromSameActor(itemDropped)) return this._onSortItem(event, itemData);
+				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
 
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await this._isFromSameActor(itemDropped)) &&
+					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					dragAndDropFromActorSource
@@ -322,17 +332,17 @@ export const readyHooks = async (): Promise<void> => {
 					}
 					// END itemDataType
 					if (!this.actor.isOwner) return false;
-					// const item = <Item>await Item.fromDropData(data);
+					// const item = <Item>await Item.implementation.fromDropData(data);
 					// const itemData = item.toObject();
 
 					// Handle item sorting within the same Actor
-					if (await this._isFromSameActor(itemDropped)) {
+					if (await _isFromSameActor(actor, itemDropped)) {
 						// return this._onSortItem(event, itemData);
 					} else {
 						// Create the owned item
 						if (
 							game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-							!(await this._isFromSameActor(itemDropped)) &&
+							!(await _isFromSameActor(actor, itemDropped)) &&
 							!isAlt() &&
 							!dragAndDropFromCompendium &&
 							dragAndDropFromActorSource
@@ -377,17 +387,17 @@ export const readyHooks = async (): Promise<void> => {
 						}
 						// END itemDataType
 						if (!this.actor.isOwner) return false;
-						// const item = <Item>await Item.fromDropData(data);
+						// const item = <Item>await Item.implementation.fromDropData(data);
 						// const itemData = item.toObject();
 
 						// Handle item sorting within the same Actor
-						if (await this._isFromSameActor(itemDropped)) {
+						if (await _isFromSameActor(actor, itemDropped)) {
 							// return this._onSortItem(event, itemData);
 						} else {
 							// Create the owned item
 							if (
 								game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-								!(await this._isFromSameActor(itemDropped)) &&
+								!(await _isFromSameActor(actor, itemDropped)) &&
 								!isAlt() &&
 								!dragAndDropFromCompendium &&
 								dragAndDropFromActorSource

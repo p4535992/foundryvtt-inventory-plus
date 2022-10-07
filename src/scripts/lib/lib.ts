@@ -963,3 +963,18 @@ function _calcItemWeight(item: Item) {
 		is_real_number(item.system.weight) ? item.system.weight : 0;
 	return Math.round(weight * quantity * 100) / 100;
 }
+
+// ===============================================================
+
+/**
+ * Is the drop data coming from the same actor?
+ * @param {object} data  The drop data.
+ * @returns {Promise<boolean>}
+ * @private
+ */
+export async function _isFromSameActor(actor, data) {
+	//@ts-ignore
+	const item = await Item.implementation.fromDropData(data);
+	return actor.id === item.parent?.uuid;
+	// return this.actor.id === item.parent?.uuid
+}
