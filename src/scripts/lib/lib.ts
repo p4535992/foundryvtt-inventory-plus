@@ -326,17 +326,19 @@ export function getCSSName(element): string | undefined {
 
 export async function retrieveItemFromData(
 	actor: Actor,
+	itemUuid: string,
 	itemId: string,
 	itemName: string,
 	currentCompendium: string,
-	sourceActorId: string,
-	itemReference: any
+	sourceActorId: string
 ): Promise<Item> {
 	let itemFounded: Item | null = null;
-	//@ts-ignore
-	itemFounded = await Item.implementation.fromDropData(itemReference);
-	if (itemFounded) {
-		return itemFounded;
+	if (itemUuid) {
+		//@ts-ignore
+		itemFounded = await Item.implementation.fromDropData({ type: "Item", uuid: itemUuid });
+		if (itemFounded) {
+			return itemFounded;
+		}
 	}
 	if (currentCompendium) {
 		const pack = game.packs.get(currentCompendium);

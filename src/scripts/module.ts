@@ -100,7 +100,7 @@ export const readyHooks = async (): Promise<void> => {
 			/*
 			const itemId = itemDropped?.uuid
 				? itemDropped?.uuid.includes("Item.")
-					? itemDropped?.uuid.replace("Item.", "")
+					? itemDropped?.uuid.split('.').pop()
 					: itemDropped?.uuid
 				: itemDropped?.id;
 			if (!itemId) {
@@ -111,15 +111,15 @@ export const readyHooks = async (): Promise<void> => {
 			const dragAndDropFromActorSource = itemDropped.actorId ? true : false;
 			*/
 			const dragAndDropFromCompendium = itemDropped?.uuid.includes("Compendium");
-			const dragAndDropFromActorSource = itemDropped?.uuid.includes("Actor");
 			const itemCurrent = await retrieveItemFromData(
 				actor,
 				itemDropped.uuid,
+				itemDropped.id,
 				"",
 				itemDropped.pack,
-				itemDropped.actorId,
-				itemDropped
+				itemDropped.actorId
 			);
+			const dragAndDropFromActorSource = itemDropped?.actorId === actor.id ? true : false;
 			const itemId = itemCurrent.id;
 			let itemData: Item | null = null;
 			if (!itemCurrent) {
