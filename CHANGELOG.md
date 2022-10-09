@@ -1,3 +1,8 @@
+### 0.6.10
+
+- BUg fix; https://github.com/p4535992/foundryvtt-inventory-plus/issues/14
+- Bug fix: https://github.com/p4535992/foundryvtt-inventory-plus/issues/13
+
 ### 0.6.0-1-2-3-4-5-6-7-8-9
 
 - Update fvtt10
