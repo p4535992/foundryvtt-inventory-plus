@@ -239,6 +239,19 @@ const API = {
 	isCategoryFulled(actor: Actor, categoryType: string, itemData: Item): boolean {
 		//@ts-ignore
 		const inventoryPlus = actor.sheet?.inventoryPlus;
+		const currentCategory = inventoryPlus.customCategorys[categoryType];
+		if (currentCategory.maxWeight > 0) {
+			return this.isCategoryFulledByWeight(actor, categoryType, itemData);
+		} else if (currentCategory.maxBulk > 0) {
+			return this.isCategoryFulledByBulk(actor, categoryType, itemData);
+		} else {
+			return false;
+		}
+	},
+
+	isCategoryFulledByWeight(actor: Actor, categoryType: string, itemData: Item): boolean {
+		//@ts-ignore
+		const inventoryPlus = actor.sheet?.inventoryPlus;
 		const categoryWeight = inventoryPlus.getCategoryItemWeight(categoryType);
 		//@ts-ignore
 		const itemWeight = itemData.system.weight * itemData.system.quantity;
@@ -249,6 +262,25 @@ const API = {
 		);
 
 		if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
+			return false;
+		} else {
+			return true;
+		}
+	},
+
+	isCategoryFulledByBulk(actor: Actor, categoryType: string, itemData: Item): boolean {
+		//@ts-ignore
+		const inventoryPlus = actor.sheet?.inventoryPlus;
+		const categoryBulk = inventoryPlus.getCategoryItemBulk(categoryType);
+		//@ts-ignore
+		const itemBulk = itemData.system.bulk * itemData.system.quantity;
+		const maxBulk = Number(
+			inventoryPlus.customCategorys[categoryType].maxBulk
+				? inventoryPlus.customCategorys[categoryType].maxBulk
+				: 0
+		);
+
+		if (isNaN(maxBulk) || maxBulk <= 0 || maxBulk >= categoryBulk + itemBulk) {
 			return false;
 		} else {
 			return true;
@@ -300,7 +332,9 @@ const API = {
 		maxWeight: number | undefined,
 		ownWeight: number | undefined,
 		items: Item[] | undefined,
-		explicitTypes: InventoryPlusItemType[] | undefined
+		explicitTypes: InventoryPlusItemType[] | undefined,
+		maxBulk: number | undefined,
+		ownBulk: number | undefined
 	): Promise<void> {
 		if (!actorId) {
 			warn(`No actor id is been passed`);
@@ -330,6 +364,8 @@ const API = {
 		if (explicitTypes) {
 			newCategory.explicitTypes = explicitTypes;
 		}
+		newCategory.maxBulk = maxBulk ?? 0;
+		newCategory.ownBulk = ownBulk ?? 0;
 		inventoryPlus.customCategorys[key] = newCategory;
 		inventoryPlus.saveCategorys();
 		if (items && items.length > 0) {

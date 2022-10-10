@@ -10,6 +10,8 @@ export class Category {
 	collapsed: boolean;
 	items: Item[];
 	explicitTypes: InventoryPlusItemType[];
+	maxBulk: number;
+	ownBulk: number;
 }
 
 export enum InventoryPlusFlags {

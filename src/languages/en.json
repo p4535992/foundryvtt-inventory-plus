@@ -46,7 +46,15 @@
 	"inventory-plus.inv-plus-dialog.inherentweightdescription": "If set to any number above 0, the total weight carried will be increased by that amount.",
 	"inventory-plus.inv-plus-dialog.inherentweightprefix": "Inherent Weight:",
 	"inventory-plus.inv-plus-dialog.ignoreweightdescription": "If checked, the weight of items in this category will not be calculated towards Carrying Capacity.",
-	"inventory-plus.inv-plus-dialog.ignoreweightprefix": "Ignore Item Weight:",
+	"inventory-plus.inv-plus-dialog.ignoreweightprefix": "Ignore Item Weight (or bulk):",
+
+	"inventory-plus.inv-plus-dialog.maxbulkdescription": "Stops any item from being dropped into the category if the combined item bulk would be increased past this number.",
+	"inventory-plus.inv-plus-dialog.maxbulkprefix": "Max Bulk:",
+	"inventory-plus.inv-plus-dialog.inherentbulkdescription": "If set to any number above 0, the total bulk carried will be increased by that amount.",
+	"inventory-plus.inv-plus-dialog.inherentbulkprefix": "Inherent Bulk:",
+	"inventory-plus.inv-plus-dialog.ignorebulkdescription": "If checked, the bulk of items in this category will not be calculated towards Carrying Capacity.",
+	"inventory-plus.inv-plus-dialog.ignorebulkprefix": "Ignore Item Bulk (or weight):",
+
 	"inventory-plus.inv-plus-dialog.explicittypesdescription": "This filter will not drop item with type different from the one setted",
 	"inventory-plus.inv-plus-dialog.explicittypesprefix": "Explicit types for this category:",
 
@@ -65,7 +73,7 @@
 	"inventory-plus.dialogs.warn.itemid": "No itemId founded for the item",
 	"inventory-plus.dialogs.warn.itemcurrent": "No itemCurrent founded for the item",
 	"inventory-plus.dialogs.warn.itemdata": "No itemData founded for the item",
-	"inventory-plus.dialogs.warn.exceedsmaxweight": "Item cannot be insert because exceeds max weight on category '{categoryName}'",
+	"inventory-plus.dialogs.warn.exceedsmaxweight": "Item cannot be insert because exceeds max weight or bulk on category '{categoryName}'",
 	"inventory-plus.dialogs.warn.nodroppeditem": "No Item founded",
 	"inventory-plus.dialogs.warn.nocategoryfoundbytype": "No category founded for type '{type}', maybe you need to create a category for that ?",
 	"inventory-plus.dialogs.warn.noacceptabletype": "Item cannot be insert because the type '{itemDataType}' is not acceptable on category '{categoryName}'",

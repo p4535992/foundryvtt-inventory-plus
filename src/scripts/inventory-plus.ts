@@ -65,6 +65,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				},
 				equipment: <Category>{
 					label: "DND5E.ItemTypeEquipmentPl",
@@ -78,6 +80,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				},
 				consumable: <Category>{
 					label: "DND5E.ItemTypeConsumablePl",
@@ -91,6 +95,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				},
 				tool: <Category>{
 					label: "DND5E.ItemTypeToolPl",
@@ -104,6 +110,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				},
 				backpack: <Category>{
 					label: "DND5E.ItemTypeContainerPl",
@@ -117,6 +125,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				},
 				loot: <Category>{
 					label: "DND5E.ItemTypeLootPl",
@@ -130,6 +140,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				},
 			};
 		} else if (flagCategorys && !flagDisableDefaultCategories) {
@@ -148,6 +160,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				};
 			}
 			const categoryEquipment = flagCategorys["equipment"];
@@ -164,6 +178,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				};
 			}
 			const categoryConsumable = flagCategorys["consumable"];
@@ -180,6 +196,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				};
 			}
 			const categoryTool = flagCategorys["tool"];
@@ -196,6 +214,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				};
 			}
 			const categoryBackpack = flagCategorys["backpack"];
@@ -212,6 +232,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				};
 			}
 			const categoryLoot = flagCategorys["loot"];
@@ -228,6 +250,8 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					maxBulk: 0,
+					ownBulk: 0,
 				};
 			}
 		} else if (flagCategorys && flagDisableDefaultCategories) {
@@ -287,6 +311,12 @@ export class InventoryPlus {
 
 		const iconClass = flagDisableDefaultCategories ? `fa-plus-square` : `fa-minus-square`;
 
+		const isVariantEncumbranceEnabled =
+			game.modules.get("variant-encumbrance-dnd5e")?.active &&
+			game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance");
+		const isBulked =
+			isVariantEncumbranceEnabled && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem");
+
 		// ONly gm can do this
 
 		if (game.user?.isGM && !game.settings.get(CONSTANTS.MODULE_NAME, "hideButtonDefaultCategories")) {
@@ -344,6 +374,8 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											maxBulk: 0,
+											ownBulk: 0,
 										};
 									}
 									const categoryEquipment = this.customCategorys["equipment"];
@@ -360,6 +392,8 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											maxBulk: 0,
+											ownBulk: 0,
 										};
 									}
 									const categoryConsumable = this.customCategorys["consumable"];
@@ -376,6 +410,8 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											maxBulk: 0,
+											ownBulk: 0,
 										};
 									}
 									const categoryTool = this.customCategorys["tool"];
@@ -392,6 +428,8 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											maxBulk: 0,
+											ownBulk: 0,
 										};
 									}
 									const categoryBackpack = this.customCategorys["backpack"];
@@ -408,6 +446,8 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											maxBulk: 0,
+											ownBulk: 0,
 										};
 									}
 									const categoryLoot = this.customCategorys["loot"];
@@ -424,6 +464,8 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											maxBulk: 0,
+											ownBulk: 0,
 										};
 									}
 									this.saveCategorys();
@@ -455,6 +497,7 @@ export class InventoryPlus {
 			});
 			const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {
 				explicitTypes: explicitTypesFromList,
+				enabledBulk: isVariantEncumbranceEnabled && isBulked,
 			});
 			const d = new Dialog({
 				title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
@@ -662,9 +705,13 @@ export class InventoryPlus {
 				`<a class="inv-plus-stuff customize-category" data-type="${type}"><i class="fas fa-edit"></i></a>`
 			).click(async (ev) => {
 				const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
-
+				const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
+					return t.isInventory;
+				});
 				const currentCategoryTmp = duplicateExtended(<Category>this.customCategorys[catTypeTmp]);
 				currentCategoryTmp.label = i18n(currentCategoryTmp.label);
+				currentCategoryTmp.explicitTypes = explicitTypesFromList; // 2022-10-10
+				currentCategoryTmp.enabledBulk = isVariantEncumbranceEnabled && isBulked;
 
 				const template = await renderTemplate(
 					`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`,
@@ -782,9 +829,9 @@ export class InventoryPlus {
 			// if (currentCategory.maxWeight > 0) {
 			if (currentCategory.ignoreWeight) {
 				icon = icon + `<i class="fas fa-feather"></i>`;
-			} else if (currentCategory.ownWeight > 0) {
+			} else if (currentCategory.ownWeight > 0 || currentCategory.ownBulk > 0) {
 				icon = icon + `<i class="fas fa-weight-hanging"></i>`;
-			} else if (currentCategory.maxWeight > 0) {
+			} else if (currentCategory.maxWeight > 0 || currentCategory.maxBulk > 0) {
 				icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
 			}
 
@@ -794,20 +841,21 @@ export class InventoryPlus {
 				? game.i18n.localize("DND5E.AbbreviationKgs")
 				: game.i18n.localize("DND5E.AbbreviationLbs");
 
-			const isVariantEncumbrance =
+			const isVariantEncumbranceEnabled =
 				game.modules.get("variant-encumbrance-dnd5e")?.active &&
 				game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance");
-			if (isVariantEncumbrance) {
+
+			const isBulked =
+				isVariantEncumbranceEnabled && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem");
+			const bulkUnit = <string>game.settings.get("variant-encumbrance-dnd5e", "unitsBulk");
+			let weigthBulk = 0;
+			if (isVariantEncumbranceEnabled) {
 				weightUnit = game.settings.get("dnd5e", "metricWeightUnits")
 					? <string>game.settings.get("variant-encumbrance-dnd5e", "unitsMetric")
 					: <string>game.settings.get("variant-encumbrance-dnd5e", "units");
-
-				const isBulked =
-					isVariantEncumbrance && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem");
 				if (isBulked) {
-					const bulkUnit = <string>game.settings.get("variant-encumbrance-dnd5e", "unitsBulk");
 					//@ts-ignore
-					const weigthBulk = <number>this.getCategoryItemBulk(type);
+					weigthBulk = <number>this.getCategoryItemBulk(type);
 					//game.modules.get('variant-encumbrance-dnd5e')?.api.convertLbToBulk(weight) || 0;
 					bulkWeightS = String(weigthBulk + " " + bulkUnit);
 				}
@@ -825,7 +873,7 @@ export class InventoryPlus {
 					} else {
 						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
 					}
-				} else {
+				} else if (!isBulked && !(currentCategory.maxBulk > 0 || currentCategory.ownBulk > 0)) {
 					if (currentCategory.ownWeight > 0) {
 						if (bulkWeightS) {
 							weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
@@ -835,6 +883,20 @@ export class InventoryPlus {
 					} else {
 						weightValue = `(${weight} ${weightUnit})`;
 					}
+				} else if (isBulked) {
+					if (currentCategory.maxBulk > 0) {
+						if (currentCategory.ownBulk > 0) {
+							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+						} else {
+							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})`;
+						}
+					} else {
+						if (currentCategory.ownBulk > 0) {
+							weightValue = `(${weigthBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+						} else {
+							weightValue = `(${weigthBulk} ${bulkUnit})`;
+						}
+					}
 				}
 			} else if (currentCategory.ownWeight > 0) {
 				if (currentCategory.maxWeight > 0) {
@@ -843,11 +905,17 @@ export class InventoryPlus {
 					} else {
 						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
 					}
-				} else {
+				} else if (!isBulked && (!currentCategory.ownBulk || currentCategory.ownBulk <= 0)) {
 					if (bulkWeightS) {
 						weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
 					} else {
 						weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+					}
+				} else if (isBulked && currentCategory.ownBulk > 0) {
+					if (currentCategory.maxBulk > 0) {
+						weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+					} else {
+						weightValue = `(${weigthBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
 					}
 				}
 			} else if (currentCategory.maxWeight > 0) {
@@ -857,11 +925,29 @@ export class InventoryPlus {
 					} else {
 						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
 					}
-				} else {
+				} else if (!isBulked && (!currentCategory.maxBulk || currentCategory.maxBulk <= 0)) {
 					weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
 				}
+				if (isBulked && currentCategory.maxBulk > 0) {
+					if (currentCategory.ownBulk > 0) {
+						weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+					} else {
+						weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})`;
+					}
+				}
+			} else if (currentCategory.ownBulk > 0) {
+				if (currentCategory.maxBulk > 0) {
+					weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+				} else {
+					weightValue = `(${weigthBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+				}
+			} else if (currentCategory.maxBulk > 0) {
+				if (currentCategory.ownBulk > 0) {
+					weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+				} else {
+					weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})`;
+				}
 			}
-
 			const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
 			header.find("h3").append(weightString);
 		}
