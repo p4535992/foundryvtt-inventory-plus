@@ -139,6 +139,15 @@ export const registerSettings = function (): void {
 		type: Boolean,
 	});
 
+	game.settings.register(CONSTANTS.MODULE_NAME, "doNotApplyWeightForEquippedArmor", {
+		name: `${CONSTANTS.MODULE_NAME}.setting.doNotApplyWeightForEquippedArmor.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.setting.doNotApplyWeightForEquippedArmor.hint`,
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
 	// ===================================================================
 
 	game.settings.register(CONSTANTS.MODULE_NAME, "debug", {
@@ -345,6 +354,15 @@ function otherSettings(apply = false) {
 			name: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name`,
 			hint: `${CONSTANTS.MODULE_NAME}.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint`,
 			scope: "client",
+			config: true,
+			default: false,
+			type: Boolean,
+		},
+
+		doNotApplyWeightForEquippedArmor: {
+			name: `${CONSTANTS.MODULE_NAME}.setting.doNotApplyWeightForEquippedArmor.name`,
+			hint: `${CONSTANTS.MODULE_NAME}.setting.doNotApplyWeightForEquippedArmor.hint`,
+			scope: "world",
 			config: true,
 			default: false,
 			type: Boolean,

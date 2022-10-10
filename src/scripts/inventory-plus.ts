@@ -314,8 +314,9 @@ export class InventoryPlus {
 		const isVariantEncumbranceEnabled =
 			game.modules.get("variant-encumbrance-dnd5e")?.active &&
 			game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance");
-		const isBulked =
-			isVariantEncumbranceEnabled && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem");
+		const isBulked = isVariantEncumbranceEnabled
+			? isVariantEncumbranceEnabled && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem")
+			: false;
 
 		// ONly gm can do this
 
@@ -497,7 +498,7 @@ export class InventoryPlus {
 			});
 			const template = await renderTemplate(`modules/${CONSTANTS.MODULE_NAME}/templates/categoryDialog.hbs`, {
 				explicitTypes: explicitTypesFromList,
-				enabledBulk: isVariantEncumbranceEnabled && isBulked,
+				enabledBulk: isBulked,
 			});
 			const d = new Dialog({
 				title: i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.creatingnewinventorycategory`),
@@ -844,12 +845,14 @@ export class InventoryPlus {
 			const isVariantEncumbranceEnabled =
 				game.modules.get("variant-encumbrance-dnd5e")?.active &&
 				game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance");
+			const isBulked = isVariantEncumbranceEnabled
+				? isVariantEncumbranceEnabled && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem")
+				: false;
 
-			const isBulked =
-				isVariantEncumbranceEnabled && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem");
-			const bulkUnit = <string>game.settings.get("variant-encumbrance-dnd5e", "unitsBulk");
+			let bulkUnit = "bulk";
 			let weigthBulk = 0;
-			if (isVariantEncumbranceEnabled) {
+			if (isBulked) {
+				bulkUnit = <string>game.settings.get("variant-encumbrance-dnd5e", "unitsBulk");
 				weightUnit = game.settings.get("dnd5e", "metricWeightUnits")
 					? <string>game.settings.get("variant-encumbrance-dnd5e", "unitsMetric")
 					: <string>game.settings.get("variant-encumbrance-dnd5e", "units");
@@ -863,27 +866,30 @@ export class InventoryPlus {
 
 			let weightValue = "";
 			if (currentCategory.ignoreWeight) {
-				if (currentCategory.maxWeight > 0) {
-					if (currentCategory.ownWeight > 0) {
-						if (bulkWeightS) {
-							weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+				if (!isBulked) {
+					if (currentCategory.maxWeight > 0) {
+						if (currentCategory.ownWeight > 0) {
+							if (bulkWeightS) {
+								weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+							} else {
+								weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+							}
 						} else {
-							weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+							weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
 						}
 					} else {
-						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
-					}
-				} else if (!isBulked && !(currentCategory.maxBulk > 0 || currentCategory.ownBulk > 0)) {
-					if (currentCategory.ownWeight > 0) {
-						if (bulkWeightS) {
-							weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+						if (currentCategory.ownWeight > 0) {
+							if (bulkWeightS) {
+								weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+							} else {
+								weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+							}
 						} else {
-							weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+							weightValue = `(${weight} ${weightUnit})`;
 						}
-					} else {
-						weightValue = `(${weight} ${weightUnit})`;
 					}
-				} else if (isBulked) {
+				} else {
+					// BULKED
 					if (currentCategory.maxBulk > 0) {
 						if (currentCategory.ownBulk > 0) {
 							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
@@ -894,58 +900,120 @@ export class InventoryPlus {
 						if (currentCategory.ownBulk > 0) {
 							weightValue = `(${weigthBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
 						} else {
-							weightValue = `(${weigthBulk} ${bulkUnit})`;
+							// weightValue = `(${weigthBulk} ${bulkUnit})`;
+							if (currentCategory.maxWeight > 0) {
+								if (currentCategory.ownWeight > 0) {
+									if (bulkWeightS) {
+										weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+									} else {
+										weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+									}
+								} else {
+									weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+								}
+							} else {
+								if (currentCategory.ownWeight > 0) {
+									if (bulkWeightS) {
+										weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+									} else {
+										weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+									}
+								} else {
+									weightValue = `(${weigthBulk} ${bulkUnit})`;
+								}
+							}
 						}
 					}
 				}
 			} else if (currentCategory.ownWeight > 0) {
-				if (currentCategory.maxWeight > 0) {
-					if (bulkWeightS) {
-						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+				if (!isBulked) {
+					if (currentCategory.maxWeight > 0) {
+						if (bulkWeightS) {
+							weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+						} else {
+							weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+						}
 					} else {
-						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+						if (bulkWeightS) {
+							weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+						} else {
+							weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+						}
 					}
-				} else if (!isBulked && (!currentCategory.ownBulk || currentCategory.ownBulk <= 0)) {
-					if (bulkWeightS) {
-						weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+				} else {
+					// BULKED
+					if (currentCategory.ownBulk > 0) {
+						if (currentCategory.maxBulk > 0) {
+							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+						} else {
+							weightValue = `(${weigthBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+						}
 					} else {
-						weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+						if (currentCategory.maxBulk > 0) {
+							if (bulkWeightS) {
+								weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+							} else {
+								weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+							}
+						} else {
+							if (bulkWeightS) {
+								weightValue = `(${weigthBulk} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
+							} else {
+								weightValue = `(${weight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+							}
+						}
 					}
-				} else if (isBulked && currentCategory.ownBulk > 0) {
+				}
+			} else if (currentCategory.maxWeight > 0) {
+				if (!isBulked) {
+					if (currentCategory.ownWeight > 0) {
+						if (bulkWeightS) {
+							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+						} else {
+							weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+						}
+					} else {
+						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+					}
+				} else {
+					// BULKED
+					if (currentCategory.maxBulk > 0) {
+						if (currentCategory.ownBulk > 0) {
+							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+						} else {
+							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})`;
+						}
+					} else {
+						if (currentCategory.ownBulk > 0) {
+							if (bulkWeightS) {
+								weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+							} else {
+								weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+							}
+						} else {
+							if (bulkWeightS) {
+								weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})`;
+							} else {
+								weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
+							}
+						}
+					}
+				}
+			}
+			// BULKED
+			else if (isBulked) {
+				if (currentCategory.ownBulk > 0) {
 					if (currentCategory.maxBulk > 0) {
 						weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
 					} else {
 						weightValue = `(${weigthBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
 					}
-				}
-			} else if (currentCategory.maxWeight > 0) {
-				if (currentCategory.ownWeight > 0) {
-					if (bulkWeightS) {
-						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}][${bulkWeightS}]`;
-					} else {
-						weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
-					}
-				} else if (!isBulked && (!currentCategory.maxBulk || currentCategory.maxBulk <= 0)) {
-					weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})`;
-				}
-				if (isBulked && currentCategory.maxBulk > 0) {
+				} else if (currentCategory.maxBulk > 0) {
 					if (currentCategory.ownBulk > 0) {
 						weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
 					} else {
 						weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})`;
 					}
-				}
-			} else if (currentCategory.ownBulk > 0) {
-				if (currentCategory.maxBulk > 0) {
-					weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
-				} else {
-					weightValue = `(${weigthBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
-				}
-			} else if (currentCategory.maxBulk > 0) {
-				if (currentCategory.ownBulk > 0) {
-					weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
-				} else {
-					weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})`;
 				}
 			}
 			const weightString = $(`<label class="category-weight"> ${icon} ${weightValue}</label>`);
@@ -1193,6 +1261,12 @@ export class InventoryPlus {
 			>game.modules.get("variant-encumbrance-dnd5e")?.api.calculateWeightOnActorWithItemsNoInventoryPlus(this.actor, items);
 			return encumbranceData.totalWeight;
 		} else {
+			const doNotIncreaseWeightByQuantityForNoAmmunition = <boolean>(
+				game.settings.get(CONSTANTS.MODULE_NAME, "doNotIncreaseWeightByQuantityForNoAmmunition")
+			);
+			const doNotApplyWeightForEquippedArmor = <boolean>(
+				game.settings.get(CONSTANTS.MODULE_NAME, "doNotApplyWeightForEquippedArmor")
+			);
 			for (const itemEntity of items) {
 				//for (const i of this.actor.items) {
 				if (type === this.getItemType(itemEntity)) {
@@ -1204,14 +1278,28 @@ export class InventoryPlus {
 					if (game.settings.get(CONSTANTS.MODULE_NAME, "enableEquipmentMultiplier")) {
 						eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, "equipmentMultiplier") || 1;
 					}
-					if (game.settings.get(CONSTANTS.MODULE_NAME, "doNotIncreaseWeightByQuantityForNoAmmunition")) {
+					if (doNotIncreaseWeightByQuantityForNoAmmunition) {
 						//@ts-ignore
 						if (itemEntity.system.consumableType !== "ammo") {
 							q = 1;
 						}
 					}
+					const isEquipped: boolean =
+						//@ts-ignore
+						itemEntity.system.equipped ? true : false;
+					if (isEquipped) {
+						const itemArmorTypes = ["clothing", "light", "medium", "heavy", "natural"];
+						if (
+							doNotApplyWeightForEquippedArmor &&
+							//@ts-ignore
+							itemArmorTypes.includes(itemEntity.system.armor?.type)
+						) {
+							totalCategoryWeight += 0;
+							continue;
+						}
+					}
 					//@ts-ignore
-					const e = <number>itemEntity.system.equipped ? eqpMultiplyer : 1;
+					const e = <number>isEquipped ? eqpMultiplyer : 1;
 					if (is_real_number(w) && is_real_number(q)) {
 						//@ts-ignore
 						totalCategoryWeight += w * q * e;
@@ -1233,48 +1321,19 @@ export class InventoryPlus {
 			game.modules.get("variant-encumbrance-dnd5e")?.active &&
 			game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance")
 		) {
+			// const encumbranceData = <
+			// 	EncumbranceBulkData //@ts-ignore
+			// >game.modules.get("variant-encumbrance-dnd5e")?.api.calculateBulkOnActorWithItems(this.actor, items);
 			const encumbranceData = <
 				EncumbranceBulkData //@ts-ignore
-			>game.modules.get("variant-encumbrance-dnd5e")?.api.calculateBulkOnActorWithItems(this.actor, items);
-			return encumbranceData.totalWeight;
+			>game.modules.get("variant-encumbrance-dnd5e")?.api.calculateBulkOnActorWithItemsNoInventoryPlus(this.actor, items);
+
+			const currentCategory = <Category>this.customCategorys[type];
+			const totalWeight = encumbranceData.totalWeight + (currentCategory.ownBulk ?? 0);
+			return totalWeight;
 		} else {
 			return 0;
 		}
-		// }else{
-		//   for (const i of items) {
-		//   //for (const i of this.actor.items) {
-		//     if (type === this.getItemType(i)) {
-		//       //@ts-ignore
-		//       const q = <number>i.system.quantity || 0;
-		//       //@ts-ignore
-		//       const bulk = <number>i.system.bulk || 0;
-		//       if (!bulk || !is_real_number(bulk){
-		//         bulk = XXXX
-		//       }
-		//       let eqpMultiplyer = 1;
-		//       if (game.settings.get(CONSTANTS.MODULE_NAME, 'enableEquipmentMultiplier')) {
-		//         eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, 'equipmentMultiplier') || 1;
-		//       }
-		//       if(game.settings.get(CONSTANTS.MODULE_NAME,'doNotIncreaseWeightByQuantityForNoAmmunition')){
-		//         //@ts-ignore
-		//         if(i.system.consumableType !== "ammo"){
-		//           q = 1;
-		//         }
-		//       }
-		//       //@ts-ignore
-		//       const e = <number>i.system.equipped ? eqpMultiplyer : 1;
-		//       if (is_real_number(bulk) && is_real_number(q)) {
-		//         //@ts-ignore
-		//         totalCategoryWeight += bulk * q * e;
-		//       } else {
-		//         debug(
-		//           `The item '${i.name}', on category '${type}', on actor ${this.actor?.name} has not valid weight or quantity `,
-		//         );
-		//       }
-		//     }
-		//   }
-		// }
-		// return totalCategoryWeight.toNearest(0.1);
 	}
 
 	// static getCSSName(element) {

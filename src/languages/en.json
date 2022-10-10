@@ -30,7 +30,10 @@
 	"inventory-plus.setting.useEquippedUnequippedItemCollectionFeature.hint": "Use equipped/unequipped feature of the 'ItemCollection/Item Container' module for the backpack. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.",
 
 	"inventory-plus.setting.doNotIncreaseWeightByQuantityForNoAmmunition.name": "Feature: Do Not increase weight by quantity for no ammunition item",
-	"inventory-plus.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint": "This is a homebrew rule, for non-ammunition items don't increase weight by quantity (so 5 potions = 1 item weight for example)",
+	"inventory-plus.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint": "This is a homebrew rule, for non-ammunition items don't increase weight by quantity (so 5 potions = 1 item weight for example). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.",
+
+	"inventory-plus.setting.doNotApplyWeightForEquippedArmor.name": "Feature: Do Not apply weight for equipped armor item",
+	"inventory-plus.setting.doNotApplyWeightForEquippedArmor.hint": "This is a homebrew rule, for equipped armor types (clothing, light, medium, heavy, natural), the weight is set to 0 and not applied. ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.",
 
 	"inventory-plus.setting.hideButtonDefaultCategories.name": "Hide button for manage default categories",
 	"inventory-plus.setting.hideButtonDefaultCategories.hint": "By default only GM can see this button, but if you enable this module settings the button is hide for everyone.",
