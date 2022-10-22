@@ -31,7 +31,7 @@ A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your In
 
 # Installation
 
-It's always better and easier to install modules through in in app browser. Just search for "Mount Up!"
+It's always better and easier to install modules through in in app browser. Just search for "Inventory Plus!"
 
 To install this module manually:
 1. Inside the Foundry "Configuration and Setup" screen, click "Add-on Modules"
