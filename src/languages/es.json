@@ -1,1 +1,8 @@
-{}
+{
+	"inventory-plus.setting.reset.name": "Restablecer la configuración por defecto",
+	"inventory-plus.setting.reset.label": "Restablecer la Configuración por Defecto",
+	"inventory-plus.setting.reset.hint": "Esto restablecerá todas las configuracionesde vuelta a los valores predeterminados del sistema de juego activo.",
+	"inventory-plus.setting.debug.name": "Habilitar depuración",
+	"inventory-plus.setting.debug.label": "Imprime mensajes de depuración en la consola",
+	"inventory-plus.setting.debug.hint": " . "
+}
