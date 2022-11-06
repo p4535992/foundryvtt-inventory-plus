@@ -854,21 +854,6 @@ export class InventoryPlus {
 				icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
 			}
 			*/
-			if (currentCategory.ignoreWeight) {
-				icon = icon + `<i class="fas fa-feather"></i>`;
-			} else if (currentCategory.ownWeight > 0) {
-				icon = icon + `<i class="fas fa-weight-hanging"></i>`;
-			} else if (currentCategory.maxWeight > 0) {
-				icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
-			}
-			if (currentCategory.ignoreBulk) {
-				icon = icon + `<i class="fas fa-feather-alt"></i>`;
-			} else if (currentCategory.ownBulk > 0) {
-				icon = icon + `<i class="fas fa-bold"></i>`;
-			} else if (currentCategory.maxBulk > 0) {
-				icon = icon + `<i class="fas fa-balance-scale-left"></i>`;
-			}
-
 			const weight = <number>this.getCategoryItemWeight(type);
 			let bulkWeightS = "";
 			let weightUnit = game.settings.get("dnd5e", "metricWeightUnits")
@@ -881,6 +866,23 @@ export class InventoryPlus {
 			const isBulked = isVariantEncumbranceEnabled
 				? isVariantEncumbranceEnabled && game.settings.get("variant-encumbrance-dnd5e", "enableBulkSystem")
 				: false;
+
+			if (currentCategory.ignoreWeight) {
+				icon = icon + `<i class="fas fa-feather"></i>`;
+			} else if (currentCategory.ownWeight > 0) {
+				icon = icon + `<i class="fas fa-weight-hanging"></i>`;
+			} else if (currentCategory.maxWeight > 0) {
+				icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
+			}
+			if (isBulked) {
+				if (currentCategory.ignoreBulk) {
+					icon = icon + `<i class="fas fa-feather-alt"></i>`;
+				} else if (currentCategory.ownBulk > 0) {
+					icon = icon + `<i class="fas fa-bold"></i>`;
+				} else if (currentCategory.maxBulk > 0) {
+					icon = icon + `<i class="fas fa-balance-scale-left"></i>`;
+				}
+			}
 
 			let bulkUnit = "bulk";
 			let weigthBulk = 0;
