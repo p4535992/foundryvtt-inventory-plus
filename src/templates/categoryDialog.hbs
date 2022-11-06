@@ -14,6 +14,10 @@
         <input name="ignoreWeight" type="checkbox" {{#if ignoreWeight}}checked{{/if}}>
     </dd>
     {{#if enabledBulk}}
+        <dt title="{{localize "inventory-plus.inv-plus-dialog.ignorebulkdescription"}}">{{localize "inventory-plus.inv-plus-dialog.ignorebulkprefix"}} </dt>
+        <dd title="{{localize "inventory-plus.inv-plus-dialog.ignorebulkdescription"}}">
+            <input name="ignoreBulk" type="checkbox" {{#if ignoreBulk}}checked{{/if}}>
+        </dd>
         <dt title="{{localize "inventory-plus.inv-plus-dialog.maxbulkdescription"}}">{{localize "inventory-plus.inv-plus-dialog.maxbulkprefix"}} </dt>
         <dd title="{{localize "inventory-plus.inv-plus-dialog.maxbulkprefix"}}">
             <input name="maxBulk" type="text" data-dType="Number" value="{{maxBulk}}">

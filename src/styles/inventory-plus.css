@@ -89,6 +89,21 @@
 	text-shadow: 0 0 8px darkgreen;
 }
 
+.inventory-list .category-weight .fa-bold {
+	color: #f6ff33;
+	text-shadow: 0 0 8px #f6ff33;
+}
+
+.inventory-list .category-weight .fa-balance-scale-left {
+	color: #ffe033;
+	text-shadow: 0 0 8px #ffe033;
+}
+
+.inventory-list .category-weight .fa-feather-alt {
+	color: #beff33;
+	text-shadow: 0 0 8px #beff33;
+}
+
 .inventory-list .category-weight .fa-times-circle,
 .inventory-list .category-weight .fa-bomb,
 .inventory-list .category-weight .fa-vest,

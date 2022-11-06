@@ -65,6 +65,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				},
@@ -80,6 +81,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				},
@@ -95,6 +97,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				},
@@ -110,6 +113,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				},
@@ -125,6 +129,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				},
@@ -140,6 +145,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				},
@@ -160,6 +166,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				};
@@ -178,6 +185,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				};
@@ -196,6 +204,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				};
@@ -214,6 +223,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				};
@@ -232,6 +242,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				};
@@ -250,6 +261,7 @@ export class InventoryPlus {
 					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 						return t.isInventory;
 					}),
+					ignoreBulk: false,
 					maxBulk: 0,
 					ownBulk: 0,
 				};
@@ -375,6 +387,7 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											ignoreBulk: false,
 											maxBulk: 0,
 											ownBulk: 0,
 										};
@@ -393,6 +406,7 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											ignoreBulk: false,
 											maxBulk: 0,
 											ownBulk: 0,
 										};
@@ -411,6 +425,7 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											ignoreBulk: false,
 											maxBulk: 0,
 											ownBulk: 0,
 										};
@@ -429,6 +444,7 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											ignoreBulk: false,
 											maxBulk: 0,
 											ownBulk: 0,
 										};
@@ -447,6 +463,7 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											ignoreBulk: false,
 											maxBulk: 0,
 											ownBulk: 0,
 										};
@@ -465,6 +482,7 @@ export class InventoryPlus {
 											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
 												return t.isInventory;
 											}),
+											ignoreBulk: false,
 											maxBulk: 0,
 											ownBulk: 0,
 										};
@@ -827,13 +845,28 @@ export class InventoryPlus {
 				}
 			}
 
-			// if (currentCategory.maxWeight > 0) {
-			if (currentCategory.ignoreWeight) {
+			/*
+			if (currentCategory.ignoreWeight || currentCategory.ignoreBulk) {
 				icon = icon + `<i class="fas fa-feather"></i>`;
 			} else if (currentCategory.ownWeight > 0 || currentCategory.ownBulk > 0) {
 				icon = icon + `<i class="fas fa-weight-hanging"></i>`;
 			} else if (currentCategory.maxWeight > 0 || currentCategory.maxBulk > 0) {
 				icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
+			}
+			*/
+			if (currentCategory.ignoreWeight) {
+				icon = icon + `<i class="fas fa-feather"></i>`;
+			} else if (currentCategory.ownWeight > 0) {
+				icon = icon + `<i class="fas fa-weight-hanging"></i>`;
+			} else if (currentCategory.maxWeight > 0) {
+				icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
+			}
+			if (currentCategory.ignoreBulk) {
+				icon = icon + `<i class="fas fa-feather-alt"></i>`;
+			} else if (currentCategory.ownBulk > 0) {
+				icon = icon + `<i class="fas fa-bold"></i>`;
+			} else if (currentCategory.maxBulk > 0) {
+				icon = icon + `<i class="fas fa-balance-scale-left"></i>`;
 			}
 
 			const weight = <number>this.getCategoryItemWeight(type);
@@ -966,7 +999,13 @@ export class InventoryPlus {
 				}
 			} else if (currentCategory.maxWeight > 0) {
 				if (!isBulked) {
-					if (currentCategory.ownWeight > 0) {
+					if (currentCategory.ownBulk > 0) {
+						if (bulkWeightS) {
+							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
+						} else {
+							weightValue = `(${weight}/${currentCategory.maxWeight} ${weightUnit})[${currentCategory.ownWeight} ${weightUnit}]`;
+						}
+					} else if (currentCategory.ownWeight > 0) {
 						if (bulkWeightS) {
 							weightValue = `(${weigthBulk}/${currentCategory.maxBulk} ${bulkUnit})[${currentCategory.ownBulk} ${bulkUnit}]`;
 						} else {

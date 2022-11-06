@@ -333,6 +333,7 @@ const API = {
 		ownWeight: number | undefined,
 		items: Item[] | undefined,
 		explicitTypes: InventoryPlusItemType[] | undefined,
+		ignoreBulk: boolean | undefined,
 		maxBulk: number | undefined,
 		ownBulk: number | undefined
 	): Promise<void> {
@@ -364,6 +365,7 @@ const API = {
 		if (explicitTypes) {
 			newCategory.explicitTypes = explicitTypes;
 		}
+		newCategory.ignoreBulk = ignoreBulk ?? false;
 		newCategory.maxBulk = maxBulk ?? 0;
 		newCategory.ownBulk = ownBulk ?? 0;
 		inventoryPlus.customCategorys[key] = newCategory;

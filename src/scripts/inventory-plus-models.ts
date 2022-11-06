@@ -10,6 +10,7 @@ export class Category {
 	collapsed: boolean;
 	items: Item[];
 	explicitTypes: InventoryPlusItemType[];
+	ignoreBulk: boolean;
 	maxBulk: number;
 	ownBulk: number;
 }
