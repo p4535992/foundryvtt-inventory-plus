@@ -4,5 +4,10 @@
 	"inventory-plus.setting.reset.hint": "Esto restablecerá todas las configuracionesde vuelta a los valores predeterminados del sistema de juego activo.",
 	"inventory-plus.setting.debug.name": "Habilitar depuración",
 	"inventory-plus.setting.debug.label": "Imprime mensajes de depuración en la consola",
-	"inventory-plus.setting.debug.hint": " . "
+	"inventory-plus.setting.debug.hint": " . ",
+	"inventory-plus.setting.enableItemTransfer.name": "Función: Activar la transferencia de artículos",
+	"inventory-plus.setting.enableItemTransfer.hint": "Aunque sea la función principal de este módulo, puede desactivar la transferencia de artículos. Sepa que puede desactivar temporalmente la función de transferencia pulsando la tecla alt mientras mueve el artículo.",
+	"inventory-plus.setting.enableCurrencyTransfer.name": "[Sólo con 'La Función : Activar la transferencia de artículos' activada] Activarla transferencia de moneda",
+	"inventory-plus.setting.enableCurrencyTransfer.hint": "Cuando se transfiere un objeto llamado \"Moneda\" se abrirá un diálogo para transferir dinero en lugar de transferir el artículo real.",
+	"inventory-plus.inv-plus-dialog.removedefaultcategories": "Desactiva Def. Cat."
 }
