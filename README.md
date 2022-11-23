@@ -12,7 +12,8 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/p4535992/foundryvtt-inventory-plus/total?style=for-the-badge)
 
-[![Translation status](https://weblate.foundryvtt-hub.com/widgets/inventory-plus/-/287x66-black.png)](https://weblate.foundryvtt-hub.com/engage/inventory-plus/)
+
+![Weblate translation status](https://weblate.foundryvtt-hub.com/widgets/inventory-plus/-/main/vertical-auto.svg)
 
 ### If you want to buy me a coffee [![alt-text](https://img.shields.io/badge/-Patreon-%23ff424d?style=for-the-badge)](https://www.patreon.com/p4535992)
 
