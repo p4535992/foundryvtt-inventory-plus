@@ -88,38 +88,39 @@ export const readyHooks = async (): Promise<void> => {
 		CONSTANTS.MODULE_NAME,
 		"game.dnd5e.applications.actor.ActorSheet5eCharacter.prototype._onDropItem",
 		async function (wrapped, ...args) {
-			const [event, itemDropped] = args;
+			const [event, itemCurrent] = args;
 			const actor = <Actor>this.actor;
 			const targetActor = actor;
-			const itemTypeCurrent = itemDropped?.type; // || event.type;
+			const itemTypeCurrent = itemCurrent?.type; // || event.type;
 
 			if (itemTypeCurrent !== "Item") {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemtypecurrent`));
 				return;
 			}
 			/*
-			const itemId = itemDropped?.uuid
-				? itemDropped?.uuid.includes("Item.")
-					? itemDropped?.uuid.split('.').pop()
-					: itemDropped?.uuid
-				: itemDropped?.id;
+			const itemId = itemCurrent?.uuid
+				? itemCurrent?.uuid.includes("Item.")
+					? itemCurrent?.uuid.split('.').pop()
+					: itemCurrent?.uuid
+				: itemCurrent?.id;
 			if (!itemId) {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemid`));
 				return;
 			}
-			const dragAndDropFromCompendium = itemDropped.pack ? true : false;
-			const dragAndDropFromActorSource = itemDropped.actorId ? true : false;
+			const dragAndDropFromCompendium = itemCurrent.pack ? true : false;
+			const dragAndDropFromActorSource = itemCurrent.actorId ? true : false;
 			*/
-			const dragAndDropFromCompendium = itemDropped?.uuid.includes("Compendium");
-			const itemCurrent = await retrieveItemFromData(
+			const dragAndDropFromCompendium = itemCurrent?.uuid.includes("Compendium");
+			const itemDropped = await retrieveItemFromData(
 				actor,
-				itemDropped.uuid,
-				itemDropped.id,
+				itemCurrent.uuid,
+				itemCurrent.id,
 				"",
-				itemDropped.pack,
-				itemDropped.actorId
+				itemCurrent.pack,
+				itemCurrent.actorId
 			);
-			const dragAndDropFromActorSource = itemDropped?.actorId === actor.id ? true : false;
+			// const dragAndDropFromActorSource = itemDropped?.actorId === actor.id ? true : false;
+			const dragAndDropFromActorSource = !(await _isFromSameActor(actor, itemDropped));
 			const itemId = itemCurrent.id;
 			let itemData: Item | null = null;
 			if (!itemCurrent) {
@@ -150,7 +151,23 @@ export const readyHooks = async (): Promise<void> => {
 			}
 
 			// Yea i hate my life
-			const actorId = itemDropped.actorId;
+			//@ts-ignore
+			const sourceActorId = itemDropped.actorId
+				? //@ts-ignore
+				  itemDropped.actorId
+				: //@ts-ignore
+				itemDropped.actor
+				? //@ts-ignore
+				  itemDropped.actor.id
+				: //@ts-ignore
+				item.parent && item.parent instanceof Actor
+				? //@ts-ignore
+				  item.parent.id
+				: //@ts-ignore
+				  undefined;
+
+			const sourceActor = game.actors?.get(sourceActorId);
+
 			let createdItem: Item | undefined = undefined;
 
 			// dropping item outside inventory list, but ignore if already owned item
@@ -187,7 +204,7 @@ export const readyHooks = async (): Promise<void> => {
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
+					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -217,7 +234,7 @@ export const readyHooks = async (): Promise<void> => {
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
+					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -244,7 +261,7 @@ export const readyHooks = async (): Promise<void> => {
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
+					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -274,7 +291,7 @@ export const readyHooks = async (): Promise<void> => {
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
+					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -307,7 +324,7 @@ export const readyHooks = async (): Promise<void> => {
 					dragAndDropFromActorSource
 				) {
 					//@ts-ignore
-					module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
+					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
 					return;
 				} else {
 					return this._onDropItemCreate(itemData);
@@ -317,7 +334,7 @@ export const readyHooks = async (): Promise<void> => {
 			// const headerElement = $(<HTMLElement>targetLi.parentElement?.parentElement).find(`h3:contains("${categoryName}")`);
 
 			// dropping new item
-			if (actorId !== this.object.id || itemData === undefined) {
+			if (sourceActorId !== this.object.id || itemData === undefined) {
 				if (!actor.items.get(<string>itemId)) {
 					// START WEIGHT CONTROL
 					if (API.isCategoryFulled(actor, targetType, itemData)) {
@@ -359,7 +376,7 @@ export const readyHooks = async (): Promise<void> => {
 							dragAndDropFromActorSource
 						) {
 							//@ts-ignore
-							module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
+							module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
 						} else {
 							const items: Item[] = await this._onDropItemCreate(itemData);
 							createdItem = items[0];
@@ -369,7 +386,7 @@ export const readyHooks = async (): Promise<void> => {
 			}
 
 			if (targetLi === undefined || targetLi.className === undefined) {
-				if (actorId === this.object.id) {
+				if (sourceActorId === this.object.id) {
 					// Do nothing
 					//return;
 				} else {
@@ -414,7 +431,7 @@ export const readyHooks = async (): Promise<void> => {
 								dragAndDropFromActorSource
 							) {
 								//@ts-ignore
-								module.dropActorSheetDataTransferStuff(targetActor, targetActor.sheet, itemDropped);
+								module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
 							} else {
 								const items: Item[] = await this._onDropItemCreate(itemData);
 								createdItem = items[0];
@@ -537,7 +554,8 @@ const module = {
 		// }
 		app.inventoryPlus.addInventoryFunctions(html);
 	},
-	dropActorSheetDataTransferStuff(targetActor: Actor, targetSheet: ActorSheet, actorData: any): boolean {
+	dropActorSheetDataTransferStuff(targetActor: Actor, sourceActor: Actor, item: Item): boolean {
+		const targetSheet = <any>targetActor.sheet;
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer")) {
 			return false;
 		}
@@ -550,39 +568,48 @@ const module = {
 			return false;
 		}
 
-		if (actorData.type === "Item" && actorData.actorId) {
+		// if (itemData.type === "Item" && itemData.uuid) {
+		if (item) {
 			if (!targetActor.id) {
 				warn(`target has no actorData._id? ${targetActor}`);
 				return false;
 			}
-			if (targetActor.id === actorData.actorId) {
+			//@ts-ignore
+			// const item = await Item.implementation.fromDropData(itemData);
+			if (targetActor.id === sourceActor.id) {
 				return false; // ignore dropping on self
 			}
-			let sourceSheet: ActorSheet;
-			if (actorData.tokenId !== null) {
-				//game.scenes.get("hyfUtn3VVPnVUpJe").tokens.get("OYwRVJ7crDyid19t").sheet.actor.items
-				//@ts-ignore
-				sourceSheet = <ActorSheet>game.scenes?.get(actorData.sceneId)!.tokens.get(actorData.tokenId)!.sheet;
-			} else {
-				//@ts-ignore
-				sourceSheet = <ActorSheet>game.actors?.get(actorData.actorId)!.sheet;
-			}
-			const sourceActor = game.actors?.get(actorData.actorId);
+			// let sourceSheet: ActorSheet;
+			// if (itemData.tokenId !== null) {
+			// 	//game.scenes.get("hyfUtn3VVPnVUpJe").tokens.get("OYwRVJ7crDyid19t").sheet.actor.items
+			// 	//@ts-ignore
+			// 	sourceSheet = <ActorSheet>game.scenes?.get(itemData.sceneId)!.tokens.get(itemData.tokenId)!.sheet;
+			// } else {
+			// 	//@ts-ignore
+			// 	sourceSheet = <ActorSheet>game.actors?.get(itemData.actorId)!.sheet;
+			// }
+			//@ts-ignore
+			// const sourceActor = game.actors?.get(sourceActorId);
+			//@ts-ignore
+			const sourceSheet = <ActorSheet>sourceActor?.sheet;
 			if (sourceActor) {
 				/* if both source and target have the same type then allow deleting original item. this is a safety check because some game systems may allow dropping on targets that don't actually allow the GM or player to see the inventory, making the item inaccessible. */
-				if (checkCompatible(sourceActor.type, targetActor.type, actorData)) {
-					const originalQuantity = actorData.system.quantity;
-					const targetActorId = targetActor.id;
-					const sourceActorId = actorData.actorId;
+				if (checkCompatible(sourceActor.type, targetActor.type, item)) {
+					//@ts-ignore
+					const originalQuantity = item.system.quantity;
+					// const targetActorId = targetActor.id;
+					//@ts-ignore
+					// const sourceActorId = item.parent.actor.id;
 					if (
 						game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyTransfer") &&
-						actorData.name === "Currency"
+						item.name === "Currency"
 					) {
 						showCurrencyTransferDialog(sourceSheet, targetSheet);
+						//@ts-ignore
 						return false;
 					} else if (originalQuantity >= 1) {
 						// game.settings.get(CONSTANTS.MODULE_NAME, 'enableItemTransfer') &&
-						showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, actorData.id, actorData);
+						showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, <string>item.id, item);
 						return false;
 					}
 				}
