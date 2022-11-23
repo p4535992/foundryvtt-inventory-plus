@@ -2,7 +2,7 @@
     "name": "inventory-plus",
     "title": "Inventory+",
     "description": "Enhances the default dnd5e sheets inventory to allow for reorganization",
-    "version": "0.6.13",
+    "version": "0.6.14",
     "main": "main.js",
   "scripts": {
     "publish": "gulp publish --update",

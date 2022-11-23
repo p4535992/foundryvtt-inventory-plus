@@ -6,6 +6,7 @@ import { InventoryPlus } from "./inventory-plus";
 import { Category, EncumbranceDnd5e, InventoryPlusFlags } from "./inventory-plus-models";
 import {
 	getCSSName,
+	debug,
 	i18n,
 	warn,
 	i18nFormat,
@@ -160,13 +161,15 @@ export const readyHooks = async (): Promise<void> => {
 				? //@ts-ignore
 				  itemDropped.actor.id
 				: //@ts-ignore
-				item.parent && item.parent instanceof Actor
+				itemDropped.parent && itemDropped.parent instanceof Actor
 				? //@ts-ignore
-				  item.parent.id
+				  itemDropped.parent.id
 				: //@ts-ignore
 				  undefined;
 
-			const sourceActor = game.actors?.get(sourceActorId);
+			const sourceActor = sourceActorId 
+				? game.actors?.get(sourceActorId)
+				: undefined;
 
 			let createdItem: Item | undefined = undefined;
 
@@ -187,21 +190,25 @@ export const readyHooks = async (): Promise<void> => {
 			if (!targetType) {
 				// No type founded use standard system
 
-				if (!this.actor.isOwner) return false;
+				if (!this.actor.isOwner) {
+					return false;
+				}
 				//@ts-ignore
 				const item = <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
-
+				if (await _isFromSameActor(actor, itemDropped)) {
+					return this._onSortItem(event, itemData);
+				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
 					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
-					dragAndDropFromActorSource
+					dragAndDropFromActorSource &&
+					sourceActor
 				) {
 					//@ts-ignore
 					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
@@ -231,7 +238,8 @@ export const readyHooks = async (): Promise<void> => {
 					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
-					dragAndDropFromActorSource
+					dragAndDropFromActorSource &&
+					sourceActor
 				) {
 					//@ts-ignore
 					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
@@ -258,7 +266,8 @@ export const readyHooks = async (): Promise<void> => {
 					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
-					dragAndDropFromActorSource
+					dragAndDropFromActorSource &&
+					sourceActor
 				) {
 					//@ts-ignore
 					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
@@ -288,7 +297,8 @@ export const readyHooks = async (): Promise<void> => {
 					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
-					dragAndDropFromActorSource
+					dragAndDropFromActorSource &&
+					sourceActor
 				) {
 					//@ts-ignore
 					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
@@ -321,7 +331,8 @@ export const readyHooks = async (): Promise<void> => {
 					!(await _isFromSameActor(actor, itemDropped)) &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
-					dragAndDropFromActorSource
+					dragAndDropFromActorSource &&
+					sourceActor
 				) {
 					//@ts-ignore
 					module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
@@ -373,7 +384,8 @@ export const readyHooks = async (): Promise<void> => {
 							!(await _isFromSameActor(actor, itemDropped)) &&
 							!isAlt() &&
 							!dragAndDropFromCompendium &&
-							dragAndDropFromActorSource
+							dragAndDropFromActorSource &&
+							sourceActor
 						) {
 							//@ts-ignore
 							module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
@@ -428,7 +440,8 @@ export const readyHooks = async (): Promise<void> => {
 								!(await _isFromSameActor(actor, itemDropped)) &&
 								!isAlt() &&
 								!dragAndDropFromCompendium &&
-								dragAndDropFromActorSource
+								dragAndDropFromActorSource &&
+								sourceActor
 							) {
 								//@ts-ignore
 								module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
@@ -624,6 +637,15 @@ const module = {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableInventorySorter")) {
 			return false;
 		}
+		const user = game.user;
+		if (!user?.character) {
+			debug(`Can't reorder you need to set a actor to the game user`);
+			return false;
+		}
+		if (user.character.id !== (<Actor>item.parent).id) {
+			debug(`Can't reorder you can order ONLY the actor connected to the game user`);
+			return false;
+		}
 		if (changes.sort !== undefined) {
 			if (!options.inventorySorterUpdate) {
 				const itemSorts = getItemSorts(<Actor>item.parent);
@@ -642,36 +664,75 @@ const module = {
 
 	createItemInventorySorter(item: Item, options: any, userId: string, ...args) {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableInventorySorter")) {
-			return;
+			return false;
+		}
+		const user = game.users?.get(userId);
+		if (!user?.character) {
+			debug(`Can't reorder you need to set a actor to the game user`);
+			return false;
+		}
+		if (user.character.id !== (<Actor>item.parent).id) {
+			debug(`Can't reorder you can order ONLY the actor connected to the game user`);
+			return false;
 		}
 		if (userId === game.userId) {
 			delayedSort(<Actor>item.parent);
 		}
+		return true;
 	},
 
-	deleteItemInventorySorter(item: Item, options: any, userId: string, ...args) {
+	deleteItemInventorySorter(item: Item, options: any, userId: string, ...args): boolean {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableInventorySorter")) {
-			return;
+			return false;
+		}
+		const user = game.users?.get(userId);
+		if (!user?.character) {
+			debug(`Can't reorder you need to set a actor to the game user`);
+			return false;
+		}
+		if (user.character.id !== (<Actor>item.parent).id) {
+			debug(`Can't reorder you can order ONLY the actor connected to the game user`);
+			return false;
 		}
 		if (userId === game.userId) {
 			delayedSort(<Actor>item.parent);
 		}
+		return true;
 	},
 
 	updateItemInventorySorter(item: Item, changes, options: any, userId: string) {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableInventorySorter")) {
-			return;
+			return false;
+		}
+		const user = game.users?.get(userId);
+		if (!user?.character) {
+			debug(`Can't reorder you need to set a actor to the game user`);
+			return false;
+		}
+		if (user.character.id !== (<Actor>item.parent).id) {
+			debug(`Can't reorder you can order ONLY the actor connected to the game user`);
+			return false;
 		}
 		if (userId === game.userId) {
 			if (!options.inventorySorterUpdate) {
 				delayedSort(<Actor>item.parent);
 			}
 		}
+		return true;
 	},
 
 	renderActorSheetEnableInventorySorter(actorSheet: ActorSheet, html, data) {
 		if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableInventorySorter")) {
-			return;
+			return false;
+		}
+		const user = game.user;
+		if (!user?.character) {
+			debug(`Can't reorder you need to set a actor to the game user`);
+			return false;
+		}
+		if (user.character.id !== actorSheet.actor.id) {
+			debug(`Can't reorder you can order ONLY the actor connected to the game user`);
+			return false;
 		}
 		if (actorSheet?.isEditable) {
 			const actor = actorSheet?.actor;
@@ -679,5 +740,6 @@ const module = {
 				delayedSort(actor);
 			}
 		}
+		return true;
 	},
 };
