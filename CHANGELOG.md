@@ -1,3 +1,7 @@
+### 0.6.15
+
+- Bug fix reorder items on inventory
+
 ### 0.6.14
 
 - Bug fix: https://github.com/p4535992/foundryvtt-inventory-plus/issues/20

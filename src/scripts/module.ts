@@ -112,7 +112,7 @@ export const readyHooks = async (): Promise<void> => {
 			const dragAndDropFromActorSource = itemCurrent.actorId ? true : false;
 			*/
 			const dragAndDropFromCompendium = itemCurrent?.uuid.includes("Compendium");
-			const itemDropped = await retrieveItemFromData(
+			const itemDropped:Item = <Item>await retrieveItemFromData(
 				actor,
 				itemCurrent.uuid,
 				itemCurrent.id,
@@ -122,10 +122,11 @@ export const readyHooks = async (): Promise<void> => {
 			);
 			// const dragAndDropFromActorSource = itemDropped?.actorId === actor.id ? true : false;
 			const dragAndDropFromActorSource = !(await _isFromSameActor(actor, itemDropped));
-			const itemId = itemCurrent.id;
+			const itemId = itemDropped.id;
 			let itemData: Item | null = null;
-			if (!itemCurrent) {
+			if (!itemDropped) {
 				// Start Patch Party Inventory
+				//@ts-ignore
 				if (itemDropped && itemDropped.type && itemDropped.id) {
 					itemData = <Item>itemDropped;
 					//@ts-ignore
@@ -144,7 +145,7 @@ export const readyHooks = async (): Promise<void> => {
 					return;
 				}
 			} else {
-				itemData = <Item>itemCurrent;
+				itemData = <Item>itemDropped;
 			}
 			if (!itemData) {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.itemdata`));
@@ -167,9 +168,7 @@ export const readyHooks = async (): Promise<void> => {
 				: //@ts-ignore
 				  undefined;
 
-			const sourceActor = sourceActorId 
-				? game.actors?.get(sourceActorId)
-				: undefined;
+			const sourceActor = sourceActorId ? game.actors?.get(sourceActorId) : undefined;
 
 			let createdItem: Item | undefined = undefined;
 
