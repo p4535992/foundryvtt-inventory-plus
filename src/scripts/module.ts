@@ -193,7 +193,11 @@ export const readyHooks = async (): Promise<void> => {
 					return false;
 				}
 				//@ts-ignore
-				const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				const item = itemDropped instanceof Item
+					? itemDropped
+					//@ts-ignore
+					: <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
@@ -223,14 +227,21 @@ export const readyHooks = async (): Promise<void> => {
 				targetType === "class" ||
 				targetType === "subclass"
 			) {
-				if (!this.actor.isOwner) return false;
+				if (!this.actor.isOwner) {
+					return false;
+				}
 				//@ts-ignore
-				const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				const item = itemDropped instanceof Item
+					? itemDropped
+					//@ts-ignore
+					: <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
-
+				if (await _isFromSameActor(actor, itemDropped)) {
+					return this._onSortItem(event, itemData);
+				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
@@ -251,14 +262,20 @@ export const readyHooks = async (): Promise<void> => {
 			if (!targetLi) {
 				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
 
-				if (!this.actor.isOwner) return false;
-				//@ts-ignore
-				const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				if (!this.actor.isOwner) {
+					return false;
+				}
+				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				const item = itemDropped instanceof Item
+					? itemDropped
+					//@ts-ignore
+					: <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
-
+				if (await _isFromSameActor(actor, itemDropped)) {
+					return this._onSortItem(event, itemData);
+				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
@@ -282,14 +299,21 @@ export const readyHooks = async (): Promise<void> => {
 					true
 				);
 
-				if (!this.actor.isOwner) return false;
+				if (!this.actor.isOwner) {
+					return false;
+				}
 				//@ts-ignore
-				const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				const item = itemDropped instanceof Item
+					? itemDropped
+					//@ts-ignore
+					: <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
-
+				if (await _isFromSameActor(actor, itemDropped)) {
+					return this._onSortItem(event, itemData);
+				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
@@ -316,14 +340,21 @@ export const readyHooks = async (): Promise<void> => {
 
 			if (!categoryRef.label) {
 				error(`Can't find a label on category with the type '${targetType}'`, true);
-				if (!this.actor.isOwner) return false;
+				if (!this.actor.isOwner) {
+					return false;
+				}
 				//@ts-ignore
-				const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
+				const item = itemDropped instanceof Item
+					? itemDropped
+					//@ts-ignore
+					: <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(actor, itemDropped)) return this._onSortItem(event, itemData);
-
+				if (await _isFromSameActor(actor, itemDropped)) {
+					return this._onSortItem(event, itemData);
+				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
@@ -369,7 +400,9 @@ export const readyHooks = async (): Promise<void> => {
 						return;
 					}
 					// END itemDataType
-					if (!this.actor.isOwner) return false;
+					if (!this.actor.isOwner) {
+						return false;
+					}
 					// const item = <Item>await Item.implementation.fromDropData(data);
 					// const itemData = item.toObject();
 
@@ -425,7 +458,9 @@ export const readyHooks = async (): Promise<void> => {
 							return;
 						}
 						// END itemDataType
-						if (!this.actor.isOwner) return false;
+						if (!this.actor.isOwner) {
+							return false;
+						}
 						// const item = <Item>await Item.implementation.fromDropData(data);
 						// const itemData = item.toObject();
 

@@ -980,9 +980,16 @@ function _calcItemWeight(item: Item) {
  * @returns {Promise<boolean>}
  * @private
  */
-export async function _isFromSameActor(actor:Actor, data:Item) {
-	//@ts-ignore
-	const item = await Item.implementation.fromDropData(data);
-	return actor.id === item.parent?.uuid || actor.uuid === item.parent?.uuid;
-	// return this.actor.id === item.parent?.uuid
+export async function _isFromSameActor(actor:Actor, item:Item) {
+	if(item instanceof Item){
+		//@ts-ignore
+		const actorRetrieve = item.actor ? item.actor : itemRetrieve.parent;
+		return actor.id === actorRetrieve?.id || actor.uuid === actorRetrieve?.uuid
+	} else {
+		//@ts-ignore
+		const itemRetrieve = await Item.implementation.fromDropData(item);
+		//@ts-ignore
+		const actorRetrieve = item.actor ? item.actor : itemRetrieve.parent;
+		return actor.id === actorRetrieve?.uuid || actor.uuid === actorRetrieve?.uuid;
+	}
 }
