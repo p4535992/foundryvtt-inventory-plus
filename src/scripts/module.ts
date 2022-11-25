@@ -112,13 +112,15 @@ export const readyHooks = async (): Promise<void> => {
 			const dragAndDropFromActorSource = itemCurrent.actorId ? true : false;
 			*/
 			const dragAndDropFromCompendium = itemCurrent?.uuid.includes("Compendium");
-			const itemDropped:Item = <Item>await retrieveItemFromData(
-				actor,
-				itemCurrent.uuid,
-				itemCurrent.id,
-				"",
-				itemCurrent.pack,
-				itemCurrent.actorId
+			const itemDropped: Item = <Item>(
+				await retrieveItemFromData(
+					actor,
+					itemCurrent.uuid,
+					itemCurrent.id,
+					"",
+					itemCurrent.pack,
+					itemCurrent.actorId
+				)
 			);
 			// const dragAndDropFromActorSource = itemDropped?.actorId === actor.id ? true : false;
 			const dragAndDropFromActorSource = !(await _isFromSameActor(actor, itemDropped));
@@ -194,10 +196,11 @@ export const readyHooks = async (): Promise<void> => {
 				}
 				//@ts-ignore
 				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
-				const item = itemDropped instanceof Item
-					? itemDropped
-					//@ts-ignore
-					: <Item>await Item.implementation.fromDropData(itemDropped);
+				const item =
+					itemDropped instanceof Item
+						? itemDropped
+						: //@ts-ignore
+						  <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
@@ -232,10 +235,11 @@ export const readyHooks = async (): Promise<void> => {
 				}
 				//@ts-ignore
 				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
-				const item = itemDropped instanceof Item
-					? itemDropped
-					//@ts-ignore
-					: <Item>await Item.implementation.fromDropData(itemDropped);
+				const item =
+					itemDropped instanceof Item
+						? itemDropped
+						: //@ts-ignore
+						  <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
@@ -266,10 +270,11 @@ export const readyHooks = async (): Promise<void> => {
 					return false;
 				}
 				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
-				const item = itemDropped instanceof Item
-					? itemDropped
-					//@ts-ignore
-					: <Item>await Item.implementation.fromDropData(itemDropped);
+				const item =
+					itemDropped instanceof Item
+						? itemDropped
+						: //@ts-ignore
+						  <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
@@ -304,10 +309,11 @@ export const readyHooks = async (): Promise<void> => {
 				}
 				//@ts-ignore
 				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
-				const item = itemDropped instanceof Item
-					? itemDropped
-					//@ts-ignore
-					: <Item>await Item.implementation.fromDropData(itemDropped);
+				const item =
+					itemDropped instanceof Item
+						? itemDropped
+						: //@ts-ignore
+						  <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
@@ -345,10 +351,11 @@ export const readyHooks = async (): Promise<void> => {
 				}
 				//@ts-ignore
 				// const item = <Item>await Item.implementation.fromDropData(itemDropped);
-				const item = itemDropped instanceof Item
-					? itemDropped
-					//@ts-ignore
-					: <Item>await Item.implementation.fromDropData(itemDropped);
+				const item =
+					itemDropped instanceof Item
+						? itemDropped
+						: //@ts-ignore
+						  <Item>await Item.implementation.fromDropData(itemDropped);
 				const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor

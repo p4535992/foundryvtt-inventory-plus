@@ -1,4 +1,4 @@
-### 0.6.15-16
+### 0.6.15-16-17
 
 - Bug fix reorder items on inventory
 
