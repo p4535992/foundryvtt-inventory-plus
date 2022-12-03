@@ -150,9 +150,7 @@ export const readyHooks = async (): Promise<void> => {
 						itemCurrent.actorId
 					)
 				);
-				// const dragAndDropFromActorSource = itemDropped?.actorId === actor.id ? true : false;
-				// const dragAndDropFromActorSource = !(await _isFromSameActor(actor, itemDropped));
-				// const itemId = itemDropped.id;
+
 				if (!itemDropped) {
 					// Start Patch Party Inventory
 					//@ts-ignore
@@ -209,7 +207,7 @@ export const readyHooks = async (): Promise<void> => {
 
 				itemDataToCheck = itemToCheck.toObject();
 			}
-
+			const isFromSameActor = await _isFromSameActor(targetActor, itemToCheck);
 			let createdItem: Item | undefined = undefined;
 			// dropping item outside inventory list, but ignore if already owned item
 			const targetLi = <HTMLLIElement>$(event.target).parents("li")[0];
@@ -233,13 +231,13 @@ export const readyHooks = async (): Promise<void> => {
 				}
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(targetActor, itemDataToCheck)) {
+				if (isFromSameActor) {
 					return this._onSortItem(event, itemDataToCheck);
 				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await _isFromSameActor(targetActor, itemDataToCheck)) &&
+					!isFromSameActor &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					// dragAndDropFromActorSource &&
@@ -272,13 +270,13 @@ export const readyHooks = async (): Promise<void> => {
 				// const itemData = item.toObject();
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(actor, itemToCheck)) {
+				if (isFromSameActor) {
 					return this._onSortItem(event, itemDataToCheck);
 				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await _isFromSameActor(targetActor, itemToCheck)) &&
+					!isFromSameActor &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					// dragAndDropFromActorSource &&
@@ -293,20 +291,20 @@ export const readyHooks = async (): Promise<void> => {
 			}
 
 			if (!targetLi) {
-				warn(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`), true);
+				debug(i18n(`${CONSTANTS.MODULE_NAME}.dialogs.warn.notargethtml`));
 
 				if (!this.actor.isOwner) {
 					return false;
 				}
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(targetActor, itemToCheck)) {
+				if (isFromSameActor) {
 					return this._onSortItem(event, itemDataToCheck);
 				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await _isFromSameActor(targetActor, itemToCheck)) &&
+					!isFromSameActor &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					// dragAndDropFromActorSource &&
@@ -331,13 +329,13 @@ export const readyHooks = async (): Promise<void> => {
 				}
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(targetActor, itemToCheck)) {
+				if (isFromSameActor) {
 					return this._onSortItem(event, itemDataToCheck);
 				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await _isFromSameActor(targetActor, itemToCheck)) &&
+					!isFromSameActor &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					// dragAndDropFromActorSource &&
@@ -365,13 +363,13 @@ export const readyHooks = async (): Promise<void> => {
 				}
 
 				// Handle item sorting within the same Actor
-				if (await _isFromSameActor(targetActor, itemToCheck)) {
+				if (isFromSameActor) {
 					return this._onSortItem(event, itemDataToCheck);
 				}
 				// Create the owned item
 				if (
 					game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-					!(await _isFromSameActor(targetActor, itemToCheck)) &&
+					!isFromSameActor &&
 					!isAlt() &&
 					!dragAndDropFromCompendium &&
 					// dragAndDropFromActorSource &&
@@ -420,13 +418,13 @@ export const readyHooks = async (): Promise<void> => {
 					// const itemData = item.toObject();
 
 					// Handle item sorting within the same Actor
-					if (await _isFromSameActor(targetActor, itemToCheck)) {
+					if (isFromSameActor) {
 						// return this._onSortItem(event, itemData);
 					} else {
 						// Create the owned item
 						if (
 							game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-							!(await _isFromSameActor(targetActor, itemToCheck)) &&
+							!isFromSameActor &&
 							!isAlt() &&
 							!dragAndDropFromCompendium &&
 							// dragAndDropFromActorSource &&
@@ -478,13 +476,13 @@ export const readyHooks = async (): Promise<void> => {
 						// const itemData = item.toObject();
 
 						// Handle item sorting within the same Actor
-						if (await _isFromSameActor(targetActor, itemToCheck)) {
+						if (isFromSameActor) {
 							// return this._onSortItem(event, itemData);
 						} else {
 							// Create the owned item
 							if (
 								game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-								!(await _isFromSameActor(targetActor, itemToCheck)) &&
+								!isFromSameActor &&
 								!isAlt() &&
 								!dragAndDropFromCompendium &&
 								// dragAndDropFromActorSource &&
