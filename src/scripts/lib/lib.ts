@@ -933,7 +933,7 @@ function calcItemWeight(
 	// [Optional] add Currency Weight (for non-transformed actors)
 	if (
 		!ignoreCurrency &&
-		game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyWeight") &&
+		// game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyWeight") &&
 		game.settings.get("dnd5e", "currencyWeight") &&
 		//@ts-ignore
 		item.system.currency
@@ -944,11 +944,11 @@ function calcItemWeight(
 			Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0)
 		);
 
-		const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
-			? game.settings.get(CONSTANTS.MODULE_NAME, "fakeMetricSystem")
-				? <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeight")
-				: <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeightMetric")
-			: <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeight");
+		const currencyPerWeight = <number>game.settings.get("dnd5e", "metricWeightUnits") ?? 1;
+		// ? game.settings.get(CONSTANTS.MODULE_NAME, "fakeMetricSystem")
+		// 	? <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeight")
+		// 	: <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeightMetric")
+		// : <number>game.settings.get(CONSTANTS.MODULE_NAME, "currencyWeight");
 
 		weight = Math.round(weight + numCoins / currencyPerWeight);
 	} else {
@@ -980,7 +980,11 @@ function _calcItemWeight(item: Item) {
  * @returns {Promise<boolean>}
  * @private
  */
-export async function _isFromSameActor(actor: Actor, item: Item) {
+export async function _isFromSameActor(actor: Actor, item: Item | null) {
+	if (!item) {
+		debug(`The item is itemData not a item object is ignored`);
+		return false;
+	}
 	if (item instanceof Item) {
 		//@ts-ignore
 		const actorRetrieve = item.actor ? item.actor : item.parent;
