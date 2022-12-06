@@ -67,11 +67,23 @@
 			"lang": "es",
 			"name": "Español",
 			"path": "languages/es.json"
+		},
+		{
+			"lang": "de",
+			"name": "Deutsch",
+			"path": "languages/de.json"
 		}
 	],
-	"scripts": ["scripts/lib/jquery.sumoselect.min.js"],
-	"esmodules": ["main.js"],
-	"styles": ["styles/inventory-plus.css", "styles/sumoselect.css"],
+	"scripts": [
+		"scripts/lib/jquery.sumoselect.min.js"
+	],
+	"esmodules": [
+		"main.js"
+	],
+	"styles": [
+		"styles/inventory-plus.css",
+		"styles/sumoselect.css"
+	],
 	"packs": [],
 	"compatibility": {
 		"minimum": 10,
