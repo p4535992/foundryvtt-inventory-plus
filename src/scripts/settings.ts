@@ -10,6 +10,24 @@ export const registerSettings = function (): void {
 		restricted: true,
 	});
 
+	game.settings.register(CONSTANTS.MODULE_NAME, "enableForNpc", {
+		name: `${CONSTANTS.MODULE_NAME}.setting.enableForNpc.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.setting.enableForNpc.hint`,
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
+	game.settings.register(CONSTANTS.MODULE_NAME, "enableForVehicle", {
+		name: `${CONSTANTS.MODULE_NAME}.setting.enableForVehicle.name`,
+		hint: `${CONSTANTS.MODULE_NAME}.setting.enableForVehicle.hint`,
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean,
+	});
+
 	game.settings.register(CONSTANTS.MODULE_NAME, "hideButtonDefaultCategories", {
 		name: `${CONSTANTS.MODULE_NAME}.setting.hideButtonDefaultCategories.name`,
 		hint: `${CONSTANTS.MODULE_NAME}.setting.hideButtonDefaultCategories.hint`,

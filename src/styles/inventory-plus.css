@@ -137,7 +137,7 @@
 	width: calc(60% - 10px);
 }
 
-/* Trabsfer stuff */
+/* Transfer stuff */
 
 .dialog .inventory-plus input:invalid {
 	background-color: red;
