@@ -1,18 +1,33 @@
-import type { ItemData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs";
-
 export class Category {
 	label: string;
-	dataset: { type: string };
+	items: Item[];
+	dataset: {
+		type: string;
+		"weapon-type"?: string;
+		"armor.type"?: string;
+		"activation.type"?: string;
+	};
+	/* non default dnd5e */
 	sortFlag: number;
 	ignoreWeight: boolean;
 	maxWeight: number;
 	ownWeight: number;
 	collapsed: boolean;
-	items: Item[];
 	explicitTypes: InventoryPlusItemType[];
 	ignoreBulk: boolean;
 	maxBulk: number;
 	ownBulk: number;
+	/* only NPC and Vehicle */
+	hasActions?: boolean;
+	crewable?: boolean;
+	columns?: [
+		{
+			label: string;
+			css: string;
+			property: string;
+			editable?: string;
+		}
+	];
 }
 
 export enum InventoryPlusFlags {
@@ -152,3 +167,31 @@ export class InventoryPlusItemType {
 	isSelected: boolean;
 	isInventory: boolean;
 }
+
+/**
+ * taken from dnd5e system
+ */
+export const equipmentColumns = [
+	{
+		label: game.i18n.localize("DND5E.Quantity"),
+		css: "item-qty",
+		property: "system.quantity",
+		editable: "Number",
+	},
+	{
+		label: game.i18n.localize("DND5E.AC"),
+		css: "item-ac",
+		property: "system.armor.value",
+	},
+	{
+		label: game.i18n.localize("DND5E.HP"),
+		css: "item-hp",
+		property: "system.hp.value",
+		editable: "Number",
+	},
+	{
+		label: game.i18n.localize("DND5E.Threshold"),
+		css: "item-threshold",
+		property: "threshold",
+	},
+];

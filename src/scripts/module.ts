@@ -90,8 +90,8 @@ export const readyHooks = async (): Promise<void> => {
 
 				// let app = this;
 				const actor = <Actor>this.actor;
-				const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
-				sheetData.inventory = newInventory;
+				const newInventory = InventoryPlus.processInventory(this, actor, sheetData.features);
+				sheetData.features = newInventory;
 				const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 				if (encumbrance5e) {
 					sheetData.system.attributes.encumbrance = encumbrance5e;
@@ -120,8 +120,8 @@ export const readyHooks = async (): Promise<void> => {
 
 				// let app = this;
 				const actor = <Actor>this.actor;
-				const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
-				sheetData.inventory = newInventory;
+				const newInventory = InventoryPlus.processInventory(this, actor, sheetData.features);
+				sheetData.features = newInventory;
 				const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 				if (encumbrance5e) {
 					sheetData.system.attributes.encumbrance = encumbrance5e;

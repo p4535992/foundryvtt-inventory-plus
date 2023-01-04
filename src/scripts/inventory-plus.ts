@@ -25,6 +25,11 @@ import {
 	is_real_number,
 	warn,
 } from "./lib/lib";
+import {
+	initCategoriesForCharacter,
+	initCategoriesForNPC,
+	initCategoriesForVehicle,
+} from "./lib/prepare-data-inventory-plus";
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
 export class InventoryPlus {
@@ -49,254 +54,20 @@ export class InventoryPlus {
 		let flagCategorys = <Record<string, Category>>(
 			this.actor.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS)
 		);
-		const flagDisableDefaultCategories = false;
-		if (flagCategorys === undefined && !flagDisableDefaultCategories) {
-			debug(`flagCategory=false && flagDisableDefaultCategories=false`);
-			flagCategorys = {
-				weapon: <Category>{
-					label: "DND5E.ItemTypeWeaponPl",
-					dataset: { type: "weapon" },
-					sortFlag: 1000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				},
-				equipment: <Category>{
-					label: "DND5E.ItemTypeEquipmentPl",
-					dataset: { type: "equipment" },
-					sortFlag: 2000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				},
-				consumable: <Category>{
-					label: "DND5E.ItemTypeConsumablePl",
-					dataset: { type: "consumable" },
-					sortFlag: 3000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				},
-				tool: <Category>{
-					label: "DND5E.ItemTypeToolPl",
-					dataset: { type: "tool" },
-					sortFlag: 4000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				},
-				backpack: <Category>{
-					label: "DND5E.ItemTypeContainerPl",
-					dataset: { type: "backpack" },
-					sortFlag: 5000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				},
-				loot: <Category>{
-					label: "DND5E.ItemTypeLootPl",
-					dataset: { type: "loot" },
-					sortFlag: 6000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				},
-			};
-		} else if (flagCategorys && !flagDisableDefaultCategories) {
-			debug(`flagCategory=true && flagDisableDefaultCategories=false`);
-			const categoryWeapon = flagCategorys["weapon"];
-			if (!categoryWeapon) {
-				flagCategorys["weapon"] = <Category>{
-					label: "DND5E.ItemTypeWeaponPl",
-					dataset: { type: "weapon" },
-					sortFlag: 1000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				};
-			}
-			const categoryEquipment = flagCategorys["equipment"];
-			if (!categoryEquipment) {
-				flagCategorys["equipment"] = <Category>{
-					label: "DND5E.ItemTypeEquipmentPl",
-					dataset: { type: "equipment" },
-					sortFlag: 2000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				};
-			}
-			const categoryConsumable = flagCategorys["consumable"];
-			if (!categoryConsumable) {
-				flagCategorys["consumable"] = <Category>{
-					label: "DND5E.ItemTypeConsumablePl",
-					dataset: { type: "consumable" },
-					sortFlag: 3000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				};
-			}
-			const categoryTool = flagCategorys["tool"];
-			if (!categoryTool) {
-				flagCategorys["tool"] = <Category>{
-					label: "DND5E.ItemTypeToolPl",
-					dataset: { type: "tool" },
-					sortFlag: 4000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				};
-			}
-			const categoryBackpack = flagCategorys["backpack"];
-			if (!categoryBackpack) {
-				flagCategorys["backpack"] = <Category>{
-					label: "DND5E.ItemTypeContainerPl",
-					dataset: { type: "backpack" },
-					sortFlag: 5000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				};
-			}
-			const categoryLoot = flagCategorys["loot"];
-			if (!categoryLoot) {
-				flagCategorys["loot"] = <Category>{
-					label: "DND5E.ItemTypeLootPl",
-					dataset: { type: "loot" },
-					sortFlag: 6000,
-					ignoreWeight: false,
-					maxWeight: 0,
-					ownWeight: 0,
-					collapsed: false,
-					items: [],
-					explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-						return t.isInventory;
-					}),
-					ignoreBulk: false,
-					maxBulk: 0,
-					ownBulk: 0,
-				};
-			}
-		} else if (flagCategorys && flagDisableDefaultCategories) {
-			debug(`flagCategory=true && flagDisableDefaultCategories=true`);
-			for (const key in flagCategorys) {
-				const category = <Category>flagCategorys[key];
-				if (category && !category?.label) {
-					continue;
-				}
-				if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeWeaponPl"))) {
-					delete flagCategorys[key];
-				}
-				if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeEquipmentPl"))) {
-					delete flagCategorys[key];
-				}
-				if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeConsumablePl"))) {
-					delete flagCategorys[key];
-				}
-				if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeToolPl"))) {
-					delete flagCategorys[key];
-				}
-				if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeContainerPl"))) {
-					delete flagCategorys[key];
-				}
-				if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeLootPl"))) {
-					delete flagCategorys[key];
-				}
-			}
+		const actorType = this.actor.type;
+		if (actorType === "character") {
+			flagCategorys = initCategoriesForCharacter(flagCategorys);
+		} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
+			flagCategorys = initCategoriesForNPC(flagCategorys);
+		} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
+			flagCategorys = initCategoriesForVehicle(flagCategorys);
 		} else {
-			debug(`flagCategory=false && flagDisableDefaultCategories=true`);
-			if (!flagCategorys) {
-				flagCategorys = {};
-			}
+			// Cannot happened
+			warn(
+				i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
+				true
+			);
+			return;
 		}
 
 		// Little trick for filter the undefined values
@@ -312,7 +83,27 @@ export class InventoryPlus {
 		this.applySortKey();
 	}
 
-	addInventoryFunctions(html: JQuery<HTMLElement>) {
+	addInventoryFunctions(html: JQuery<HTMLElement>, actorType: string) {
+		if (!actorType || !html) {
+			// Cannot happened
+			return;
+		}
+		let targetCssInventoryPlus = "";
+		if (actorType === "character") {
+			targetCssInventoryPlus = "inventory";
+		} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
+			targetCssInventoryPlus = "features";
+		} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
+			targetCssInventoryPlus = "features";
+		} else {
+			// Cannot happened
+			warn(
+				i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
+				false
+			);
+			return;
+		}
+
 		/*
 		 *  add remove default categories
 		 */
@@ -500,7 +291,7 @@ export class InventoryPlus {
 				});
 				d.render(true);
 			});
-			html.find(".inventory .filter-list").prepend(removeDefaultCategoriesBtn);
+			html.find(`.${targetCssInventoryPlus} .filter-list`).prepend(removeDefaultCategoriesBtn);
 		}
 
 		/*
@@ -550,12 +341,12 @@ export class InventoryPlus {
 			});
 			d.render(true);
 		});
-		html.find(".inventory .filter-list").prepend(addCategoryBtn);
+		html.find(`.${targetCssInventoryPlus} .filter-list`).prepend(addCategoryBtn);
 
 		/*
 		 *  add removal function
 		 */
-		// const createBtns: JQuery<HTMLElement> = html.find('.inventory .item-create');
+		// const createBtns: JQuery<HTMLElement> = html.find(`.${targetCssInventoryPlus} .item-create`);
 		// for (const createBtn of createBtns) {
 		//   const type = <string>createBtn.dataset.type;
 		//   // Filter for only invenotry items
@@ -572,7 +363,7 @@ export class InventoryPlus {
 		// }
 		// }
 
-		html.find(".inventory a.item-create").each((i, el) => {
+		html.find(`.${targetCssInventoryPlus} a.item-create`).each((i, el) => {
 			const type = <string>el.dataset.type;
 			$(el).data("type", type);
 			$(el).attr("data-type", type);
@@ -658,9 +449,9 @@ export class InventoryPlus {
 			});
 		});
 
-		html.find(".inventory a.item-create").css("display", "none");
+		html.find(`.${targetCssInventoryPlus} a.item-create`).css("display", "none");
 
-		html.find(".inventory a.quick-insert-link").each((i, el) => {
+		html.find(`.${targetCssInventoryPlus} a.quick-insert-link`).each((i, el) => {
 			let catType = <string>el.attributes["data-type"];
 			if (!catType) {
 				catType = <string>$(el).parent().find(".remove-category")[0]?.dataset.type;
@@ -673,7 +464,7 @@ export class InventoryPlus {
 		 *  add extra header functions
 		 */
 
-		const targetCss = `.inventory .${getCSSName("sub-header")}`;
+		const targetCss = `.${targetCssInventoryPlus} .${getCSSName("sub-header")}`;
 		const headers = html.find(targetCss);
 		for (const headerTmp of headers) {
 			const header = <JQuery<HTMLElement>>$(headerTmp);
