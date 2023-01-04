@@ -127,7 +127,6 @@ The `InventoryPlusItemType` object is represented like this:
 {
   id: string;
   name: string;
-  namePl: string;
   img: string;
   isSelected: boolean;
   isInventory: boolean;
@@ -137,14 +136,36 @@ The `InventoryPlusItemType` object is represented like this:
 The `Category` object is represented like this:
 ```
 {
-  label: string;
-  dataset: { type: string };
-  sortFlag: number;
-  ignoreWeight: boolean;
-  maxWeight: number;
-  ownWeight: number;
-  collapsed: boolean;
-  items: ItemData[];
+	label: string;
+	items: Item[];
+	dataset: {
+		type: string;
+		/* only NPC and Vehicle */
+		"weapon-type"?: string;
+		"armor.type"?: string;
+		"activation.type"?: string;
+	};
+	/* only NPC and Vehicle */
+	hasActions?: boolean;
+	crewable?: boolean;
+	columns?: [
+		{
+			label: string;
+			css: string;
+			property: string;
+			editable?: string;
+		}
+	];
+	/* non default dnd5e */
+	sortFlag: number;
+	ignoreWeight: boolean;
+	maxWeight: number;
+	ownWeight: number;
+	collapsed: boolean;
+	explicitTypes: InventoryPlusItemType[];
+	ignoreBulk: boolean;
+	maxBulk: number;
+	ownBulk: number;
 }
 ```
 

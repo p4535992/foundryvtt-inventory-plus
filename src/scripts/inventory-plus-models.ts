@@ -3,20 +3,11 @@ export class Category {
 	items: Item[];
 	dataset: {
 		type: string;
+		/* only NPC and Vehicle */
 		"weapon-type"?: string;
 		"armor.type"?: string;
 		"activation.type"?: string;
 	};
-	/* non default dnd5e */
-	sortFlag: number;
-	ignoreWeight: boolean;
-	maxWeight: number;
-	ownWeight: number;
-	collapsed: boolean;
-	explicitTypes: InventoryPlusItemType[];
-	ignoreBulk: boolean;
-	maxBulk: number;
-	ownBulk: number;
 	/* only NPC and Vehicle */
 	hasActions?: boolean;
 	crewable?: boolean;
@@ -28,6 +19,16 @@ export class Category {
 			editable?: string;
 		}
 	];
+	/* non default dnd5e */
+	sortFlag: number;
+	ignoreWeight: boolean;
+	maxWeight: number;
+	ownWeight: number;
+	collapsed: boolean;
+	explicitTypes: InventoryPlusItemType[];
+	ignoreBulk: boolean;
+	maxBulk: number;
+	ownBulk: number;
 }
 
 export enum InventoryPlusFlags {
@@ -71,7 +72,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "weapon",
 		name: "DND5E.ItemTypeWeapon",
-		namePl: "DND5E.ItemTypeWeaponPl",
+		// namePl: "DND5E.ItemTypeWeaponPl",
 		img: "",
 		isSelected: false,
 		isInventory: true,
@@ -79,7 +80,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "equipment",
 		name: "DND5E.ItemTypeEquipment",
-		namePl: "DND5E.ItemTypeEquipmentPl",
+		// namePl: "DND5E.ItemTypeEquipmentPl",
 		img: "",
 		isSelected: false,
 		isInventory: true,
@@ -87,7 +88,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "consumable",
 		name: "DND5E.ItemTypeConsumable",
-		namePl: "DND5E.ItemTypeConsumablePl",
+		// namePl: "DND5E.ItemTypeConsumablePl",
 		img: "",
 		isSelected: false,
 		isInventory: true,
@@ -95,7 +96,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "tool",
 		name: "DND5E.ItemTypeTool",
-		namePl: "DND5E.ItemTypeToolPl",
+		// namePl: "DND5E.ItemTypeToolPl",
 		img: "",
 		isSelected: false,
 		isInventory: true,
@@ -103,7 +104,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "loot",
 		name: "DND5E.ItemTypeLoot",
-		namePl: "DND5E.ItemTypeLootPl",
+		// namePl: "DND5E.ItemTypeLootPl",
 		img: "",
 		isSelected: false,
 		isInventory: true,
@@ -111,7 +112,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "background",
 		name: "DND5E.ItemTypeBackground",
-		namePl: "DND5E.ItemTypeBackgroundPl",
+		// namePl: "DND5E.ItemTypeBackgroundPl",
 		img: "",
 		isSelected: false,
 		isInventory: false,
@@ -119,7 +120,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "class",
 		name: "DND5E.ItemTypeClass",
-		namePl: "DND5E.ItemTypeClassPl",
+		// namePl: "DND5E.ItemTypeClassPl",
 		img: "",
 		isSelected: false,
 		isInventory: false,
@@ -127,7 +128,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "subclass",
 		name: "DND5E.ItemTypeSubclass",
-		namePl: "DND5E.ItemTypeSubclassPl",
+		// namePl: "DND5E.ItemTypeSubclassPl",
 		img: "",
 		isSelected: false,
 		isInventory: false,
@@ -135,7 +136,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "spell",
 		name: "DND5E.ItemTypeSpell",
-		namePl: "DND5E.ItemTypeSpellPl",
+		// namePl: "DND5E.ItemTypeSpellPl",
 		img: "",
 		isSelected: false,
 		isInventory: false,
@@ -143,7 +144,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "feat",
 		name: "DND5E.ItemTypeFeat",
-		namePl: "DND5E.ItemTypeFeatPl",
+		// namePl: "DND5E.ItemTypeFeatPl",
 		img: "",
 		isSelected: false,
 		isInventory: false,
@@ -151,7 +152,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 	{
 		id: "backpack",
 		name: "DND5E.ItemTypeContainer",
-		namePl: "DND5E.ItemTypeContainerPl",
+		// namePl: "DND5E.ItemTypeContainerPl",
 		img: "",
 		isSelected: false,
 		isInventory: true,
@@ -162,36 +163,7 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 export class InventoryPlusItemType {
 	id: string;
 	name: string;
-	namePl: string;
 	img: string;
 	isSelected: boolean;
 	isInventory: boolean;
 }
-
-/**
- * taken from dnd5e system
- */
-export const equipmentColumns = [
-	{
-		label: game.i18n.localize("DND5E.Quantity"),
-		css: "item-qty",
-		property: "system.quantity",
-		editable: "Number",
-	},
-	{
-		label: game.i18n.localize("DND5E.AC"),
-		css: "item-ac",
-		property: "system.armor.value",
-	},
-	{
-		label: game.i18n.localize("DND5E.HP"),
-		css: "item-hp",
-		property: "system.hp.value",
-		editable: "Number",
-	},
-	{
-		label: game.i18n.localize("DND5E.Threshold"),
-		css: "item-threshold",
-		property: "threshold",
-	},
-];

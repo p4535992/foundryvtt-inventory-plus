@@ -1,4 +1,4 @@
-import { Category, equipmentColumns, inventoryPlusItemTypeCollection } from "../inventory-plus-models";
+import { Category, inventoryPlusItemTypeCollection } from "../inventory-plus-models";
 import { debug, i18n, isStringEquals } from "./lib";
 
 // const inventory = {
@@ -493,6 +493,33 @@ export function initCategoriesForNPC(flagCategorys) {
 // };
 
 export function initCategoriesForVehicle(flagCategorys) {
+    
+    // Taken from dnd5e system
+    const equipmentColumns = [
+        {
+            label: game.i18n.localize("DND5E.Quantity"),
+            css: "item-qty",
+            property: "system.quantity",
+            editable: "Number",
+        },
+        {
+            label: game.i18n.localize("DND5E.AC"),
+            css: "item-ac",
+            property: "system.armor.value",
+        },
+        {
+            label: game.i18n.localize("DND5E.HP"),
+            css: "item-hp",
+            property: "system.hp.value",
+            editable: "Number",
+        },
+        {
+            label: game.i18n.localize("DND5E.Threshold"),
+            css: "item-threshold",
+            property: "threshold",
+        },
+    ];
+
 	const flagDisableDefaultCategories = false;
 	if (flagCategorys === undefined && !flagDisableDefaultCategories) {
 		debug(`flagCategory=false && flagDisableDefaultCategories=false`);
