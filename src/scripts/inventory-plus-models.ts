@@ -60,7 +60,7 @@ export class EncumbranceBulkData extends EncumbranceData {
 	minimumBulk: number;
 }
 
-export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
+export const inventoryPlusItemTypeCollectionForCharacter = <InventoryPlusItemType[]>[
 	{
 		id: "",
 		name: "None",
@@ -158,6 +158,91 @@ export const inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[
 		isInventory: true,
 	},
 	// {id:'set', name:'Armor set', namePl:'Armor set', img:'', isSelected: false},
+];
+
+export const inventoryPlusItemTypeCollectionForNPC = <InventoryPlusItemType[]>[
+	{
+		id: "",
+		name: "None",
+		namePl: "None",
+		img: "",
+		isSelected: true,
+		isInventory: true,
+	},
+	{
+		id: "weapon",
+		name: "DND5E.AttackPl",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "feat",
+		name: "DND5E.ActionPl",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "feat",
+		name: "DND5E.Features",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "loot",
+		name: "DND5E.Inventory",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+];
+
+export const inventoryPlusItemTypeCollectionForVehicle = <InventoryPlusItemType[]>[
+	{
+		id: "",
+		name: "None",
+		namePl: "None",
+		img: "",
+		isSelected: true,
+		isInventory: true,
+	},
+	{
+		id: "feat",
+		name: "DND5E.ActionPl",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "equipment",
+		name: "ITEM.TypeEquipment",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "feat",
+		name: "DND5E.Features",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "feat",
+		name: "DND5E.ReactionPl",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "weapon",
+		name: "ITEM.TypeWeaponPl",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
 ];
 
 export class InventoryPlusItemType {

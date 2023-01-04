@@ -11,7 +11,9 @@ import {
 	EncumbranceData,
 	InventoryPlusFlags,
 	InventoryPlusItemType,
-	inventoryPlusItemTypeCollection,
+	inventoryPlusItemTypeCollectionForCharacter,
+	inventoryPlusItemTypeCollectionForNPC,
+	inventoryPlusItemTypeCollectionForVehicle,
 } from "./inventory-plus-models";
 import {
 	debug,
@@ -26,6 +28,9 @@ import {
 	warn,
 } from "./lib/lib";
 import {
+	adjustCustomCategoriesForCharacter,
+	adjustCustomCategoriesForNPC,
+	adjustCustomCategoriesForVehicle,
 	initCategoriesForCharacter,
 	initCategoriesForNPC,
 	initCategoriesForVehicle,
@@ -88,18 +93,22 @@ export class InventoryPlus {
 			// Cannot happened
 			return;
 		}
+		let inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[];
 		let targetCssInventoryPlus = "";
 		if (actorType === "character") {
 			targetCssInventoryPlus = "inventory";
+			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForCharacter;
 		} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
 			targetCssInventoryPlus = "features";
+			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForNPC;
 		} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
 			targetCssInventoryPlus = "features";
+			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForVehicle;
 		} else {
 			// Cannot happened
 			warn(
 				i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
-				false
+				true
 			);
 			return;
 		}
@@ -164,119 +173,28 @@ export class InventoryPlus {
 										this.removeCategory(catType);
 									}
 								} else {
-									const categoryWeapon = this.customCategorys["weapon"];
-									if (!categoryWeapon) {
-										this.customCategorys["weapon"] = <Category>{
-											label: "DND5E.ItemTypeWeaponPl",
-											dataset: { type: "weapon" },
-											sortFlag: 1000,
-											ignoreWeight: false,
-											maxWeight: 0,
-											ownWeight: 0,
-											collapsed: false,
-											items: [],
-											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-												return t.isInventory;
-											}),
-											ignoreBulk: false,
-											maxBulk: 0,
-											ownBulk: 0,
-										};
-									}
-									const categoryEquipment = this.customCategorys["equipment"];
-									if (!categoryEquipment) {
-										this.customCategorys["equipment"] = <Category>{
-											label: "DND5E.ItemTypeEquipmentPl",
-											dataset: { type: "equipment" },
-											sortFlag: 2000,
-											ignoreWeight: false,
-											maxWeight: 0,
-											ownWeight: 0,
-											collapsed: false,
-											items: [],
-											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-												return t.isInventory;
-											}),
-											ignoreBulk: false,
-											maxBulk: 0,
-											ownBulk: 0,
-										};
-									}
-									const categoryConsumable = this.customCategorys["consumable"];
-									if (!categoryConsumable) {
-										this.customCategorys["consumable"] = <Category>{
-											label: "DND5E.ItemTypeConsumablePl",
-											dataset: { type: "consumable" },
-											sortFlag: 3000,
-											ignoreWeight: false,
-											maxWeight: 0,
-											ownWeight: 0,
-											collapsed: false,
-											items: [],
-											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-												return t.isInventory;
-											}),
-											ignoreBulk: false,
-											maxBulk: 0,
-											ownBulk: 0,
-										};
-									}
-									const categoryTool = this.customCategorys["tool"];
-									if (!categoryTool) {
-										this.customCategorys["tool"] = <Category>{
-											label: "DND5E.ItemTypeToolPl",
-											dataset: { type: "tool" },
-											sortFlag: 4000,
-											ignoreWeight: false,
-											maxWeight: 0,
-											ownWeight: 0,
-											collapsed: false,
-											items: [],
-											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-												return t.isInventory;
-											}),
-											ignoreBulk: false,
-											maxBulk: 0,
-											ownBulk: 0,
-										};
-									}
-									const categoryBackpack = this.customCategorys["backpack"];
-									if (!categoryBackpack) {
-										this.customCategorys["backpack"] = <Category>{
-											label: "DND5E.ItemTypeContainerPl",
-											dataset: { type: "backpack" },
-											sortFlag: 5000,
-											ignoreWeight: false,
-											maxWeight: 0,
-											ownWeight: 0,
-											collapsed: false,
-											items: [],
-											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-												return t.isInventory;
-											}),
-											ignoreBulk: false,
-											maxBulk: 0,
-											ownBulk: 0,
-										};
-									}
-									const categoryLoot = this.customCategorys["loot"];
-									if (!categoryLoot) {
-										this.customCategorys["loot"] = <Category>{
-											label: "DND5E.ItemTypeLootPl",
-											dataset: { type: "loot" },
-											sortFlag: 6000,
-											ignoreWeight: false,
-											maxWeight: 0,
-											ownWeight: 0,
-											collapsed: false,
-											items: [],
-											explicitTypes: inventoryPlusItemTypeCollection.filter((t) => {
-												return t.isInventory;
-											}),
-											ignoreBulk: false,
-											maxBulk: 0,
-											ownBulk: 0,
-										};
+									if (actorType === "character") {
+										this.customCategorys = adjustCustomCategoriesForCharacter(this.customCategorys);
+									} else if (
+										actorType === "npc" &&
+										game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")
+									) {
+										this.customCategorys = adjustCustomCategoriesForNPC(this.customCategorys);
+									} else if (
+										actorType === "vehicle" &&
+										game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")
+									) {
+										this.customCategorys = adjustCustomCategoriesForVehicle(this.customCategorys);
+									} else {
+										// Cannot happened
+										warn(
+											i18nFormat(
+												`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`,
+												{ actorType: actorType }
+											),
+											true
+										);
+										return;
 									}
 									this.saveCategorys();
 								}
@@ -321,7 +239,7 @@ export class InventoryPlus {
 							const selectExplicitTypes = $(
 								<HTMLElement>(<JQuery<HTMLElement>>html).find('select[name="explicitTypes"')[0]
 							);
-							this.createCategory(input, selectExplicitTypes); // ,selectDefaultType
+							this.createCategory(input, selectExplicitTypes, inventoryPlusItemTypeCollection); // ,selectDefaultType
 						},
 					},
 					cancel: {
@@ -908,7 +826,11 @@ export class InventoryPlus {
 		return sections;
 	}
 
-	createCategory(inputs, selectExplicitTypes: JQuery<HTMLElement>) {
+	createCategory(
+		inputs,
+		selectExplicitTypes: JQuery<HTMLElement>,
+		inventoryPlusItemTypeCollection: InventoryPlusItemType[]
+	) {
 		// ,selectDefaultType:JQuery<HTMLElement>
 		const newCategory = new Category();
 
