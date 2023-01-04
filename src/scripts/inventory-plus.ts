@@ -290,7 +290,7 @@ export class InventoryPlus {
 		// for (const createBtn of createBtns) {
 		//   const type = <string>createBtn.dataset.type;
 		//   // Filter for only invenotry items
-		//   // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+		//   // const dnd5eItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
 		//   // if (physicalItems.indexOf(type) === -1) {
 		//   //const parent = <ParentNode>createBtn.parentNode;
 		//   const createItemBtn = `<a class="item-control item-create"
@@ -539,7 +539,6 @@ export class InventoryPlus {
 			let icon = ``;
 
 			// show type of category
-			//const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot']
 			const enabledExplicitTypes = currentCategory.explicitTypes.filter((i) => {
 				return i.isSelected;
 			});
@@ -1156,9 +1155,20 @@ export class InventoryPlus {
 		}
 
 		let myName = "";
-		const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
+		const dnd5eItems = [
+			"weapon",
+			"equipment",
+			"consumable",
+			"tool",
+			"loot",
+			"background",
+			//"class",
+			//"subclass",
+			//"spell",
+			"feat"
+		];
 		let itemTypeTmp = "";
-		if (physicalItems.includes(type.toLowerCase())) {
+		if (dnd5eItems.includes(type.toLowerCase())) {
 			myName = game.i18n.format("DND5E.ItemNew", {
 				type: game.i18n.localize(`DND5E.ItemType${type.capitalize()}`),
 			});
