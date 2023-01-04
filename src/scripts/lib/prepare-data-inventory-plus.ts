@@ -15,6 +15,15 @@ import { debug, i18n, isStringEquals } from "./lib";
 //     loot: { label: "ITEM.TypeLootPl", items: [], dataset: {type: "loot"} }
 // };
 
+export const physicalItemsForCharacters = [
+    "weapon",
+    "equipment",
+    "consumable",
+    "tool",
+    "backpack",
+    "loot",
+];
+
 export function adjustCustomCategoriesForCharacter(customCategorys: Record<string, Category>) {
 	const categoryWeapon = customCategorys["weapon"];
 	if (!categoryWeapon) {
@@ -395,6 +404,13 @@ export function initCategoriesForCharacter(flagCategorys) {
 //     equipment: { label: game.i18n.localize("DND5E.Inventory"), items: [], dataset: {type: "loot"}}
 // };
 
+export const physicalItemsForNPC = [
+    "weapons",
+    "actions",
+    "passive",
+    "equipment",
+];
+
 export function adjustCustomCategoriesForNPC(customCategorys: Record<string, Category>) {
 	const categoryWeapons = customCategorys["weapons"];
 	if (!categoryWeapons) {
@@ -696,6 +712,14 @@ export function initCategoriesForNPC(flagCategorys) {
 //       columns: equipmentColumns
 //     }
 // };
+
+export const physicalItemsForVehicle = [
+    "actions",
+    "equipment",
+    "passive",
+    "reactions",
+    "weapons"
+];
 
 export function adjustCustomCategoriesForVehicle(customCategorys: Record<string, Category>) {
 	// Taken from dnd5e system

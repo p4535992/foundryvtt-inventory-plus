@@ -1,5 +1,6 @@
 import API from "../api";
 import CONSTANTS from "../constants";
+import type { Category } from "../inventory-plus-models";
 
 // =============================
 // Module Generic function
@@ -996,4 +997,148 @@ export async function _isFromSameActor(actor: Actor, item: Item | null) {
 		const actorRetrieve = item.actor ? item.actor : itemRetrieve.parent;
 		return actor.id === actorRetrieve?.uuid || actor.uuid === actorRetrieve?.uuid;
 	}
+}
+
+export function retrieveSectionIdFromItemType(actorType:string, category:Category) {
+	let sectionId:string|undefined = undefined;
+	const itemType = <string>category.dataset.type;
+	const activationType = <string>category.dataset["activation.type"] ?? "";
+	const weaponType = <string>category.dataset["weapon-type"] ?? "";
+	const armorType = <string>category.dataset["armor.type"] ?? "";
+	
+	if (actorType === "character") {
+		switch(itemType) {
+			case "weapon" : {
+				sectionId = "weapon";
+				break;
+			}
+			case "equipment" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "consumable" : {
+				sectionId = "consumable";
+				break;
+			}
+			case "tool" : {
+				sectionId = "tool";
+				break;
+			}
+			case "backpack" : {
+				sectionId = "backpack";
+				break;
+			}
+			case "loot" : {
+				sectionId = "loot";
+				break;
+			}
+			default: {
+				sectionId = undefined;
+				break;
+			}
+		}
+	} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
+		switch(itemType) {
+			case "feat" : {
+				if(activationType === "action") {
+					sectionId = "actions";
+				} else {
+					sectionId = "passive";
+				}
+				break;
+			}
+			case "weapon" : {
+				if(weaponType === "natural") {
+					sectionId = "weapons";
+				} else {
+					sectionId = "equipment";
+				}
+				break;
+			}
+			case "equipment" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "consumable" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "tool" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "backpack" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "loot" : {
+				sectionId = "equipment";
+				break;
+			}
+			default: {
+				sectionId = undefined;
+				break;
+			}
+		}
+	} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
+		switch(itemType) {
+			case "feat" : {
+				if(activationType === "crew") {
+					sectionId = "actions";
+				} 
+				else if(activationType === "reaction"){
+					sectionId = "reactions";
+				}
+				else {
+					sectionId = "passive";
+				}
+				break;
+			}
+			case "weapon" : {
+				if(weaponType === "siege") {
+					sectionId = "weapons";
+				} else {
+					sectionId = "weapons";
+				}
+				break;
+			}
+			case "equipment" : {
+				if(armorType === "vehicle") {
+					sectionId = "equipment";
+				} else {
+					sectionId = "equipment";
+				}
+				break;
+			}
+			case "consumable" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "tool" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "backpack" : {
+				sectionId = "equipment";
+				break;
+			}
+			case "loot" : {
+				sectionId = "equipment";
+				break;
+			}
+			default: {
+				sectionId = undefined;
+				break;
+			}
+		}
+	} else {
+		// Cannot happened
+		warn(
+			i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
+			true
+		);
+		return;
+	}
+	return sectionId;
+
 }

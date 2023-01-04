@@ -25,6 +25,7 @@ import {
 	info,
 	isStringEquals,
 	is_real_number,
+	retrieveSectionIdFromItemType,
 	warn,
 } from "./lib/lib";
 import {
@@ -34,6 +35,9 @@ import {
 	initCategoriesForCharacter,
 	initCategoriesForNPC,
 	initCategoriesForVehicle,
+	physicalItemsForCharacters,
+	physicalItemsForNPC,
+	physicalItemsForVehicle,
 } from "./lib/prepare-data-inventory-plus";
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
@@ -161,16 +165,34 @@ export class InventoryPlus {
 										? true
 										: false;
 								if (!f) {
-									const physicalItems = [
-										"weapon",
-										"equipment",
-										"consumable",
-										"tool",
-										"backpack",
-										"loot",
-									];
-									for (const catType of physicalItems) {
-										this.removeCategory(catType);
+									if (actorType === "character") {
+										for (const catType of physicalItemsForCharacters) {
+											this.removeCategory(catType);
+										}
+									} else if (
+										actorType === "npc" &&
+										game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")
+									) {
+										for (const catType of physicalItemsForNPC) {
+											this.removeCategory(catType);
+										}
+									} else if (
+										actorType === "vehicle" &&
+										game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")
+									) {
+										for (const catType of physicalItemsForVehicle) {
+											this.removeCategory(catType);
+										}
+									} else {
+										// Cannot happened
+										warn(
+											i18nFormat(
+												`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`,
+												{ actorType: actorType }
+											),
+											true
+										);
+										return;
 									}
 								} else {
 									if (actorType === "character") {
@@ -781,11 +803,17 @@ export class InventoryPlus {
 		for (const section of inventory) {
 			for (const item of <Item[]>section.items) {
 				let type = this.getItemType(item);
-				if (sections[type] === undefined) {
+
+				const sectionId = <string>retrieveSectionIdFromItemType(actor.type, section);
+				if (sectionId === undefined) {
 					type = item.type;
-				}
-				if (sections[type]) {
-					(<Category>sections[type]).items?.push(item);
+				} else {
+					if (sections[sectionId] === undefined) {
+						type = item.type;
+					}
+					if (sections[sectionId]) {
+						(<Category>sections[sectionId]).items?.push(item);
+					}
 				}
 			}
 		}
