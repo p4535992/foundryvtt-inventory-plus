@@ -802,20 +802,67 @@ export class InventoryPlus {
 		for (const section of inventory) {
 			for (const item of <Item[]>section.items) {
 				let type = this.getItemType(item);
-
-				const sectionId = <string>retrieveSectionIdFromItemType(actor.type, section);
+				//let sectionId = <string>retrieveSectionIdFromItemType(actor.type, section, undefined);
+				let sectionId = <string>retrieveSectionIdFromItemType(actor.type, section, type);
 				if (sectionId === undefined) {
-					type = item.type;
-				} else {
-					if (sections[sectionId] === undefined) {
-						type = item.type;
+					if (sections[type]) {
+						sectionId = type;
+					} else {
+						sectionId = item.type;
 					}
-					if (sections[sectionId]) {
-						(<Category>sections[sectionId]).items?.push(item);
-					}
+				}
+				if (sections[sectionId]) {
+					(<Category>sections[sectionId]).items?.push(item);
 				}
 			}
 		}
+
+		// const sections = <Record<string, Category>>duplicateExtended(this.customCategorys);
+
+		// let sectionsBase = <Category[]>duplicateExtended(this.customCategorys);
+
+		// //const sections = duplicateExtended(sectionsBase);
+		// for (const id in sections) {
+		// 	(<Category>sectionsBase[id]).items = [];
+		// 	if (!(<Category>sectionsBase[id]).customId) {
+		// 		(<Category>sectionsBase[id]).customId = id;
+		// 	}
+		// }
+
+		// let sectionsBase2 = <Category[]>mergeObject(Object.values(sectionsBase), inventory);
+
+		// // for (const cat of sectionsBase2) {
+		// // 	const uid = cat.customId;
+		// // 	if(sections[uid]) {
+		// // 		sections[uid] = mergeObject(<Category>sections[uid], cat);
+		// // 	}
+		// // }
+
+		// for (const section of Object.values(sectionsBase2)) {
+		// 	if (!section.items) {
+		// 		section.items = [];
+		// 		continue;
+		// 	}
+		// 	for (const item of <Item[]>section.items) {
+		// 		let type = this.getItemType(item);
+
+		// 		let sectionId = <string>retrieveSectionIdFromItemType(actor.type, section, type);
+		// 		if (sectionId === undefined) {
+		// 			if (sections[type]) {
+		// 				sectionId = type;
+		// 			} else {
+		// 				sectionId = item.type;
+		// 			}
+		// 		}
+		// 		if (sections[sectionId]) {
+		// 			(<Category>sections[sectionId]).items?.push(item);
+		// 		} 
+		// 		// else if (sections[section.customId]) {
+		// 		// 	(<Category>sections[section.customId]).items?.push(item);
+		// 		// }
+		// 	}
+		// }
+
 		// TODO WHY THIS HIDE THE WEIGHT LABEL OF ITEMS ????
 		/*
     const items = actor.items.contents;
@@ -1165,7 +1212,7 @@ export class InventoryPlus {
 			//"class",
 			//"subclass",
 			//"spell",
-			"feat"
+			"feat",
 		];
 		let itemTypeTmp = "";
 		if (dnd5eItems.includes(type.toLowerCase())) {

@@ -29,6 +29,7 @@ export class Category {
 	ignoreBulk: boolean;
 	maxBulk: number;
 	ownBulk: number;
+	//customId: string;
 }
 
 export enum InventoryPlusFlags {

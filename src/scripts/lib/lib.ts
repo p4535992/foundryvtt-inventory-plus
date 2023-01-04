@@ -999,36 +999,36 @@ export async function _isFromSameActor(actor: Actor, item: Item | null) {
 	}
 }
 
-export function retrieveSectionIdFromItemType(actorType:string, category:Category) {
-	let sectionId:string|undefined = undefined;
-	const itemType = <string>category.dataset.type;
+export function retrieveSectionIdFromItemType(actorType: string, category: Category, itemType:string|undefined) {
+	let sectionId: string | undefined = undefined;
+	itemType = itemType === undefined ? <string>category.dataset.type : itemType;
 	const activationType = <string>category.dataset["activation.type"] ?? "";
 	const weaponType = <string>category.dataset["weapon-type"] ?? "";
 	const armorType = <string>category.dataset["armor.type"] ?? "";
-	
+
 	if (actorType === "character") {
-		switch(itemType) {
-			case "weapon" : {
+		switch (itemType) {
+			case "weapon": {
 				sectionId = "weapon";
 				break;
 			}
-			case "equipment" : {
+			case "equipment": {
 				sectionId = "equipment";
 				break;
 			}
-			case "consumable" : {
+			case "consumable": {
 				sectionId = "consumable";
 				break;
 			}
-			case "tool" : {
+			case "tool": {
 				sectionId = "tool";
 				break;
 			}
-			case "backpack" : {
+			case "backpack": {
 				sectionId = "backpack";
 				break;
 			}
-			case "loot" : {
+			case "loot": {
 				sectionId = "loot";
 				break;
 			}
@@ -1038,40 +1038,40 @@ export function retrieveSectionIdFromItemType(actorType:string, category:Categor
 			}
 		}
 	} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
-		switch(itemType) {
-			case "feat" : {
-				if(activationType === "action") {
+		switch (itemType) {
+			case "feat": {
+				if (activationType === "action") {
 					sectionId = "actions";
 				} else {
 					sectionId = "passive";
 				}
 				break;
 			}
-			case "weapon" : {
-				if(weaponType === "natural") {
+			case "weapon": {
+				if (weaponType === "natural") {
 					sectionId = "weapons";
 				} else {
 					sectionId = "equipment";
 				}
 				break;
 			}
-			case "equipment" : {
+			case "equipment": {
 				sectionId = "equipment";
 				break;
 			}
-			case "consumable" : {
+			case "consumable": {
 				sectionId = "equipment";
 				break;
 			}
-			case "tool" : {
+			case "tool": {
 				sectionId = "equipment";
 				break;
 			}
-			case "backpack" : {
+			case "backpack": {
 				sectionId = "equipment";
 				break;
 			}
-			case "loot" : {
+			case "loot": {
 				sectionId = "equipment";
 				break;
 			}
@@ -1081,48 +1081,46 @@ export function retrieveSectionIdFromItemType(actorType:string, category:Categor
 			}
 		}
 	} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
-		switch(itemType) {
-			case "feat" : {
-				if(activationType === "crew") {
+		switch (itemType) {
+			case "feat": {
+				if (activationType === "crew") {
 					sectionId = "actions";
-				} 
-				else if(activationType === "reaction"){
+				} else if (activationType === "reaction") {
 					sectionId = "reactions";
-				}
-				else {
+				} else {
 					sectionId = "passive";
 				}
 				break;
 			}
-			case "weapon" : {
-				if(weaponType === "siege") {
+			case "weapon": {
+				if (weaponType === "siege") {
 					sectionId = "weapons";
 				} else {
 					sectionId = "weapons";
 				}
 				break;
 			}
-			case "equipment" : {
-				if(armorType === "vehicle") {
+			case "equipment": {
+				if (armorType === "vehicle") {
 					sectionId = "equipment";
 				} else {
 					sectionId = "equipment";
 				}
 				break;
 			}
-			case "consumable" : {
+			case "consumable": {
 				sectionId = "equipment";
 				break;
 			}
-			case "tool" : {
+			case "tool": {
 				sectionId = "equipment";
 				break;
 			}
-			case "backpack" : {
+			case "backpack": {
 				sectionId = "equipment";
 				break;
 			}
-			case "loot" : {
+			case "loot": {
 				sectionId = "equipment";
 				break;
 			}
@@ -1140,5 +1138,4 @@ export function retrieveSectionIdFromItemType(actorType:string, category:Categor
 		return;
 	}
 	return sectionId;
-
 }

@@ -23,22 +23,7 @@ import {
 } from "./lib/lib";
 
 export const initHooks = async (): Promise<void> => {
-	// registerSettings();
-	// registerLibwrappers();
-	// Hooks.once('socketlib.ready', registerSocket);
-	// if (game.settings.get(CONSTANTS.MODULE_NAME, 'debugHooks')) {
-	//   for (const hook of Object.values(HOOKS)) {
-	//     if (typeof hook === 'string') {
-	//       Hooks.on(hook, (...args) => debug(`Hook called: ${hook}`, ...args));
-	//       debug(`Registered hook: ${hook}`);
-	//     } else {
-	//       for (const innerHook of Object.values(hook)) {
-	//         Hooks.on(<string>innerHook, (...args) => debug(`Hook called: ${innerHook}`, ...args));
-	//         debug(`Registered hook: ${innerHook}`);
-	//       }
-	//     }
-	//   }
-	// }
+	// Do nothing
 };
 
 export const setupHooks = async (): Promise<void> => {

@@ -166,6 +166,7 @@ The `Category` object is represented like this:
 	ignoreBulk: boolean;
 	maxBulk: number;
 	ownBulk: number;
+  customId: string;
 }
 ```
 
