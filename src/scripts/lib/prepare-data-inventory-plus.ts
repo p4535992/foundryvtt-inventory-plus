@@ -15,7 +15,7 @@ import { debug, i18n, isStringEquals } from "./lib";
 //     loot: { label: "ITEM.TypeLootPl", items: [], dataset: {type: "loot"} }
 // };
 
-export const physicalItemsForCharacters = [
+export const defaultSectionsForCharacters = [
     "weapon",
     "equipment",
     "consumable",
@@ -404,7 +404,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 //     equipment: { label: game.i18n.localize("DND5E.Inventory"), items: [], dataset: {type: "loot"}}
 // };
 
-export const physicalItemsForNPC = [
+export const defaultSectionsForNPC = [
     "weapons",
     "actions",
     "passive",
@@ -713,7 +713,7 @@ export function initCategoriesForNPC(flagCategorys) {
 //     }
 // };
 
-export const physicalItemsForVehicle = [
+export const defaultSectionsForVehicle = [
     "actions",
     "equipment",
     "passive",

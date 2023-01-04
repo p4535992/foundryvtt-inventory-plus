@@ -35,9 +35,9 @@ import {
 	initCategoriesForCharacter,
 	initCategoriesForNPC,
 	initCategoriesForVehicle,
-	physicalItemsForCharacters,
-	physicalItemsForNPC,
-	physicalItemsForVehicle,
+	defaultSectionsForCharacters,
+	defaultSectionsForNPC,
+	defaultSectionsForVehicle,
 } from "./lib/prepare-data-inventory-plus";
 // import ActorSheet5eCharacter from "../../systems/dnd5e/module/actor/sheets/character.js";
 
@@ -166,21 +166,21 @@ export class InventoryPlus {
 										: false;
 								if (!f) {
 									if (actorType === "character") {
-										for (const catType of physicalItemsForCharacters) {
+										for (const catType of defaultSectionsForCharacters) {
 											this.removeCategory(catType);
 										}
 									} else if (
 										actorType === "npc" &&
 										game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")
 									) {
-										for (const catType of physicalItemsForNPC) {
+										for (const catType of defaultSectionsForNPC) {
 											this.removeCategory(catType);
 										}
 									} else if (
 										actorType === "vehicle" &&
 										game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")
 									) {
-										for (const catType of physicalItemsForVehicle) {
+										for (const catType of defaultSectionsForVehicle) {
 											this.removeCategory(catType);
 										}
 									} else {
