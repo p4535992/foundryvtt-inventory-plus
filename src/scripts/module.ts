@@ -3,7 +3,7 @@ import { getApi, setApi } from "../main";
 import API from "./api";
 import CONSTANTS from "./constants";
 import { InventoryPlus } from "./inventory-plus";
-import { Category, EncumbranceDnd5e, InventoryPlusFlags } from "./inventory-plus-models";
+import { Category, EncumbranceDnd5e, InventoryPlusFlags, itemTypesDnd5e } from "./inventory-plus-models";
 import {
 	getCSSName,
 	debug,
@@ -62,7 +62,7 @@ export const readyHooks = async (): Promise<void> => {
 			// let app = this;
 			const actor = <Actor>this.actor;
 			const newInventory = InventoryPlus.processInventory(this, actor, sheetData.inventory);
-			sheetData.inventory = newInventory;
+			sheetData.inventory = Object.values(newInventory);
 			const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 			if (encumbrance5e) {
 				sheetData.system.attributes.encumbrance = encumbrance5e;
@@ -91,7 +91,7 @@ export const readyHooks = async (): Promise<void> => {
 				// let app = this;
 				const actor = <Actor>this.actor;
 				const newInventory = InventoryPlus.processInventory(this, actor, sheetData.features);
-				sheetData.features = newInventory;
+				sheetData.features = Object.values(newInventory);
 				const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 				if (encumbrance5e) {
 					sheetData.system.attributes.encumbrance = encumbrance5e;
@@ -121,7 +121,7 @@ export const readyHooks = async (): Promise<void> => {
 				// let app = this;
 				const actor = <Actor>this.actor;
 				const newInventory = InventoryPlus.processInventory(this, actor, sheetData.features);
-				sheetData.features = newInventory;
+				sheetData.features = Object.values(newInventory);
 				const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 				if (encumbrance5e) {
 					sheetData.system.attributes.encumbrance = encumbrance5e;
@@ -369,19 +369,6 @@ const module = {
 		let dragAndDropFromCompendium = false;
 		let sourceActor: Actor | null = null;
 		let sourceActorId: string | null = null;
-		const itemTypesDnd5e = [
-			"weapon",
-			"equipment",
-			"consumable",
-			"tool",
-			"loot",
-			"background",
-			"class",
-			"subclass",
-			"spell",
-			"feat",
-			"backpack",
-		];
 
 		// Check is a item data by property
 		if (itemCurrent.data && itemTypesDnd5e.includes(itemCurrent.data.type)) {

@@ -167,3 +167,17 @@ export class InventoryPlusItemType {
 	isSelected: boolean;
 	isInventory: boolean;
 }
+
+export const itemTypesDnd5e = [
+	"weapon",
+	"equipment",
+	"consumable",
+	"tool",
+	"loot",
+	"background",
+	"class",
+	"subclass",
+	"spell",
+	"feat",
+	"backpack",
+];
