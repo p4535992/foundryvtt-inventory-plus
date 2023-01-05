@@ -1197,8 +1197,11 @@ export function retrieveCategoryIdFromLabel(
 			dataCategoryId = <string>headerElement.attr("data-categoryid");
 		}
 	}
-	if (categoryText && categoryText.includes("(")) {
-		const arr = <string[]>(categoryText.split("("));
+	if (categoryText && categoryText.includes("[")) {
+		const arr = <string[]>categoryText.split("[");
+		categoryTextTmp = (<string>arr[0])?.trim();
+	} else if (categoryText && categoryText.includes("(")) {
+		const arr = <string[]>categoryText.split("(");
 		categoryTextTmp = (<string>arr[0])?.trim();
 	} else {
 		categoryTextTmp = categoryText.trim();
@@ -1212,7 +1215,8 @@ export function retrieveCategoryIdFromLabel(
 			}
 		} else if (categoryTextTmp) {
 			// TODO i know this suck is just for retrocompatibility.....
-			if (categoryTextTmp.startsWith(i18n(value.label))) {
+			// if (categoryTextTmp.startsWith(i18n(value.label))) {
+			if (isStringEquals(categoryTextTmp, value.label)) {
 				categoryId = key;
 				break;
 			}

@@ -49,6 +49,11 @@ This module uses the [libWrapper](https://github.com/ruipin/fvtt-lib-wrapper) li
 
 This module allows you to create custom inventory categories and sort items into them and the default categories. You can also order the categories around and even disable weight tracking on a per category basis.
 
+## Known issue
+
+- The no dialog on the edit category is frozen for now just "close" the dialog
+- The retrieve of the category depend on the name used  for the category so for now hus use unique name category 
+
 ## Features
 
 Due to collisions, code maintenance problems, and **reduction in the number of modules** I have rewritten for the inherent use of the module some features of other modules, mentioned in the _credits_ of this document. I invite you to support these authors in their various kofis and patreons. Each feature is non-blocking with the other modules and can be activated / deactivated from a specific module setting, which we list below
@@ -166,7 +171,7 @@ The `Category` object is represented like this:
 	ignoreBulk: boolean;
 	maxBulk: number;
 	ownBulk: number;
-  customId: string;
+    customId: string;
 }
 ```
 

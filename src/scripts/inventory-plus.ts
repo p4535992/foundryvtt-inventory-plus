@@ -147,6 +147,7 @@ export class InventoryPlus {
 			const removeDefaultCategoriesBtn = $(
 				`<a class="custom-category"><i class="fas ${iconClass}"></i>${labelDialogDisableDefaultCategories}</a>`
 			).click(async (ev) => {
+				ev.preventDefault();
 				const template = await renderTemplate(
 					`modules/${CONSTANTS.MODULE_NAME}/templates/restoreDefaultCategoriesDialog.hbs`,
 					{
@@ -243,6 +244,7 @@ export class InventoryPlus {
 				`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.addcustomcategory`
 			)}</a>`
 		).click(async (ev) => {
+			ev.preventDefault();
 			const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
 				return t.isInventory;
 			});
@@ -518,6 +520,7 @@ export class InventoryPlus {
 			// ===================
 			const arrow = currentCategory?.collapsed === true ? "right" : "down";
 			const toggleBtn = $(`<a class="toggle-collapse"><i class="fas fa-caret-${arrow}"></i></a>`).click((ev) => {
+				ev.preventDefault();
 				currentCategory.collapsed = <boolean>!currentCategory?.collapsed;
 				this.saveCategorys();
 			});
@@ -528,13 +531,19 @@ export class InventoryPlus {
 			if (this.getLowestSortFlag() !== currentCategory.sortFlag) {
 				const upBtn = $(
 					`<a class="inv-plus-stuff shuffle-up" title="Move category up"><i class="fas fa-chevron-up"></i></a>`
-				).click(() => this.changeCategoryOrder(categoryId, true));
+				).click((ev) => {
+					ev.preventDefault();
+					this.changeCategoryOrder(categoryId, true);
+				});
 				extraStuff.append(upBtn);
 			}
 			if (this.getHighestSortFlag() !== currentCategory.sortFlag) {
 				const downBtn = $(
 					`<a class="inv-plus-stuff shuffle-down" title="Move category down"><i class="fas fa-chevron-down"></i></a>`
-				).click(() => this.changeCategoryOrder(categoryId, false));
+				).click((ev) => {
+					ev.preventDefault();
+					this.changeCategoryOrder(categoryId, false);
+				});
 				extraStuff.append(downBtn);
 			}
 			// ================
@@ -546,6 +555,7 @@ export class InventoryPlus {
 				<i class="fas fa-edit"></i>
 				</a>`
 			).click(async (ev) => {
+				ev.preventDefault();
 				// const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 
 				const headerElement = $(<HTMLElement>headerTmp.querySelector("h3"));
@@ -923,6 +933,9 @@ export class InventoryPlus {
 				*/
 				if (sections[sectionId]) {
 					(<Category>sections[sectionId]).items?.push(item);
+					if (!sections[sectionId]?.customId) {
+						(<Category>sections[sectionId]).customId = sectionId;
+					}
 				}
 			}
 		}
