@@ -314,12 +314,12 @@ const API = {
 	getItemsFromCategory(actor: Actor, categoryDatasetType: string, customCategorys: Record<string, any>): Item[] {
 		return actor.items.filter((item) => {
 			// Ripreso da getItemType
-			let type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-			// if (!type) {
-			// 	type = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+			let sectionCategoryId = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+			// if (!sectionCategoryId) {
+			// 	sectionCategoryId = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
 			// }
-			if (type === undefined || customCategorys[type] === undefined) {
-				type = item.type;
+			if (sectionCategoryId === undefined || customCategorys[sectionCategoryId] === undefined) {
+				sectionCategoryId = item.type;
 			}
 			// return categoryDatasetType === type;
 			let sectionId = <string>(
@@ -328,7 +328,7 @@ const API = {
 					customCategorys,
 					item.type,
 					undefined,
-					type,
+					sectionCategoryId,
 					categoryDatasetType
 				)
 			);
