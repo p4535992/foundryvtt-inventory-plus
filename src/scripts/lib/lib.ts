@@ -1184,7 +1184,7 @@ export function retrieveSectionIdFromItemType(
 	return sectionId;
 }
 
-export function retrieveCategoryFromLabel(
+export function retrieveCategoryIdFromLabel(
 	sections: Record<string, Category>,
 	categoryText: string
 ): string | undefined {

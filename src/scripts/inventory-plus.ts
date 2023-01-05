@@ -25,7 +25,7 @@ import {
 	info,
 	isStringEquals,
 	is_real_number,
-	retrieveCategoryFromLabel,
+	retrieveCategoryIdFromLabel,
 	retrieveSectionIdFromItemType,
 	warn,
 } from "./lib/lib";
@@ -307,7 +307,7 @@ export class InventoryPlus {
 		html.find(`.${targetCssInventoryPlus} a.item-create`).each((i, el) => {
 			const type = <string>el.dataset.type;
 			const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-			const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
 
 			$(el).data("type", type);
 			$(el).attr("data-type", type);
@@ -327,7 +327,7 @@ export class InventoryPlus {
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
 					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-					const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+					const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
 					catType = categoryId;
 				}
 				if (!catType) {
@@ -399,7 +399,7 @@ export class InventoryPlus {
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
 					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-					const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+					const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
 					catType = categoryId;
 				}
 				if (!catType) {
@@ -425,7 +425,7 @@ export class InventoryPlus {
 			let catType = <string>el.attributes["data-categoryid"];
 			if (!catType) {
 				const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-				const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+				const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
 				catType = categoryId;
 			}
 			if (!catType) {
@@ -459,7 +459,7 @@ export class InventoryPlus {
 			const type = <string>(<HTMLElement>header.find(".item-control")[0]).dataset.type;
 
 			const categoryText = <string>headerTmp.querySelector("h3")?.innerText;
-			const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
 
 			const extraStuff = $('<div class="inv-plus-stuff flexrow"></div>');
 			header.find("h3").after(extraStuff);
@@ -511,7 +511,7 @@ export class InventoryPlus {
 				// const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 
 				const categoryText = <string>headerTmp.querySelector("h3")?.innerText;
-				const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+				const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
 				const catTypeTmp = categoryId;
 
 				const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
@@ -948,13 +948,24 @@ export class InventoryPlus {
 
 		newCategory.explicitTypes = explicitTypesFromListTmp;
 
-		if (newCategory.label === undefined || newCategory.label === "") {
-			error(`Could not create Category as no name was specified`, true);
+		if (newCategory.label === undefined || newCategory.label === "" || newCategory.label === null) {
+			error(`Could not create the category as no name was specified`, true);
+			return;
+		}
+
+		const categoryId = retrieveCategoryIdFromLabel(this.customCategorys, newCategory.label);
+		if (categoryId) {
+			error(`Could not create the category a category with the same name is already present`, true);
 			return;
 		}
 
 		const key = this.generateCategoryId();
+		if (this.customCategorys[key]) {
+			error(`Could not create the category a category with the same id is already present`, true);
+			return;
+		}
 
+		newCategory.customId = key;
 		newCategory.dataset = { type: key };
 		newCategory.collapsed = false;
 		newCategory.sortFlag = this.getHighestSortFlag() + 1000;

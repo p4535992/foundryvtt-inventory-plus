@@ -35,7 +35,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "weapon",
+			customId: "weapon",
 		};
 	}
 	const categoryEquipment = customCategorys["equipment"];
@@ -55,7 +55,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "equipment",
+			customId: "equipment",
 		};
 	}
 	const categoryConsumable = customCategorys["consumable"];
@@ -75,7 +75,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "consumable",
+			customId: "consumable",
 		};
 	}
 	const categoryTool = customCategorys["tool"];
@@ -95,7 +95,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "tool",
+			customId: "tool",
 		};
 	}
 	const categoryBackpack = customCategorys["backpack"];
@@ -115,7 +115,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "backpack",
+			customId: "backpack",
 		};
 	}
 	const categoryLoot = customCategorys["loot"];
@@ -135,7 +135,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "loot",
+			customId: "loot",
 		};
 	}
 	return customCategorys;
@@ -161,7 +161,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "weapon",
+				customId: "weapon",
 			},
 			equipment: <Category>{
 				label: "DND5E.ItemTypeEquipmentPl",
@@ -178,7 +178,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "equipment",
+				customId: "equipment",
 			},
 			consumable: <Category>{
 				label: "DND5E.ItemTypeConsumablePl",
@@ -195,7 +195,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "consumable",
+				customId: "consumable",
 			},
 			tool: <Category>{
 				label: "DND5E.ItemTypeToolPl",
@@ -212,7 +212,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "tool",
+				customId: "tool",
 			},
 			backpack: <Category>{
 				label: "DND5E.ItemTypeContainerPl",
@@ -229,7 +229,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "backpack",
+				customId: "backpack",
 			},
 			loot: <Category>{
 				label: "DND5E.ItemTypeLootPl",
@@ -246,7 +246,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "loot",
+				customId: "loot",
 			},
 		};
 	} else if (flagCategorys && !flagDisableDefaultCategories) {
@@ -268,7 +268,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "weapon",
+				customId: "weapon",
 			};
 		}
 		const categoryEquipment = flagCategorys["equipment"];
@@ -288,7 +288,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "equipment",
+				customId: "equipment",
 			};
 		}
 		const categoryConsumable = flagCategorys["consumable"];
@@ -308,7 +308,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "consumable",
+				customId: "consumable",
 			};
 		}
 		const categoryTool = flagCategorys["tool"];
@@ -328,7 +328,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "tool",
+				customId: "tool",
 			};
 		}
 		const categoryBackpack = flagCategorys["backpack"];
@@ -348,7 +348,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "backpack",
+				customId: "backpack",
 			};
 		}
 		const categoryLoot = flagCategorys["loot"];
@@ -368,7 +368,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "loot",
+				customId: "loot",
 			};
 		}
 	} else if (flagCategorys && flagDisableDefaultCategories) {
@@ -436,7 +436,7 @@ export function adjustCustomCategoriesForNPC(customCategorys: Record<string, Cat
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "weapons",
+			customId: "weapons",
 		};
 	}
 	const categoryActions = customCategorys["actions"];
@@ -457,7 +457,7 @@ export function adjustCustomCategoriesForNPC(customCategorys: Record<string, Cat
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "actions",
+			customId: "actions",
 		};
 	}
 	const categoryPassive = customCategorys["passive"];
@@ -477,7 +477,7 @@ export function adjustCustomCategoriesForNPC(customCategorys: Record<string, Cat
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "passive",
+			customId: "passive",
 		};
 	}
 	const categoryEquipment = customCategorys["equipment"];
@@ -497,7 +497,7 @@ export function adjustCustomCategoriesForNPC(customCategorys: Record<string, Cat
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "equipment",
+			customId: "equipment",
 		};
 	}
 	return customCategorys;
@@ -524,7 +524,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "weapons",
+				customId: "weapons",
 			},
 			actions: <Category>{
 				label: game.i18n.localize("DND5E.ActionPl"),
@@ -542,7 +542,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "actions",
+				customId: "actions",
 			},
 			passive: <Category>{
 				label: game.i18n.localize("DND5E.Features"),
@@ -559,7 +559,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "passive",
+				customId: "passive",
 			},
 			equipment: <Category>{
 				label: game.i18n.localize("DND5E.Inventory"),
@@ -576,7 +576,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "equipment",
+				customId: "equipment",
 			},
 		};
 	} else if (flagCategorys && !flagDisableDefaultCategories) {
@@ -599,7 +599,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "weapons",
+				customId: "weapons",
 			};
 		}
 		const categoryActions = flagCategorys["actions"];
@@ -620,7 +620,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "actions",
+				customId: "actions",
 			};
 		}
 		const categoryPassive = flagCategorys["passive"];
@@ -640,7 +640,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "passive",
+				customId: "passive",
 			};
 		}
 		const categoryEquipment = flagCategorys["equipment"];
@@ -660,7 +660,7 @@ export function initCategoriesForNPC(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "equipment",
+				customId: "equipment",
 			};
 		}
 	} else if (flagCategorys && flagDisableDefaultCategories) {
@@ -786,7 +786,7 @@ export function adjustCustomCategoriesForVehicle(customCategorys: Record<string,
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "actions",
+			customId: "actions",
 		};
 	}
 	const categoryEquipment = customCategorys["equipment"];
@@ -808,7 +808,7 @@ export function adjustCustomCategoriesForVehicle(customCategorys: Record<string,
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "equipment",
+			customId: "equipment",
 		};
 	}
 	const categoryPassive = customCategorys["passive"];
@@ -828,7 +828,7 @@ export function adjustCustomCategoriesForVehicle(customCategorys: Record<string,
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "passive",
+			customId: "passive",
 		};
 	}
 	const categoryReactions = customCategorys["reactions"];
@@ -848,7 +848,7 @@ export function adjustCustomCategoriesForVehicle(customCategorys: Record<string,
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "reactions",
+			customId: "reactions",
 		};
 	}
 	const categoryWeapons = customCategorys["weapons"];
@@ -870,7 +870,7 @@ export function adjustCustomCategoriesForVehicle(customCategorys: Record<string,
 			ignoreBulk: false,
 			maxBulk: 0,
 			ownBulk: 0,
-			// customId: "weapons",
+			customId: "weapons",
 		};
 	}
 	return customCategorys;
@@ -931,7 +931,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "actions",
+				customId: "actions",
 			},
 			equipment: <Category>{
 				label: game.i18n.localize("ITEM.TypeEquipment"),
@@ -950,7 +950,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "equipment",
+				customId: "equipment",
 			},
 			passive: <Category>{
 				label: game.i18n.localize("DND5E.Features"),
@@ -967,7 +967,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "passive",
+				customId: "passive",
 			},
 			reactions: <Category>{
 				label: game.i18n.localize("DND5E.ReactionPl"),
@@ -984,7 +984,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "reactions",
+				customId: "reactions",
 			},
 			weapons: <Category>{
 				label: game.i18n.localize("DND5E.ItemTypeWeaponPl"),
@@ -1003,7 +1003,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "weapons",
+				customId: "weapons",
 			},
 		};
 	} else if (flagCategorys && !flagDisableDefaultCategories) {
@@ -1034,7 +1034,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "actions",
+				customId: "actions",
 			};
 		}
 		const categoryEquipment = flagCategorys["equipment"];
@@ -1056,7 +1056,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "equipment",
+				customId: "equipment",
 			};
 		}
 		const categoryPassive = flagCategorys["passive"];
@@ -1076,7 +1076,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "passive",
+				customId: "passive",
 			};
 		}
 		const categoryReactions = flagCategorys["reactions"];
@@ -1096,7 +1096,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "reactions",
+				customId: "reactions",
 			};
 		}
 		const categoryWeapons = flagCategorys["weapons"];
@@ -1118,7 +1118,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				ignoreBulk: false,
 				maxBulk: 0,
 				ownBulk: 0,
-				// customId: "weapons",
+				customId: "weapons",
 			};
 		}
 	} else if (flagCategorys && flagDisableDefaultCategories) {
