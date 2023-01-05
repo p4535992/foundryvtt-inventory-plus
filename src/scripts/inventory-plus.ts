@@ -306,12 +306,20 @@ export class InventoryPlus {
 
 		html.find(`.${targetCssInventoryPlus} a.item-create`).each((i, el) => {
 			const type = <string>el.dataset.type;
+
+			const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 			const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
+			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText);
 
 			$(el).data("type", type);
 			$(el).attr("data-type", type);
 			$(el).attr("data-categoryid", categoryId);
+
+			if (categoryId) {
+				if (!headerElement.attr("data-categoryid")) {
+					headerElement.attr("data-categoryid", categoryId);
+				}
+			}
 
 			const removeCategoryBtnS = `<a class="item-control remove-category"
           title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
@@ -326,9 +334,17 @@ export class InventoryPlus {
 				//const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type || <string>type;
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
+					const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-					const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
+					const categoryId = <string>(
+						retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText)
+					);
 					catType = categoryId;
+					if (categoryId) {
+						if (!headerElement.attr("data-categoryid")) {
+							headerElement.attr("data-categoryid", categoryId);
+						}
+					}
 				}
 				if (!catType) {
 					catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type || <string>type;
@@ -398,9 +414,17 @@ export class InventoryPlus {
 				// let catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
+					const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-					const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
+					const categoryId = <string>(
+						retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText)
+					);
 					catType = categoryId;
+					if (categoryId) {
+						if (!headerElement.attr("data-categoryid")) {
+							headerElement.attr("data-categoryid", categoryId);
+						}
+					}
 				}
 				if (!catType) {
 					catType = <string>$(ev.currentTarget).parent().find(".remove-category")[0]?.dataset.categoryid;
@@ -424,9 +448,17 @@ export class InventoryPlus {
 			//}
 			let catType = <string>el.attributes["data-categoryid"];
 			if (!catType) {
+				const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 				const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-				const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
+				const categoryId = <string>(
+					retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText)
+				);
 				catType = categoryId;
+				if (categoryId) {
+					if (!headerElement.attr("data-categoryid")) {
+						headerElement.attr("data-categoryid", categoryId);
+					}
+				}
 			}
 			if (!catType) {
 				catType = <string>$(el).parent().find(".remove-category")[0]?.dataset.categoryid;
@@ -458,8 +490,14 @@ export class InventoryPlus {
 			const header = <JQuery<HTMLElement>>$(headerTmp);
 			const type = <string>(<HTMLElement>header.find(".item-control")[0]).dataset.type;
 
+			const headerElement = $(<HTMLElement>headerTmp.querySelector("h3"));
 			const categoryText = <string>headerTmp.querySelector("h3")?.innerText;
-			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
+			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText);
+			if (categoryId) {
+				if (!headerElement.attr("data-categoryid")) {
+					headerElement.attr("data-categoryid", categoryId);
+				}
+			}
 
 			const extraStuff = $('<div class="inv-plus-stuff flexrow"></div>');
 			header.find("h3").after(extraStuff);
@@ -510,9 +548,17 @@ export class InventoryPlus {
 			).click(async (ev) => {
 				// const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 
+				const headerElement = $(<HTMLElement>headerTmp.querySelector("h3"));
 				const categoryText = <string>headerTmp.querySelector("h3")?.innerText;
-				const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, categoryText);
+				const categoryId = <string>(
+					retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText)
+				);
 				const catTypeTmp = categoryId;
+				if (categoryId) {
+					if (!headerElement.attr("data-categoryid")) {
+						headerElement.attr("data-categoryid", categoryId);
+					}
+				}
 
 				const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
 					return t.isInventory;
@@ -953,7 +999,7 @@ export class InventoryPlus {
 			return;
 		}
 
-		const categoryId = retrieveCategoryIdFromLabel(this.customCategorys, newCategory.label);
+		const categoryId = retrieveCategoryIdFromLabel(this.customCategorys, undefined, newCategory.label);
 		if (categoryId) {
 			error(`Could not create the category a category with the same name is already present`, true);
 			return;

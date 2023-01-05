@@ -1186,16 +1186,36 @@ export function retrieveSectionIdFromItemType(
 
 export function retrieveCategoryIdFromLabel(
 	sections: Record<string, Category>,
+	element: JQuery<HTMLElement> | undefined,
 	categoryText: string
 ): string | undefined {
-	if (!categoryText) {
-		return;
+	let dataCategoryId: string | undefined = undefined;
+	let categoryTextTmp = "";
+	if (element) {
+		let headerElement = element;
+		if (!headerElement.attr("data-categoryid")) {
+			dataCategoryId = <string>headerElement.attr("data-categoryid");
+		}
+	}
+	if (categoryText && categoryText.includes("(")) {
+		const arr = <string[]>(categoryText.split("("));
+		categoryTextTmp = (<string>arr[0])?.trim();
+	} else {
+		categoryTextTmp = categoryText.trim();
 	}
 	let categoryId: string | undefined = undefined;
 	for (const [key, value] of Object.entries(sections)) {
-		if (i18n(value.label) === categoryText) {
-			categoryId = key;
-			break;
+		if (dataCategoryId) {
+			if (i18n(value.customId) === dataCategoryId) {
+				categoryId = key;
+				break;
+			}
+		} else if (categoryTextTmp) {
+			// TODO i know this suck is just for retrocompatibility.....
+			if (categoryTextTmp.startsWith(i18n(value.label))) {
+				categoryId = key;
+				break;
+			}
 		}
 	}
 	return categoryId;
