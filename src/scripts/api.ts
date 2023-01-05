@@ -319,18 +319,14 @@ const API = {
 			// 	sectionCategoryId = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
 			// }
 			if (sectionCategoryId === undefined || customCategorys[sectionCategoryId] === undefined) {
+				sectionCategoryId = categoryDatasetType;
+			}
+			if (sectionCategoryId === undefined || customCategorys[sectionCategoryId] === undefined) {
 				sectionCategoryId = item.type;
 			}
 			// return categoryDatasetType === type;
 			let sectionId = <string>(
-				retrieveSectionIdFromItemType(
-					actor.type,
-					customCategorys,
-					item.type,
-					undefined,
-					sectionCategoryId,
-					categoryDatasetType
-				)
+				retrieveSectionIdFromItemType(actor.type, customCategorys, item.type, undefined, sectionCategoryId)
 			);
 			return categoryDatasetType === sectionId;
 		});

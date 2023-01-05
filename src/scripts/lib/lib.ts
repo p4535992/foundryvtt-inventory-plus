@@ -1004,8 +1004,8 @@ export function retrieveSectionIdFromItemType(
 	sections: Record<string, Category>,
 	originalItemType: string,
 	category: Category | undefined,
-	sectionItemTypeOri: string | undefined,
-	categoryDatasetType: string | undefined
+	sectionItemTypeOri: string | undefined
+	// categoryDatasetType: string | undefined
 ) {
 	let sectionId: string | undefined = undefined;
 	let sectionItemType = sectionItemTypeOri ? sectionItemTypeOri : originalItemType;
@@ -1013,16 +1013,14 @@ export function retrieveSectionIdFromItemType(
 	let weaponType = "";
 	let armorType = "";
 	if (category) {
-		sectionItemType = categoryDatasetType ?? sectionItemType ?? category.dataset.type;
+		// sectionItemType = categoryDatasetType ?? sectionItemType ?? category.dataset.type;
+		sectionItemType = sectionItemType ?? category.dataset.type;
 		activationType = <string>category.dataset["activation.type"] ?? "";
 		weaponType = <string>category.dataset["weapon-type"] ?? "";
 		armorType = <string>category.dataset["armor.type"] ?? "";
 	}
-	if(!sectionItemType){
-		warn(
-			i18n(`Section item is not found o the preparation method`),
-			true
-		);
+	if (!sectionItemType) {
+		warn(i18n(`Section item is not found o the preparation method`), true);
 		return;
 	}
 
@@ -1181,10 +1179,24 @@ export function retrieveSectionIdFromItemType(
 		}
 	}
 	if (!sectionId) {
-		warn(
-			i18n(`Section id not found on preparation method`),
-			true
-		);
+		warn(i18n(`Section id not found on preparation method`), true);
 	}
 	return sectionId;
+}
+
+export function retrieveCategoryFromLabel(
+	sections: Record<string, Category>,
+	categoryText: string
+): string | undefined {
+	if (!categoryText) {
+		return;
+	}
+	let categoryId: string | undefined = undefined;
+	for (const [key, value] of Object.entries(sections)) {
+		if (i18n(value.label) === categoryText) {
+			categoryId = key;
+			break;
+		}
+	}
+	return categoryId;
 }

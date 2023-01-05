@@ -25,6 +25,7 @@ import {
 	info,
 	isStringEquals,
 	is_real_number,
+	retrieveCategoryFromLabel,
 	retrieveSectionIdFromItemType,
 	warn,
 } from "./lib/lib";
@@ -295,7 +296,7 @@ export class InventoryPlus {
 		//   //const parent = <ParentNode>createBtn.parentNode;
 		//   const createItemBtn = `<a class="item-control item-create"
 		//     title="${i18n('DND5E.ItemCreate')}"
-		//     data-type="${type}">`;
+		//     data-type="${type}" data-categoryid="${categoryId}">`;
 		//   $(createBtn).html(createItemBtn);
 		//@ts-ignore
 		//parent.innerHTML = '';
@@ -305,12 +306,16 @@ export class InventoryPlus {
 
 		html.find(`.${targetCssInventoryPlus} a.item-create`).each((i, el) => {
 			const type = <string>el.dataset.type;
+			const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+			const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+
 			$(el).data("type", type);
 			$(el).attr("data-type", type);
+			$(el).attr("data-categoryid", categoryId);
 
 			const removeCategoryBtnS = `<a class="item-control remove-category"
           title="${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategory`)}"
-          data-type="${type}">
+          data-type="${type}" data-categoryid="${categoryId}">
           <i class="fas fa-minus"></i>${i18n(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategoryprefix`)}</a>`;
 
 			const linkElRemoveCategory = $(removeCategoryBtnS);
@@ -318,9 +323,18 @@ export class InventoryPlus {
 
 			linkElRemoveCategory.on("click", async (ev) => {
 				ev.preventDefault();
-				const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type || <string>type;
+				//const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type || <string>type;
+				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
+				if (!catType) {
+					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+					catType = categoryId;
+				}
+				if (!catType) {
+					catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type || <string>type;
+				}
 				const category = <Category>this.customCategorys[catType];
-				const categoryItems = API.getItemsFromCategory(this.actor, category.dataset.type, this.customCategorys);
+				const categoryItems = API.getItemsFromCategory(this.actor, catType, this.customCategorys);
 				if (categoryItems && categoryItems.length > 0) {
 					warn(
 						i18nFormat(`${CONSTANTS.MODULE_NAME}.inv-plus-dialog.deletecategorycheckitems`, {
@@ -374,14 +388,26 @@ export class InventoryPlus {
 
 			const createItemBtn = `<a class="item-control item-create-2"
           title="${i18n("DND5E.ItemCreate")}"
-          data-type="${type}">
+          data-type="${type}" data-categoryid="${categoryId}">
           <i class="fas fa-plus"></i> ${i18n("DND5E.Add")}</a>`;
 
 			const linkElItemCreate2 = $(createItemBtn);
 			$(el).after(linkElItemCreate2);
 			linkElItemCreate2.on("click", (ev) => {
 				ev.preventDefault();
-				let catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+				// let catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
+				if (!catType) {
+					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+					catType = categoryId;
+				}
+				if (!catType) {
+					catType = <string>$(ev.currentTarget).parent().find(".remove-category")[0]?.dataset.categoryid;
+				}
+				if (!catType) {
+					catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+				}
 				if (!catType) {
 					catType = <string>$(ev.currentTarget).parent().find(".remove-category")[0]?.dataset.type;
 				}
@@ -392,12 +418,34 @@ export class InventoryPlus {
 		html.find(`.${targetCssInventoryPlus} a.item-create`).css("display", "none");
 
 		html.find(`.${targetCssInventoryPlus} a.quick-insert-link`).each((i, el) => {
-			let catType = <string>el.attributes["data-type"];
+			//let catType = <string>el.attributes["data-type"];
+			//if (!catType) {
+			//	catType = <string>$(el).parent().find(".remove-category")[0]?.dataset.type;
+			//}
+			let catType = <string>el.attributes["data-categoryid"];
+			if (!catType) {
+				const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+				const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+				catType = categoryId;
+			}
+			if (!catType) {
+				catType = <string>$(el).parent().find(".remove-category")[0]?.dataset.categoryid;
+			}
+			if (!catType) {
+				catType = <string>el.attributes["data-type"];
+			}
 			if (!catType) {
 				catType = <string>$(el).parent().find(".remove-category")[0]?.dataset.type;
 			}
-			$(el).data("type", catType);
-			$(el).attr("data-type", catType);
+
+			let itemType = <string>el.attributes["data-type"];
+			if (!itemType) {
+				itemType = <string>$(el).parent().find(".remove-category")[0]?.dataset.type;
+			}
+
+			$(el).data("type", itemType);
+			$(el).attr("data-type", itemType);
+			$(el).attr("data-categoryid", catType);
 		});
 
 		/*
@@ -410,15 +458,18 @@ export class InventoryPlus {
 			const header = <JQuery<HTMLElement>>$(headerTmp);
 			const type = <string>(<HTMLElement>header.find(".item-control")[0]).dataset.type;
 
+			const categoryText = <string>headerTmp.querySelector("h3")?.innerText;
+			const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+
 			const extraStuff = $('<div class="inv-plus-stuff flexrow"></div>');
 			header.find("h3").after(extraStuff);
 
-			if (this.customCategorys[type] === undefined) {
-				warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfoundbytype`, { type: type }));
+			if (this.customCategorys[categoryId] === undefined) {
+				warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfoundbytype`, { type: categoryId }));
 				return;
 			}
 
-			const currentCategory = <Category>this.customCategorys[type];
+			const currentCategory = <Category>this.customCategorys[categoryId];
 			if (!currentCategory.explicitTypes || currentCategory.explicitTypes.length === 0) {
 				currentCategory.explicitTypes = inventoryPlusItemTypeCollection.filter((t) => {
 					return t.isInventory;
@@ -439,22 +490,30 @@ export class InventoryPlus {
 			if (this.getLowestSortFlag() !== currentCategory.sortFlag) {
 				const upBtn = $(
 					`<a class="inv-plus-stuff shuffle-up" title="Move category up"><i class="fas fa-chevron-up"></i></a>`
-				).click(() => this.changeCategoryOrder(type, true));
+				).click(() => this.changeCategoryOrder(categoryId, true));
 				extraStuff.append(upBtn);
 			}
 			if (this.getHighestSortFlag() !== currentCategory.sortFlag) {
 				const downBtn = $(
 					`<a class="inv-plus-stuff shuffle-down" title="Move category down"><i class="fas fa-chevron-down"></i></a>`
-				).click(() => this.changeCategoryOrder(type, false));
+				).click(() => this.changeCategoryOrder(categoryId, false));
 				extraStuff.append(downBtn);
 			}
 			// ================
 			// edit category
 			// ===============
 			const editCategoryBtn = $(
-				`<a class="inv-plus-stuff customize-category" data-type="${type}"><i class="fas fa-edit"></i></a>`
+				`<a class="inv-plus-stuff customize-category" 
+				data-type="${type}" data-categoryid="${categoryId}">
+				<i class="fas fa-edit"></i>
+				</a>`
 			).click(async (ev) => {
-				const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+				// const catTypeTmp = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
+
+				const categoryText = <string>headerTmp.querySelector("h3")?.innerText;
+				const categoryId = <string>retrieveCategoryFromLabel(this.customCategorys, categoryText);
+				const catTypeTmp = categoryId;
+
 				const explicitTypesFromList = inventoryPlusItemTypeCollection.filter((t) => {
 					return t.isInventory;
 				});
@@ -584,7 +643,7 @@ export class InventoryPlus {
 				icon = icon + `<i class="fas fa-balance-scale-right"></i>`;
 			}
 			*/
-			const weight = <number>this.getCategoryItemWeight(type);
+			const weight = <number>this.getCategoryItemWeight(categoryId);
 			let bulkWeightS = "";
 			let weightUnit = game.settings.get("dnd5e", "metricWeightUnits")
 				? game.i18n.localize("DND5E.AbbreviationKgs")
@@ -803,7 +862,7 @@ export class InventoryPlus {
 			for (const item of <Item[]>section.items) {
 				let sectionItemType = this.getItemType(item);
 				let sectionId = <string>(
-					retrieveSectionIdFromItemType(actor.type, sections, item.type, section, sectionItemType, undefined)
+					retrieveSectionIdFromItemType(actor.type, sections, item.type, section, sectionItemType)
 				);
 				/*
 				//let sectionId = <string>retrieveSectionIdFromItemType(actor.type, section, undefined);
@@ -821,7 +880,7 @@ export class InventoryPlus {
 				}
 			}
 		}
-		
+
 		// TODO WHY THIS HIDE THE WEIGHT LABEL OF ITEMS ????
 		/*
     const items = actor.items.contents;
@@ -904,7 +963,6 @@ export class InventoryPlus {
 	}
 
 	async removeCategory(catType: string) {
-		//const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 		const changedItems: ItemData[] = [];
 		const items = API.getItemsFromCategory(this.actor, catType, this.customCategorys);
 		for (const itemEntity of items) {
