@@ -8,7 +8,7 @@ import {
 	InventoryPlusFlags,
 	InventoryPlusItemType,
 } from "./inventory-plus-models";
-import { calcWeight, debug, is_real_number, warn } from "./lib/lib";
+import { calcWeight, debug, is_real_number, retrieveSectionIdFromItemType, warn } from "./lib/lib";
 
 const API = {
 	inventoryPlus: <InventoryPlus>{},
@@ -321,7 +321,18 @@ const API = {
 			if (type === undefined || customCategorys[type] === undefined) {
 				type = item.type;
 			}
-			return categoryDatasetType === type;
+			// return categoryDatasetType === type;
+			let sectionId = <string>(
+				retrieveSectionIdFromItemType(
+					actor.type,
+					customCategorys,
+					item.type,
+					undefined,
+					type,
+					categoryDatasetType
+				)
+			);
+			return categoryDatasetType === sectionId;
 		});
 	},
 

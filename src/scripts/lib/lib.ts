@@ -999,15 +999,35 @@ export async function _isFromSameActor(actor: Actor, item: Item | null) {
 	}
 }
 
-export function retrieveSectionIdFromItemType(actorType: string, category: Category, itemType:string|undefined) {
+export function retrieveSectionIdFromItemType(
+	actorType: string,
+	sections: Record<string, Category>,
+	originalItemType: string,
+	category: Category | undefined,
+	sectionItemTypeOri: string | undefined,
+	categoryDatasetType: string | undefined
+) {
 	let sectionId: string | undefined = undefined;
-	itemType = itemType === undefined ? <string>category.dataset.type : itemType;
-	const activationType = <string>category.dataset["activation.type"] ?? "";
-	const weaponType = <string>category.dataset["weapon-type"] ?? "";
-	const armorType = <string>category.dataset["armor.type"] ?? "";
+	let sectionItemType = sectionItemTypeOri ? sectionItemTypeOri : originalItemType;
+	let activationType = <string>"";
+	let weaponType = "";
+	let armorType = "";
+	if (category) {
+		sectionItemType = categoryDatasetType ?? sectionItemType ?? category.dataset.type;
+		activationType = <string>category.dataset["activation.type"] ?? "";
+		weaponType = <string>category.dataset["weapon-type"] ?? "";
+		armorType = <string>category.dataset["armor.type"] ?? "";
+	}
+	if(!sectionItemType){
+		warn(
+			i18n(`Section item is not found o the preparation method`),
+			true
+		);
+		return;
+	}
 
 	if (actorType === "character") {
-		switch (itemType) {
+		switch (sectionItemType) {
 			case "weapon": {
 				sectionId = "weapon";
 				break;
@@ -1038,7 +1058,7 @@ export function retrieveSectionIdFromItemType(actorType: string, category: Categ
 			}
 		}
 	} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
-		switch (itemType) {
+		switch (sectionItemType) {
 			case "feat": {
 				if (activationType === "action") {
 					sectionId = "actions";
@@ -1081,7 +1101,7 @@ export function retrieveSectionIdFromItemType(actorType: string, category: Categ
 			}
 		}
 	} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
-		switch (itemType) {
+		switch (sectionItemType) {
 			case "feat": {
 				if (activationType === "crew") {
 					sectionId = "actions";
@@ -1135,7 +1155,36 @@ export function retrieveSectionIdFromItemType(actorType: string, category: Categ
 			i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
 			true
 		);
-		return;
+		sectionId = undefined;
+	}
+	if (sectionId === undefined) {
+		if (sections[sectionItemType]) {
+			sectionId = sectionItemType;
+		} else if (sections[originalItemType]) {
+			sectionId = originalItemType;
+		} else {
+			if (actorType === "character") {
+				sectionId = "weapon";
+			} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
+				sectionId = "weapons";
+			} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
+				sectionId = "weapons";
+			} else {
+				// Cannot happened
+				warn(
+					i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, {
+						actorType: actorType,
+					}),
+					true
+				);
+			}
+		}
+	}
+	if (!sectionId) {
+		warn(
+			i18n(`Section id not found on preparation method`),
+			true
+		);
 	}
 	return sectionId;
 }

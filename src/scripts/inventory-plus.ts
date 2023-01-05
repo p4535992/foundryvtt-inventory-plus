@@ -801,7 +801,11 @@ export class InventoryPlus {
 
 		for (const section of inventory) {
 			for (const item of <Item[]>section.items) {
-				let type = this.getItemType(item);
+				let sectionItemType = this.getItemType(item);
+				let sectionId = <string>(
+					retrieveSectionIdFromItemType(actor.type, sections, item.type, section, sectionItemType, undefined)
+				);
+				/*
 				//let sectionId = <string>retrieveSectionIdFromItemType(actor.type, section, undefined);
 				let sectionId = <string>retrieveSectionIdFromItemType(actor.type, section, type);
 				if (sectionId === undefined) {
@@ -811,6 +815,7 @@ export class InventoryPlus {
 						sectionId = item.type;
 					}
 				}
+				*/
 				if (sections[sectionId]) {
 					(<Category>sections[sectionId]).items?.push(item);
 				}
@@ -856,7 +861,7 @@ export class InventoryPlus {
 		// 		}
 		// 		if (sections[sectionId]) {
 		// 			(<Category>sections[sectionId]).items?.push(item);
-		// 		} 
+		// 		}
 		// 		// else if (sections[section.customId]) {
 		// 		// 	(<Category>sections[section.customId]).items?.push(item);
 		// 		// }
@@ -1142,9 +1147,9 @@ export class InventoryPlus {
 		return totalCategoryWeight.toNearest(0.1);
 	}
 
-	getCategoryItemBulk(type: string): number {
+	getCategoryItemBulk(sectionId: string): number {
 		// let totalCategoryWeight = 0;
-		const items = API.getItemsFromCategory(this.actor, type, this.customCategorys);
+		const items = API.getItemsFromCategory(this.actor, sectionId, this.customCategorys);
 		if (
 			game.modules.get("variant-encumbrance-dnd5e")?.active &&
 			game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance")
@@ -1156,7 +1161,7 @@ export class InventoryPlus {
 				EncumbranceBulkData //@ts-ignore
 			>game.modules.get("variant-encumbrance-dnd5e")?.api.calculateBulkOnActorWithItemsNoInventoryPlus(this.actor, items);
 
-			const currentCategory = <Category>this.customCategorys[type];
+			const currentCategory = <Category>this.customCategorys[sectionId];
 			const totalWeight = encumbranceData.totalWeight + (currentCategory.ownBulk ?? 0);
 			return totalWeight;
 		} else {

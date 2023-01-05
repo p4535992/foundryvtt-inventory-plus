@@ -854,7 +854,7 @@ export function adjustCustomCategoriesForVehicle(customCategorys: Record<string,
 	const categoryWeapons = customCategorys["weapons"];
 	if (!categoryWeapons) {
 		customCategorys["weapons"] = <Category>{
-			label: game.i18n.localize("ITEM.TypeWeaponPl"),
+			label: game.i18n.localize("DND5E.ItemTypeWeaponPl"),
 			crewable: true,
 			dataset: { type: "weapon", "weapon-type": "siege" },
 			columns: <any>equipmentColumns,
@@ -987,7 +987,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				// customId: "reactions",
 			},
 			weapons: <Category>{
-				label: game.i18n.localize("ITEM.TypeWeaponPl"),
+				label: game.i18n.localize("DND5E.ItemTypeWeaponPl"),
 				crewable: true,
 				dataset: { type: "weapon", "weapon-type": "siege" },
 				columns: <any>equipmentColumns,
@@ -1102,7 +1102,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 		const categoryWeapons = flagCategorys["weapons"];
 		if (!categoryWeapons) {
 			flagCategorys["weapons"] = <Category>{
-				label: game.i18n.localize("ITEM.TypeWeaponPl"),
+				label: game.i18n.localize("DND5E.ItemTypeWeaponPl"),
 				crewable: true,
 				dataset: { type: "weapon", "weapon-type": "siege" },
 				columns: <any>equipmentColumns,
