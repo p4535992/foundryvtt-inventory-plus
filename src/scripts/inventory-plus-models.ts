@@ -19,6 +19,8 @@ export class Category {
 			editable?: string;
 		}
 	];
+	css?: string;
+	editableName?: boolean;
 	/* non default dnd5e */
 	sortFlag: number;
 	ignoreWeight: boolean;
@@ -240,6 +242,59 @@ export const inventoryPlusItemTypeCollectionForVehicle = <InventoryPlusItemType[
 	{
 		id: "weapon",
 		name: "ITEM.TypeWeaponPl",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+];
+
+export const inventoryPlusItemTypeCollectionForVehicleCargo = <InventoryPlusItemType[]>[
+	{
+		id: "",
+		name: "None",
+		namePl: "None",
+		img: "",
+		isSelected: true,
+		isInventory: true,
+	},
+	{
+		id: "weapon",
+		name: "DND5E.ItemTypeWeapon",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "equipment",
+		name: "DND5E.ItemTypeEquipment",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "consumable",
+		name: "DND5E.ItemTypeConsumable",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "tool",
+		name: "DND5E.ItemTypeTool",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "loot",
+		name: "DND5E.ItemTypeLoot",
+		img: "",
+		isSelected: false,
+		isInventory: true,
+	},
+	{
+		id: "backpack",
+		name: "DND5E.ItemTypeContainer",
 		img: "",
 		isSelected: false,
 		isInventory: true,

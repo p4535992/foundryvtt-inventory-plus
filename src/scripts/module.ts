@@ -1,9 +1,18 @@
-import type { ItemData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/data.mjs";
 import { getApi, setApi } from "../main";
 import API from "./api";
 import CONSTANTS from "./constants";
 import { InventoryPlus } from "./inventory-plus";
-import { Category, EncumbranceDnd5e, InventoryPlusFlags, itemTypesDnd5e } from "./inventory-plus-models";
+import {
+	Category,
+	EncumbranceDnd5e,
+	InventoryPlusFlags,
+	InventoryPlusItemType,
+	inventoryPlusItemTypeCollectionForCharacter,
+	inventoryPlusItemTypeCollectionForNPC,
+	inventoryPlusItemTypeCollectionForVehicle,
+	inventoryPlusItemTypeCollectionForVehicleCargo,
+	itemTypesDnd5e,
+} from "./inventory-plus-models";
 import {
 	getCSSName,
 	debug,
@@ -107,6 +116,10 @@ export const readyHooks = async (): Promise<void> => {
 				const actor = <Actor>this.actor;
 				const newInventory = InventoryPlus.processInventory(this, actor, sheetData.features);
 				sheetData.features = Object.values(newInventory);
+
+				// const newInventoryCargo = InventoryPlus.processInventory(this, actor, sheetData.cargo);
+				// sheetData.cargo = Object.values(newInventoryCargo);
+
 				const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 				if (encumbrance5e) {
 					sheetData.system.attributes.encumbrance = encumbrance5e;
@@ -162,7 +175,50 @@ const module = {
 		app.inventoryPlus = new InventoryPlus();
 		app.inventoryPlus.init(actorEntityTmp);
 		// }
-		app.inventoryPlus.addInventoryFunctions(html, actorEntityTmp.type);
+
+		const actorType = actorEntityTmp.type;
+		let inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[];
+		let targetCssInventoryPlus: string | undefined = undefined;
+		if (actorType === "character") {
+			targetCssInventoryPlus = "inventory";
+			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForCharacter;
+			app.inventoryPlus.addInventoryFunctions(
+				html,
+				actorType,
+				targetCssInventoryPlus,
+				inventoryPlusItemTypeCollection
+			);
+		} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
+			targetCssInventoryPlus = "features";
+			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForNPC;
+			app.inventoryPlus.addInventoryFunctions(
+				html,
+				actorType,
+				targetCssInventoryPlus,
+				inventoryPlusItemTypeCollection
+			);
+		} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
+			targetCssInventoryPlus = "features";
+			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForVehicle;
+			app.inventoryPlus.addInventoryFunctions(
+				html,
+				actorType,
+				targetCssInventoryPlus,
+				inventoryPlusItemTypeCollection
+			);
+
+			// SPECIAL CASE CARGO
+			// targetCssInventoryPlus = "cargo";
+			// inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForVehicleCargo;
+			// app.inventoryPlus.addInventoryFunctions(html, actorType, targetCssInventoryPlus);
+		} else {
+			// Cannot happened
+			warn(
+				i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
+				true
+			);
+			return;
+		}
 	},
 	dropActorSheetDataTransferStuff(targetActor: Actor, sourceActor: Actor, item: Item): boolean {
 		if (!item) {

@@ -93,28 +93,14 @@ export class InventoryPlus {
 		this.applySortKey();
 	}
 
-	addInventoryFunctions(html: JQuery<HTMLElement>, actorType: string) {
+	addInventoryFunctions(
+		html: JQuery<HTMLElement>,
+		actorType: string,
+		targetCssInventoryPlus: string,
+		inventoryPlusItemTypeCollection: InventoryPlusItemType[]
+	) {
 		if (!actorType || !html) {
 			// Cannot happened
-			return;
-		}
-		let inventoryPlusItemTypeCollection = <InventoryPlusItemType[]>[];
-		let targetCssInventoryPlus = "";
-		if (actorType === "character") {
-			targetCssInventoryPlus = "inventory";
-			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForCharacter;
-		} else if (actorType === "npc" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForNpc")) {
-			targetCssInventoryPlus = "features";
-			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForNPC;
-		} else if (actorType === "vehicle" && game.settings.get(CONSTANTS.MODULE_NAME, "enableForVehicle")) {
-			targetCssInventoryPlus = "features";
-			inventoryPlusItemTypeCollection = inventoryPlusItemTypeCollectionForVehicle;
-		} else {
-			// Cannot happened
-			warn(
-				i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
-				true
-			);
 			return;
 		}
 
@@ -505,8 +491,12 @@ export class InventoryPlus {
 			header.find("h3").after(extraStuff);
 
 			if (this.customCategorys[categoryId] === undefined) {
-				warn(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfoundbytype`, { type: categoryId }));
-				return;
+				warn(
+					i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.nocategoryfoundbytype`, {
+						type: categoryId ?? categoryText,
+					})
+				);
+				continue;
 			}
 
 			const currentCategory = <Category>this.customCategorys[categoryId];

@@ -1,3 +1,8 @@
+### 0.6.20 [BREAKING CHANGES]
+
+- Add initial management for NPC e Vehicle
+- Add some better code in preparation of 0.2.1
+
 ### 0.6.19
 
 - Update languages

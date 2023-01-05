@@ -1149,3 +1149,250 @@ export function initCategoriesForVehicle(flagCategorys) {
 	}
 	return flagCategorys;
 }
+
+// const cargo = {
+// 	crew: {
+// 	  label: game.i18n.localize("DND5E.VehicleCrew"),
+// 	  items: context.actor.system.cargo.crew,
+// 	  css: "cargo-row crew",
+// 	  editableName: true,
+// 	  dataset: {type: "crew"},
+// 	  columns: cargoColumns
+// 	},
+// 	passengers: {
+// 	  label: game.i18n.localize("DND5E.VehiclePassengers"),
+// 	  items: context.actor.system.cargo.passengers,
+// 	  css: "cargo-row passengers",
+// 	  editableName: true,
+// 	  dataset: {type: "passengers"},
+// 	  columns: cargoColumns
+// 	},
+// 	cargo: {
+// 	  label: game.i18n.localize("DND5E.VehicleCargo"),
+// 	  items: [],
+// 	  dataset: {type: "loot"},
+// 	  columns: [{
+// 		label: game.i18n.localize("DND5E.Quantity"),
+// 		css: "item-qty",
+// 		property: "system.quantity",
+// 		editable: "Number"
+// 	  }, {
+// 		label: game.i18n.localize("DND5E.Price"),
+// 		css: "item-price",
+// 		property: "system.price.value",
+// 		editable: "Number"
+// 	  }, {
+// 		label: game.i18n.localize("DND5E.Weight"),
+// 		css: "item-weight",
+// 		property: "system.weight",
+// 		editable: "Number"
+// 	  }]
+// 	}
+// };
+
+export function initCategoriesForVehicleForCargo(flagCategorys) {
+	// Taken from dnd5e system
+	const cargoColumns = [
+		{
+			label: game.i18n.localize("DND5E.Quantity"),
+			css: "item-qty",
+			property: "quantity",
+			editable: "Number",
+		},
+	];
+
+	const flagDisableDefaultCategories = false;
+	if (flagCategorys === undefined && !flagDisableDefaultCategories) {
+		debug(`flagCategory=false && flagDisableDefaultCategories=false`);
+		flagCategorys = {
+			crew: <Category>{
+				label: game.i18n.localize("DND5E.VehicleCrew"),
+				items: <Item[]>[], // context.actor.system.cargo.crew,
+				css: "cargo-row crew",
+				editableName: true,
+				dataset: { type: "crew" },
+				columns: cargoColumns,
+				sortFlag: 1000,
+				ignoreWeight: false,
+				maxWeight: 0,
+				ownWeight: 0,
+				collapsed: false,
+				explicitTypes: inventoryPlusItemTypeCollectionForVehicle.filter((t) => {
+					return t.isInventory;
+				}),
+				ignoreBulk: false,
+				maxBulk: 0,
+				ownBulk: 0,
+				customId: "crew",
+			},
+			passengers: <Category>{
+				label: game.i18n.localize("DND5E.VehiclePassengers"),
+				items: <Item[]>[], // context.actor.system.cargo.passengers,
+				css: "cargo-row passengers",
+				editableName: true,
+				dataset: { type: "passengers" },
+				columns: cargoColumns,
+				sortFlag: 2000,
+				ignoreWeight: false,
+				maxWeight: 0,
+				ownWeight: 0,
+				collapsed: false,
+				explicitTypes: inventoryPlusItemTypeCollectionForVehicle.filter((t) => {
+					return t.isInventory;
+				}),
+				ignoreBulk: false,
+				maxBulk: 0,
+				ownBulk: 0,
+				customId: "passengers",
+			},
+			cargo: <any>{
+				label: <string>game.i18n.localize("DND5E.VehicleCargo"),
+				items: <Item[]>[],
+				dataset: { type: "loot" },
+				columns: [
+					{
+						label: <string>game.i18n.localize("DND5E.Quantity"),
+						css: "item-qty",
+						property: "system.quantity",
+						editable: "Number",
+					},
+					{
+						label: <string>game.i18n.localize("DND5E.Price"),
+						css: "item-price",
+						property: "system.price.value",
+						editable: "Number",
+					},
+					{
+						label: <string>game.i18n.localize("DND5E.Weight"),
+						css: "item-weight",
+						property: "system.weight",
+						editable: "Number",
+					},
+				],
+				sortFlag: 3000,
+				ignoreWeight: false,
+				maxWeight: 0,
+				ownWeight: 0,
+				collapsed: false,
+				explicitTypes: inventoryPlusItemTypeCollectionForVehicle.filter((t) => {
+					return t.isInventory;
+				}),
+				ignoreBulk: false,
+				maxBulk: 0,
+				ownBulk: 0,
+				customId: "cargo",
+			},
+		};
+	} else if (flagCategorys && !flagDisableDefaultCategories) {
+		debug(`flagCategory=true && flagDisableDefaultCategories=false`);
+		const categoryCrew = flagCategorys["crew"];
+		if (!categoryCrew) {
+			flagCategorys["crew"] = <Category>{
+				label: game.i18n.localize("DND5E.VehicleCrew"),
+				items: <Item[]>[], // context.actor.system.cargo.crew,
+				css: "cargo-row crew",
+				editableName: true,
+				dataset: { type: "crew" },
+				columns: cargoColumns,
+				sortFlag: 1000,
+				ignoreWeight: false,
+				maxWeight: 0,
+				ownWeight: 0,
+				collapsed: false,
+				explicitTypes: inventoryPlusItemTypeCollectionForVehicle.filter((t) => {
+					return t.isInventory;
+				}),
+				ignoreBulk: false,
+				maxBulk: 0,
+				ownBulk: 0,
+				customId: "crew",
+			};
+		}
+		const categoryPassengers = flagCategorys["passengers"];
+		if (!categoryPassengers) {
+			flagCategorys["passengers"] = <Category>{
+				label: game.i18n.localize("DND5E.VehiclePassengers"),
+				items: <Item[]>[], // context.actor.system.cargo.passengers,
+				css: "cargo-row passengers",
+				editableName: true,
+				dataset: { type: "passengers" },
+				columns: cargoColumns,
+				sortFlag: 2000,
+				ignoreWeight: false,
+				maxWeight: 0,
+				ownWeight: 0,
+				collapsed: false,
+				explicitTypes: inventoryPlusItemTypeCollectionForVehicle.filter((t) => {
+					return t.isInventory;
+				}),
+				ignoreBulk: false,
+				maxBulk: 0,
+				ownBulk: 0,
+				customId: "passengers",
+			};
+		}
+		const categoryCargo = flagCategorys["cargo"];
+		if (!categoryCargo) {
+			flagCategorys["cargo"] = <any>{
+				label: <string>game.i18n.localize("DND5E.VehicleCargo"),
+				items: <Item[]>[],
+				dataset: { type: "loot" },
+				columns: [
+					{
+						label: <string>game.i18n.localize("DND5E.Quantity"),
+						css: "item-qty",
+						property: "system.quantity",
+						editable: "Number",
+					},
+					{
+						label: <string>game.i18n.localize("DND5E.Price"),
+						css: "item-price",
+						property: "system.price.value",
+						editable: "Number",
+					},
+					{
+						label: <string>game.i18n.localize("DND5E.Weight"),
+						css: "item-weight",
+						property: "system.weight",
+						editable: "Number",
+					},
+				],
+				sortFlag: 3000,
+				ignoreWeight: false,
+				maxWeight: 0,
+				ownWeight: 0,
+				collapsed: false,
+				explicitTypes: inventoryPlusItemTypeCollectionForVehicle.filter((t) => {
+					return t.isInventory;
+				}),
+				ignoreBulk: false,
+				maxBulk: 0,
+				ownBulk: 0,
+				customId: "cargo",
+			};
+		}
+	} else if (flagCategorys && flagDisableDefaultCategories) {
+		debug(`flagCategory=true && flagDisableDefaultCategories=true`);
+		for (const key in flagCategorys) {
+			const category = <Category>flagCategorys[key];
+			if (category && !category?.label) {
+				continue;
+			}
+			if (isStringEquals(i18n(category?.label), i18n("DND5E.VehicleCrew"))) {
+				delete flagCategorys[key];
+			}
+			if (isStringEquals(i18n(category?.label), i18n("DND5E.VehiclePassengers"))) {
+				delete flagCategorys[key];
+			}
+			if (isStringEquals(i18n(category?.label), i18n("DND5E.VehicleCargo"))) {
+				delete flagCategorys[key];
+			}
+		}
+	} else {
+		debug(`flagCategory=false && flagDisableDefaultCategories=true`);
+		if (!flagCategorys) {
+			flagCategorys = {};
+		}
+	}
+	return flagCategorys;
+}
