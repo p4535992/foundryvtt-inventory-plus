@@ -213,10 +213,10 @@ const module = {
 			// app.inventoryPlus.addInventoryFunctions(html, actorType, targetCssInventoryPlus);
 		} else {
 			// Cannot happened
-			warn(
-				i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
-				true
-			);
+			// warn(
+			// 	i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
+			// 	true
+			// );
 			return;
 		}
 	},

@@ -1149,10 +1149,10 @@ export function retrieveSectionIdFromItemType(
 		}
 	} else {
 		// Cannot happened
-		warn(
-			i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
-			true
-		);
+		// warn(
+		// 	i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
+		// 	true
+		// );
 		sectionId = undefined;
 	}
 	if (sectionId === undefined) {
@@ -1169,12 +1169,12 @@ export function retrieveSectionIdFromItemType(
 				sectionId = "weapons";
 			} else {
 				// Cannot happened
-				warn(
-					i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, {
-						actorType: actorType,
-					}),
-					true
-				);
+				// warn(
+				// 	i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, {
+				// 		actorType: actorType,
+				// 	}),
+				// 	true
+				// );
 			}
 		}
 	}
@@ -1204,7 +1204,7 @@ export function retrieveCategoryIdFromLabel(
 		const arr = <string[]>categoryText.split("(");
 		categoryTextTmp = (<string>arr[0])?.trim();
 	} else {
-		categoryTextTmp = categoryText.trim();
+		categoryTextTmp = categoryText ? categoryText.trim() : categoryTextTmp;
 	}
 	let categoryId: string | undefined = undefined;
 	for (const [key, value] of Object.entries(sections)) {

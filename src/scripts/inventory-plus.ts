@@ -73,10 +73,10 @@ export class InventoryPlus {
 			flagCategorys = initCategoriesForVehicle(flagCategorys);
 		} else {
 			// Cannot happened
-			warn(
-				i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
-				true
-			);
+			// warn(
+			// 	i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
+			// 	true
+			// );
 			return;
 		}
 
@@ -173,13 +173,13 @@ export class InventoryPlus {
 										}
 									} else {
 										// Cannot happened
-										warn(
-											i18nFormat(
-												`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`,
-												{ actorType: actorType }
-											),
-											true
-										);
+										// warn(
+										// 	i18nFormat(
+										// 		`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`,
+										// 		{ actorType: actorType }
+										// 	),
+										// 	true
+										// );
 										return;
 									}
 								} else {
@@ -197,13 +197,13 @@ export class InventoryPlus {
 										this.customCategorys = adjustCustomCategoriesForVehicle(this.customCategorys);
 									} else {
 										// Cannot happened
-										warn(
-											i18nFormat(
-												`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`,
-												{ actorType: actorType }
-											),
-											true
-										);
+										// warn(
+										// 	i18nFormat(
+										// 		`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`,
+										// 		{ actorType: actorType }
+										// 	),
+										// 	true
+										// );
 										return;
 									}
 									this.saveCategorys();
