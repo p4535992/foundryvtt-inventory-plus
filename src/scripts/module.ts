@@ -677,7 +677,6 @@ const module = {
 			}
 		}
 		const categoryName = <string>i18n(categoryRef.label);
-		// const headerElement = $(<HTMLElement>targetLi.parentElement?.parentElement).find(`h3:contains("${categoryName}")`);
 
 		// dropping new item
 		if (sourceActorId !== this.object.id || itemDataToCheck === undefined) {

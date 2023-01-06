@@ -295,8 +295,17 @@ export class InventoryPlus {
 		html.find(`.${targetCssInventoryPlus} a.item-create`).each((i, el) => {
 			const type = <string>el.dataset.type;
 
-			const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
-			const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+			let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+			let headerElement:JQuery<HTMLElement>|undefined = undefined;
+			if(categoryText) {
+				headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
+			} else {
+				headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
+				categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
+			}
+			if(!categoryText) {
+				warn(`No category text is been founded open a issue on the github project`);
+			}
 			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText);
 
 			$(el).data("type", type);
@@ -322,8 +331,17 @@ export class InventoryPlus {
 				//const catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type || <string>type;
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
-					const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
-					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					let headerElement:JQuery<HTMLElement>|undefined = undefined;
+					if(categoryText) {
+						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
+					} else {
+						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
+						categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					}
+					if(!categoryText) {
+						warn(`No category text is been founded open a issue on the github project`);
+					}
 					const categoryId = <string>(
 						retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText)
 					);
@@ -402,8 +420,17 @@ export class InventoryPlus {
 				// let catType = <string>ev.target.dataset.type || <string>ev.currentTarget.dataset.type;
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
-					const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
-					const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					let headerElement:JQuery<HTMLElement>|undefined = undefined;
+					if(categoryText) {
+						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
+					} else {
+						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
+						categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					}
+					if(!categoryText) {
+						warn(`No category text is been founded open a issue on the github project`);
+					}
 					const categoryId = <string>(
 						retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText)
 					);
@@ -436,8 +463,17 @@ export class InventoryPlus {
 			//}
 			let catType = <string>el.attributes["data-categoryid"];
 			if (!catType) {
-				const headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
-				const categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+				let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
+				let headerElement:JQuery<HTMLElement>|undefined = undefined;
+				if(categoryText) {
+					headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
+				} else {
+					headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
+					categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
+				}
+				if(!categoryText) {
+					warn(`No category text is been founded open a issue on the github project`);
+				}
 				const categoryId = <string>(
 					retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText)
 				);

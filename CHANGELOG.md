@@ -1,3 +1,7 @@
+### 0.6.21
+
+- Bug fix tidysheet
+
 ### 0.6.20 [BREAKING CHANGES]
 
 - Add initial management for NPC e Vehicle
