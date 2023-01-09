@@ -75,7 +75,7 @@
 	"inventory-plus.inv-plus-dialog.explicittypesdescription": "Dieser Filter verhindert das hinzufügen von Gegenständen anderer Art als in der Kategorie definiert",
 	"inventory-plus.inv-plus-dialog.deletecategorycheckitems": "Die Kategorie '{categoryName}' kann nicht entfernt werden, da sich noch Gegenstände darin befinden",
 	"inventory-plus.dialogs.warn.exceedsmaxweight": "Einfügen nicht möglich, da Gewicht oder Massekapazität der Kategorie '{categoryName}' überschritten werden",
-	"inventory-plus.dialogs.warn.nocategoryfoundbytype": "Keine Kategorie für den Gegenstandstypen '{type}' gefunden, womöglich muss eine Kategorie erstellt werden.",
+	"inventory-plus.dialogs.warn.nocategoryfoundbytype": "Keine Kategorie für den Gegenstandstypus'{type}' gefunden, womöglich muss eine Kategorie erstellt werden?",
 	"inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage": "Diese Aktion stellt die Standardkategorien von DnD5e wieder her. Status: {status}.",
 	"inventory-plus.inv-plus-dialog.removedefaulcategorieswarnmessage3": "Jeder Gegenstand in einer Standardkategorie mit der ID \"Waffe\", \"Ausrüstung\", \"Verbrauchsmaterial\", \"Werkzeug\", \"Behälter\" und \"Beute\" ('weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot' ) wird gelöscht. Beachte ob eine Standardkategorie umbenannt wurde und verschiebe jeden ihrer Gegenstände in eine benutzerdefinierte Kategorie.",
 	"inventory-plus.inv-plus-dialog.confirmationdeletecategory": "Soll die Kategorie '{categoryName}' wirklich gelöscht werden? Alle Gegenstände in dieser Kategorie erhalten den \"versteckt\" (hidden) Status (werden nicht gelöscht). Es ist dennoch ratsam sie in eine andere Kategorie zu verschieben bevor fortgefahren wird.",
@@ -84,5 +84,8 @@
 	"inventory-plus.currency": "Währung",
 	"inventory-plus.howmanytimeswanttomove": "Wie viele Gegenstände sollen verschoben werden?",
 	"inventory-plus.inv-plus-dialog.reenabledefaultcategories": "Reaktiviere Stnd. Kat.",
-	"inventory-plus.inv-plus-dialog.removedefaultcategories": "Deaktiviere Std. Kat."
+	"inventory-plus.inv-plus-dialog.removedefaultcategories": "Deaktiviere Std. Kat.",
+	"inventory-plus.setting.enableForNpc.name": "Aktiviere \"Inventory+\" für NSCs",
+	"inventory-plus.setting.enableForVehicle.name": "[Experimentell] Aktiviere \"Inventory+\" für Vehikel",
+	"inventory-plus.dialogs.warn.actortypeisnotsupported": "Der Spielfigurtypus '{actorType}' wird nicht unterstützt"
 }
