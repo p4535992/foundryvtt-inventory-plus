@@ -1100,7 +1100,7 @@ export class InventoryPlus {
 			const currentCategory = <Category>this.customCategorys[id];
 			if (!currentCategory.sortFlag || !this.customCategorys[movedType]?.sortFlag) {
 				currentCategory.sortFlag = currentSortFlag;
-				setProperty(<any>this.customCategorys[movedType],"sortFlag",<number>currentSortFlag);
+				setProperty(<any>this.customCategorys[movedType], "sortFlag", <number>currentSortFlag);
 			}
 			if (up) {
 				if (
