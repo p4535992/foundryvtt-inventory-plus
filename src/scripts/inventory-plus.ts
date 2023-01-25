@@ -296,14 +296,14 @@ export class InventoryPlus {
 			const type = <string>el.dataset.type;
 
 			let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-			let headerElement:JQuery<HTMLElement>|undefined = undefined;
-			if(categoryText) {
+			let headerElement: JQuery<HTMLElement> | undefined = undefined;
+			if (categoryText) {
 				headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 			} else {
 				headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
 				categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
 			}
-			if(!categoryText) {
+			if (!categoryText) {
 				warn(`No category text is been founded open a issue on the github project`);
 			}
 			const categoryId = <string>retrieveCategoryIdFromLabel(this.customCategorys, headerElement, categoryText);
@@ -332,14 +332,18 @@ export class InventoryPlus {
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
 					let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-					let headerElement:JQuery<HTMLElement>|undefined = undefined;
-					if(categoryText) {
+					let headerElement: JQuery<HTMLElement> | undefined = undefined;
+					if (categoryText) {
 						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 					} else {
-						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
-						categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
+						headerElement = $(
+							<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3")
+						);
+						categoryText = <string>(
+							el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText
+						);
 					}
-					if(!categoryText) {
+					if (!categoryText) {
 						warn(`No category text is been founded open a issue on the github project`);
 					}
 					const categoryId = <string>(
@@ -421,14 +425,18 @@ export class InventoryPlus {
 				let catType = <string>ev.target.dataset.categoryid || <string>ev.currentTarget.dataset.categoryid;
 				if (!catType) {
 					let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-					let headerElement:JQuery<HTMLElement>|undefined = undefined;
-					if(categoryText) {
+					let headerElement: JQuery<HTMLElement> | undefined = undefined;
+					if (categoryText) {
 						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 					} else {
-						headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
-						categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
+						headerElement = $(
+							<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3")
+						);
+						categoryText = <string>(
+							el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText
+						);
 					}
-					if(!categoryText) {
+					if (!categoryText) {
 						warn(`No category text is been founded open a issue on the github project`);
 					}
 					const categoryId = <string>(
@@ -464,14 +472,16 @@ export class InventoryPlus {
 			let catType = <string>el.attributes["data-categoryid"];
 			if (!catType) {
 				let categoryText = <string>el.parentElement?.parentElement?.querySelector("h3")?.innerText;
-				let headerElement:JQuery<HTMLElement>|undefined = undefined;
-				if(categoryText) {
+				let headerElement: JQuery<HTMLElement> | undefined = undefined;
+				if (categoryText) {
 					headerElement = $(<HTMLElement>el.parentElement?.parentElement?.querySelector("h3"));
 				} else {
 					headerElement = $(<HTMLElement>el.parentElement?.parentElement?.parentElement?.querySelector("h3"));
-					categoryText = <string>el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText;
+					categoryText = <string>(
+						el.parentElement?.parentElement?.parentElement?.querySelector("h3")?.innerText
+					);
 				}
-				if(!categoryText) {
+				if (!categoryText) {
 					warn(`No category text is been founded open a issue on the github project`);
 				}
 				const categoryId = <string>(
@@ -1088,6 +1098,10 @@ export class InventoryPlus {
 		if (!up) currentSortFlag = 999999999;
 		for (const id in this.customCategorys) {
 			const currentCategory = <Category>this.customCategorys[id];
+			if (!currentCategory.sortFlag || !this.customCategorys[movedType]?.sortFlag) {
+				currentCategory.sortFlag = currentSortFlag;
+				setProperty(<any>this.customCategorys[movedType],"sortFlag",<number>currentSortFlag);
+			}
 			if (up) {
 				if (
 					id !== movedType &&
@@ -1330,7 +1344,7 @@ export class InventoryPlus {
 		let itemTypeTmp = "";
 		if (dnd5eItems.includes(type.toLowerCase())) {
 			myName = game.i18n.format("DND5E.ItemNew", {
-				type: game.i18n.localize(`DND5E.ItemType${type.capitalize()}`),
+				type: game.i18n.localize(`ITEM.ItemType${type.capitalize()}`),
 			});
 			itemTypeTmp = type;
 		} else {
@@ -1343,7 +1357,7 @@ export class InventoryPlus {
 				itemTypeTmp = defaultType.id;
 			}
 			myName = game.i18n.format("DND5E.ItemNew", {
-				type: game.i18n.localize(`DND5E.ItemType${itemTypeTmp.capitalize()}`),
+				type: game.i18n.localize(`ITEM.ItemType${itemTypeTmp.capitalize()}`),
 			});
 		}
 		/*

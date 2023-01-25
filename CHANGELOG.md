@@ -1,3 +1,7 @@
+### 0.6.23
+
+- Ty to @Szefo09 for the contribution. Fixed Encumbrance and names of default categories. Sorry for no PR
+
 ### 0.6.21-22
 
 - Bug fix tidysheet

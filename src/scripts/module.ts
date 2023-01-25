@@ -59,7 +59,8 @@ export const readyHooks = async (): Promise<void> => {
 			sheetData.inventory = Object.values(newInventory);
 			const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 			if (encumbrance5e) {
-				sheetData.system.attributes.encumbrance = encumbrance5e;
+				sheetData.encumbrance = encumbrance5e;
+				// sheetData.system.attributes.encumbrance = encumbrance5e;
 			}
 			return sheetData;
 		},
@@ -88,7 +89,8 @@ export const readyHooks = async (): Promise<void> => {
 				sheetData.features = Object.values(newInventory);
 				const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 				if (encumbrance5e) {
-					sheetData.system.attributes.encumbrance = encumbrance5e;
+					sheetData.encumbrance = encumbrance5e;
+					// sheetData.system.attributes.encumbrance = encumbrance5e;
 				}
 				return sheetData;
 			},
@@ -122,7 +124,8 @@ export const readyHooks = async (): Promise<void> => {
 
 				const encumbrance5e = <EncumbranceDnd5e>API.calculateWeightFromActor(actor);
 				if (encumbrance5e) {
-					sheetData.system.attributes.encumbrance = encumbrance5e;
+					sheetData.encumbrance = encumbrance5e;
+					// sheetData.system.attributes.encumbrance = encumbrance5e;
 				}
 				return sheetData;
 			},

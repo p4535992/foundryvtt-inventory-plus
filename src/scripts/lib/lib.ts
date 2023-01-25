@@ -1149,10 +1149,7 @@ export function retrieveSectionIdFromItemType(
 		}
 	} else {
 		// Cannot happened
-		// warn(
-		// 	i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }),
-		// 	true
-		// );
+		debug(i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, { actorType: actorType }));
 		sectionId = undefined;
 	}
 	if (sectionId === undefined) {
@@ -1169,12 +1166,11 @@ export function retrieveSectionIdFromItemType(
 				sectionId = "weapons";
 			} else {
 				// Cannot happened
-				// warn(
-				// 	i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, {
-				// 		actorType: actorType,
-				// 	}),
-				// 	true
-				// );
+				debug(
+					i18nFormat(`${CONSTANTS.MODULE_NAME}.dialogs.warn.actortypeisnotsupported`, {
+						actorType: actorType,
+					})
+				);
 			}
 		}
 	}

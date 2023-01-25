@@ -21,7 +21,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 	const categoryWeapon = customCategorys["weapon"];
 	if (!categoryWeapon) {
 		customCategorys["weapon"] = <Category>{
-			label: "DND5E.ItemTypeWeaponPl",
+			label: "ITEM.TypeWeaponPl",
 			dataset: { type: "weapon" },
 			sortFlag: 1000,
 			ignoreWeight: false,
@@ -41,7 +41,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 	const categoryEquipment = customCategorys["equipment"];
 	if (!categoryEquipment) {
 		customCategorys["equipment"] = <Category>{
-			label: "DND5E.ItemTypeEquipmentPl",
+			label: "ITEM.TypeEquipmentPl",
 			dataset: { type: "equipment" },
 			sortFlag: 2000,
 			ignoreWeight: false,
@@ -61,7 +61,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 	const categoryConsumable = customCategorys["consumable"];
 	if (!categoryConsumable) {
 		customCategorys["consumable"] = <Category>{
-			label: "DND5E.ItemTypeConsumablePl",
+			label: "ITEM.TypeConsumablePl",
 			dataset: { type: "consumable" },
 			sortFlag: 3000,
 			ignoreWeight: false,
@@ -81,7 +81,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 	const categoryTool = customCategorys["tool"];
 	if (!categoryTool) {
 		customCategorys["tool"] = <Category>{
-			label: "DND5E.ItemTypeToolPl",
+			label: "ITEM.TypeToolPl",
 			dataset: { type: "tool" },
 			sortFlag: 4000,
 			ignoreWeight: false,
@@ -101,7 +101,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 	const categoryBackpack = customCategorys["backpack"];
 	if (!categoryBackpack) {
 		customCategorys["backpack"] = <Category>{
-			label: "DND5E.ItemTypeContainerPl",
+			label: "ITEM.TypeContainerPl",
 			dataset: { type: "backpack" },
 			sortFlag: 5000,
 			ignoreWeight: false,
@@ -121,7 +121,7 @@ export function adjustCustomCategoriesForCharacter(customCategorys: Record<strin
 	const categoryLoot = customCategorys["loot"];
 	if (!categoryLoot) {
 		customCategorys["loot"] = <Category>{
-			label: "DND5E.ItemTypeLootPl",
+			label: "ITEM.TypeLootPl",
 			dataset: { type: "loot" },
 			sortFlag: 6000,
 			ignoreWeight: false,
@@ -147,7 +147,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 		debug(`flagCategory=false && flagDisableDefaultCategories=false`);
 		flagCategorys = {
 			weapon: <Category>{
-				label: "DND5E.ItemTypeWeaponPl",
+				label: "ITEM.TypeWeaponPl",
 				items: [],
 				dataset: { type: "weapon" },
 				sortFlag: 1000,
@@ -164,7 +164,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				customId: "weapon",
 			},
 			equipment: <Category>{
-				label: "DND5E.ItemTypeEquipmentPl",
+				label: "ITEM.TypeEquipmentPl",
 				items: [],
 				dataset: { type: "equipment" },
 				sortFlag: 2000,
@@ -181,7 +181,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				customId: "equipment",
 			},
 			consumable: <Category>{
-				label: "DND5E.ItemTypeConsumablePl",
+				label: "ITEM.TypeConsumablePl",
 				items: [],
 				dataset: { type: "consumable" },
 				sortFlag: 3000,
@@ -198,7 +198,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				customId: "consumable",
 			},
 			tool: <Category>{
-				label: "DND5E.ItemTypeToolPl",
+				label: "ITEM.TypeToolPl",
 				items: [],
 				dataset: { type: "tool" },
 				sortFlag: 4000,
@@ -215,7 +215,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				customId: "tool",
 			},
 			backpack: <Category>{
-				label: "DND5E.ItemTypeContainerPl",
+				label: "ITEM.TypeContainerPl",
 				items: [],
 				dataset: { type: "backpack" },
 				sortFlag: 5000,
@@ -232,7 +232,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 				customId: "backpack",
 			},
 			loot: <Category>{
-				label: "DND5E.ItemTypeLootPl",
+				label: "ITEM.TypeLootPl",
 				items: [],
 				dataset: { type: "loot" },
 				sortFlag: 6000,
@@ -254,7 +254,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 		const categoryWeapon = flagCategorys["weapon"];
 		if (!categoryWeapon) {
 			flagCategorys["weapon"] = <Category>{
-				label: "DND5E.ItemTypeWeaponPl",
+				label: "ITEM.TypeWeaponPl",
 				items: [],
 				dataset: { type: "weapon" },
 				sortFlag: 1000,
@@ -274,7 +274,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 		const categoryEquipment = flagCategorys["equipment"];
 		if (!categoryEquipment) {
 			flagCategorys["equipment"] = <Category>{
-				label: "DND5E.ItemTypeEquipmentPl",
+				label: "ITEM.TypeEquipmentPl",
 				items: [],
 				dataset: { type: "equipment" },
 				sortFlag: 2000,
@@ -294,7 +294,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 		const categoryConsumable = flagCategorys["consumable"];
 		if (!categoryConsumable) {
 			flagCategorys["consumable"] = <Category>{
-				label: "DND5E.ItemTypeConsumablePl",
+				label: "ITEM.TypeConsumablePl",
 				items: [],
 				dataset: { type: "consumable" },
 				sortFlag: 3000,
@@ -314,7 +314,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 		const categoryTool = flagCategorys["tool"];
 		if (!categoryTool) {
 			flagCategorys["tool"] = <Category>{
-				label: "DND5E.ItemTypeToolPl",
+				label: "ITEM.TypeToolPl",
 				items: [],
 				dataset: { type: "tool" },
 				sortFlag: 4000,
@@ -334,7 +334,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 		const categoryBackpack = flagCategorys["backpack"];
 		if (!categoryBackpack) {
 			flagCategorys["backpack"] = <Category>{
-				label: "DND5E.ItemTypeContainerPl",
+				label: "ITEM.TypeContainerPl",
 				items: [],
 				dataset: { type: "backpack" },
 				sortFlag: 5000,
@@ -354,7 +354,7 @@ export function initCategoriesForCharacter(flagCategorys) {
 		const categoryLoot = flagCategorys["loot"];
 		if (!categoryLoot) {
 			flagCategorys["loot"] = <Category>{
-				label: "DND5E.ItemTypeLootPl",
+				label: "ITEM.TypeLootPl",
 				items: [],
 				dataset: { type: "loot" },
 				sortFlag: 6000,
@@ -378,22 +378,22 @@ export function initCategoriesForCharacter(flagCategorys) {
 			if (category && !category?.label) {
 				continue;
 			}
-			if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeWeaponPl"))) {
+			if (isStringEquals(i18n(category?.label), i18n("ITEM.TypeWeaponPl"))) {
 				delete flagCategorys[key];
 			}
-			if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeEquipmentPl"))) {
+			if (isStringEquals(i18n(category?.label), i18n("ITEM.TypeEquipmentPl"))) {
 				delete flagCategorys[key];
 			}
-			if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeConsumablePl"))) {
+			if (isStringEquals(i18n(category?.label), i18n("ITEM.TypeConsumablePl"))) {
 				delete flagCategorys[key];
 			}
-			if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeToolPl"))) {
+			if (isStringEquals(i18n(category?.label), i18n("ITEM.TypeToolPl"))) {
 				delete flagCategorys[key];
 			}
-			if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeContainerPl"))) {
+			if (isStringEquals(i18n(category?.label), i18n("ITEM.TypeContainerPl"))) {
 				delete flagCategorys[key];
 			}
-			if (isStringEquals(i18n(category?.label), i18n("DND5E.ItemTypeLootPl"))) {
+			if (isStringEquals(i18n(category?.label), i18n("ITEM.TypeLootPl"))) {
 				delete flagCategorys[key];
 			}
 		}
@@ -854,7 +854,7 @@ export function adjustCustomCategoriesForVehicle(customCategorys: Record<string,
 	const categoryWeapons = customCategorys["weapons"];
 	if (!categoryWeapons) {
 		customCategorys["weapons"] = <Category>{
-			label: game.i18n.localize("DND5E.ItemTypeWeaponPl"),
+			label: game.i18n.localize("ITEM.TypeWeaponPl"),
 			crewable: true,
 			dataset: { type: "weapon", "weapon-type": "siege" },
 			columns: <any>equipmentColumns,
@@ -987,7 +987,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 				customId: "reactions",
 			},
 			weapons: <Category>{
-				label: game.i18n.localize("DND5E.ItemTypeWeaponPl"),
+				label: game.i18n.localize("ITEM.TypeWeaponPl"),
 				crewable: true,
 				dataset: { type: "weapon", "weapon-type": "siege" },
 				columns: <any>equipmentColumns,
@@ -1102,7 +1102,7 @@ export function initCategoriesForVehicle(flagCategorys) {
 		const categoryWeapons = flagCategorys["weapons"];
 		if (!categoryWeapons) {
 			flagCategorys["weapons"] = <Category>{
-				label: game.i18n.localize("DND5E.ItemTypeWeaponPl"),
+				label: game.i18n.localize("ITEM.TypeWeaponPl"),
 				crewable: true,
 				dataset: { type: "weapon", "weapon-type": "siege" },
 				columns: <any>equipmentColumns,
