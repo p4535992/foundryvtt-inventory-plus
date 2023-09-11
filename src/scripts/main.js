@@ -208,71 +208,71 @@ const module = {
       return;
     }
   },
-  dropActorSheetDataTransferStuff(targetActor, sourceActor, item) {
-    if (!item) {
-      debug(`The item is itemData not a item object is ignored`);
-      return false;
-    }
-    const targetSheet = targetActor.sheet;
-    if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer")) {
-      return false;
-    }
-    // if (isAlt()) {
-    //   return false; // ignore when Alt is pressed to drop.
-    // }
+  //   dropActorSheetDataTransferStuff(targetActor, sourceActor, item) {
+  //     if (!item) {
+  //       debug(`The item is itemData not a item object is ignored`);
+  //       return false;
+  //     }
+  //     const targetSheet = targetActor.sheet;
+  //     if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer")) {
+  //       return false;
+  //     }
+  //     // if (isAlt()) {
+  //     //   return false; // ignore when Alt is pressed to drop.
+  //     // }
 
-    if (targetActor.permission !== 3) {
-      error("You don't have the permissions to transfer items here", true);
-      return false;
-    }
+  //     if (targetActor.permission !== 3) {
+  //       error("You don't have the permissions to transfer items here", true);
+  //       return false;
+  //     }
 
-    // if (itemData.type === "Item" && itemData.uuid) {
-    if (item) {
-      if (!targetActor.id) {
-        warn(`target has no actorData._id? ${targetActor}`);
-        return false;
-      }
-      //@ts-ignore
-      // const item = await Item.implementation.fromDropData(itemData);
-      if (targetActor.id === sourceActor.id) {
-        return false; // ignore dropping on self
-      }
-      // let sourceSheet: ActorSheet;
-      // if (itemData.tokenId !== null) {
-      // 	//game.scenes.get("hyfUtn3VVPnVUpJe").tokens.get("OYwRVJ7crDyid19t").sheet.actor.items
-      // 	//@ts-ignore
-      // 	sourceSheet = <ActorSheet>game.scenes?.get(itemData.sceneId)!.tokens.get(itemData.tokenId)!.sheet;
-      // } else {
-      // 	//@ts-ignore
-      // 	sourceSheet = <ActorSheet>game.actors?.get(itemData.actorId)!.sheet;
-      // }
-      //@ts-ignore
-      // const sourceActor = game.actors?.get(sourceActorId);
-      //@ts-ignore
-      const sourceSheet = sourceActor?.sheet;
-      if (sourceActor) {
-        /* if both source and target have the same type then allow deleting original item. this is a safety check because some game systems may allow dropping on targets that don't actually allow the GM or player to see the inventory, making the item inaccessible. */
-        if (checkCompatible(sourceActor.type, targetActor.type, item)) {
-          //@ts-ignore
-          const originalQuantity = item.system.quantity;
-          // const targetActorId = targetActor.id;
-          //@ts-ignore
-          // const sourceActorId = item.parent.actor.id;
-          if (game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyTransfer") && item.name === "Currency") {
-            showCurrencyTransferDialog(sourceSheet, targetSheet);
-            //@ts-ignore
-            return false;
-          } else if (originalQuantity >= 1) {
-            showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, item.id, item);
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-    warn(`You can't transfer no items document here"`);
-    return false;
-  },
+  //     // if (itemData.type === "Item" && itemData.uuid) {
+  //     if (item) {
+  //       if (!targetActor.id) {
+  //         warn(`target has no actorData._id? ${targetActor}`);
+  //         return false;
+  //       }
+  //       //@ts-ignore
+  //       // const item = await Item.implementation.fromDropData(itemData);
+  //       if (targetActor.id === sourceActor.id) {
+  //         return false; // ignore dropping on self
+  //       }
+  //       // let sourceSheet: ActorSheet;
+  //       // if (itemData.tokenId !== null) {
+  //       // 	//game.scenes.get("hyfUtn3VVPnVUpJe").tokens.get("OYwRVJ7crDyid19t").sheet.actor.items
+  //       // 	//@ts-ignore
+  //       // 	sourceSheet = <ActorSheet>game.scenes?.get(itemData.sceneId)!.tokens.get(itemData.tokenId)!.sheet;
+  //       // } else {
+  //       // 	//@ts-ignore
+  //       // 	sourceSheet = <ActorSheet>game.actors?.get(itemData.actorId)!.sheet;
+  //       // }
+  //       //@ts-ignore
+  //       // const sourceActor = game.actors?.get(sourceActorId);
+  //       //@ts-ignore
+  //       const sourceSheet = sourceActor?.sheet;
+  //       if (sourceActor) {
+  //         /* if both source and target have the same type then allow deleting original item. this is a safety check because some game systems may allow dropping on targets that don't actually allow the GM or player to see the inventory, making the item inaccessible. */
+  //         if (checkCompatible(sourceActor.type, targetActor.type, item)) {
+  //           //@ts-ignore
+  //           const originalQuantity = item.system.quantity;
+  //           // const targetActorId = targetActor.id;
+  //           //@ts-ignore
+  //           // const sourceActorId = item.parent.actor.id;
+  //           if (game.settings.get(CONSTANTS.MODULE_NAME, "enableCurrencyTransfer") && item.name === "Currency") {
+  //             showCurrencyTransferDialog(sourceSheet, targetSheet);
+  //             //@ts-ignore
+  //             return false;
+  //           } else if (originalQuantity >= 1) {
+  //             showItemTransferDialog(originalQuantity, sourceSheet, targetSheet, item.id, item);
+  //             return false;
+  //           }
+  //         }
+  //       }
+  //       return true;
+  //     }
+  //     warn(`You can't transfer no items document here"`);
+  //     return false;
+  //   },
 
   preUpdateItemInventorySorter(item, changes, options, ...args) {
     if (!game.settings.get(CONSTANTS.MODULE_NAME, "enableInventorySorter")) {
@@ -512,20 +512,20 @@ const module = {
         return this._onSortItem(event, itemDataToCheck);
       }
       // Create the owned item
-      if (
-        game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-        !isFromSameActor &&
-        !isAlt() &&
-        !dragAndDropFromCompendium &&
-        // dragAndDropFromActorSource &&
-        sourceActor
-      ) {
-        //@ts-ignore
-        module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
-        return;
-      } else {
-        return this._onDropItemCreate(itemDataToCheck);
-      }
+      //   if (
+      //     game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
+      //     !isFromSameActor &&
+      //     !isAlt() &&
+      //     !dragAndDropFromCompendium &&
+      //     // dragAndDropFromActorSource &&
+      //     sourceActor
+      //   ) {
+      //     //@ts-ignore
+      //     module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemDropped);
+      //     return;
+      //   } else {
+      return this._onDropItemCreate(itemDataToCheck);
+      //   }
     }
 
     if (targetType === "feat" || targetType === "spell" || targetType === "class" || targetType === "subclass") {
@@ -546,20 +546,20 @@ const module = {
         return this._onSortItem(event, itemDataToCheck);
       }
       // Create the owned item
-      if (
-        game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-        !isFromSameActor &&
-        !isAlt() &&
-        !dragAndDropFromCompendium &&
-        // dragAndDropFromActorSource &&
-        sourceActor
-      ) {
-        //@ts-ignore
-        module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
-        return;
-      } else {
-        return this._onDropItemCreate(itemDataToCheck);
-      }
+      //   if (
+      //     game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
+      //     !isFromSameActor &&
+      //     !isAlt() &&
+      //     !dragAndDropFromCompendium &&
+      //     // dragAndDropFromActorSource &&
+      //     sourceActor
+      //   ) {
+      //     //@ts-ignore
+      //     module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
+      //     return;
+      //   } else {
+      return this._onDropItemCreate(itemDataToCheck);
+      //   }
     }
 
     if (!targetLi) {
@@ -574,20 +574,20 @@ const module = {
         return this._onSortItem(event, itemDataToCheck);
       }
       // Create the owned item
-      if (
-        game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-        !isFromSameActor &&
-        !isAlt() &&
-        !dragAndDropFromCompendium &&
-        // dragAndDropFromActorSource &&
-        sourceActor
-      ) {
-        //@ts-ignore
-        module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
-        return;
-      } else {
-        return this._onDropItemCreate(itemDataToCheck);
-      }
+      //   if (
+      //     game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
+      //     !isFromSameActor &&
+      //     !isAlt() &&
+      //     !dragAndDropFromCompendium &&
+      //     // dragAndDropFromActorSource &&
+      //     sourceActor
+      //   ) {
+      //     //@ts-ignore
+      //     module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
+      //     return;
+      //   } else {
+      return this._onDropItemCreate(itemDataToCheck);
+      //   }
     }
 
     if (!targetType || !this.inventoryPlus.customCategorys[targetType]) {
@@ -602,20 +602,20 @@ const module = {
         return this._onSortItem(event, itemDataToCheck);
       }
       // Create the owned item
-      if (
-        game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-        !isFromSameActor &&
-        !isAlt() &&
-        !dragAndDropFromCompendium &&
-        // dragAndDropFromActorSource &&
-        sourceActor
-      ) {
-        //@ts-ignore
-        module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
-        return;
-      } else {
-        return this._onDropItemCreate(itemDataToCheck);
-      }
+      //   if (
+      //     game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
+      //     !isFromSameActor &&
+      //     !isAlt() &&
+      //     !dragAndDropFromCompendium &&
+      //     // dragAndDropFromActorSource &&
+      //     sourceActor
+      //   ) {
+      //     //@ts-ignore
+      //     module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
+      //     return;
+      //   } else {
+      return this._onDropItemCreate(itemDataToCheck);
+      //   }
     }
 
     const categoryRef = this.inventoryPlus.customCategorys[targetType];
@@ -636,20 +636,20 @@ const module = {
         return this._onSortItem(event, itemDataToCheck);
       }
       // Create the owned item
-      if (
-        game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-        !isFromSameActor &&
-        !isAlt() &&
-        !dragAndDropFromCompendium &&
-        // dragAndDropFromActorSource &&
-        sourceActor
-      ) {
-        //@ts-ignore
-        module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
-        return;
-      } else {
-        return this._onDropItemCreate(itemDataToCheck);
-      }
+      //   if (
+      //     game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
+      //     !isFromSameActor &&
+      //     !isAlt() &&
+      //     !dragAndDropFromCompendium &&
+      //     // dragAndDropFromActorSource &&
+      //     sourceActor
+      //   ) {
+      //     //@ts-ignore
+      //     module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
+      //     return;
+      //   } else {
+      return this._onDropItemCreate(itemDataToCheck);
+      //   }
     }
     const categoryName = i18n(categoryRef.label);
 
@@ -690,20 +690,20 @@ const module = {
           // return this._onSortItem(event, itemData);
         } else {
           // Create the owned item
-          if (
-            game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-            !isFromSameActor &&
-            !isAlt() &&
-            !dragAndDropFromCompendium &&
-            // dragAndDropFromActorSource &&
-            sourceActor
-          ) {
-            //@ts-ignore
-            module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
-          } else {
-            const items = await this._onDropItemCreate(itemDataToCheck);
-            createdItem = items[0];
-          }
+          //   if (
+          //     game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
+          //     !isFromSameActor &&
+          //     !isAlt() &&
+          //     !dragAndDropFromCompendium &&
+          //     // dragAndDropFromActorSource &&
+          //     sourceActor
+          //   ) {
+          //     //@ts-ignore
+          //     module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
+          //   } else {
+          const items = await this._onDropItemCreate(itemDataToCheck);
+          createdItem = items[0];
+          //   }
         }
       }
     }
@@ -748,20 +748,20 @@ const module = {
             // return this._onSortItem(event, itemData);
           } else {
             // Create the owned item
-            if (
-              game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
-              !isFromSameActor &&
-              !isAlt() &&
-              !dragAndDropFromCompendium &&
-              // dragAndDropFromActorSource &&
-              sourceActor
-            ) {
-              //@ts-ignore
-              module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
-            } else {
-              const items = await this._onDropItemCreate(itemDataToCheck);
-              createdItem = items[0];
-            }
+            // if (
+            //   game.settings.get(CONSTANTS.MODULE_NAME, "enableItemTransfer") &&
+            //   !isFromSameActor &&
+            //   !isAlt() &&
+            //   !dragAndDropFromCompendium &&
+            //   // dragAndDropFromActorSource &&
+            //   sourceActor
+            // ) {
+            //   //@ts-ignore
+            //   module.dropActorSheetDataTransferStuff(targetActor, sourceActor, itemToCheck);
+            // } else {
+            const items = await this._onDropItemCreate(itemDataToCheck);
+            createdItem = items[0];
+            // }
           }
         }
       }

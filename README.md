@@ -52,7 +52,7 @@ This module allows you to create custom inventory categories and sort items into
 ## Known issue
 
 - The no dialog on the edit category is frozen for now just "close" the dialog
-- The retrieve of the category depend on the name used  for the category so for now hus use unique name category 
+- The retrieve of the category depend on the name used  for the category so for now hus use unique name category
 
 ## Features
 
@@ -62,13 +62,8 @@ Due to collisions, code maintenance problems, and **reduction in the number of m
 
 **Feature: Integration with Item Collection**: Use equipped/unequipped feature of the 'ItemCollection/Item Container' module for the backpack. Bags can be unequipped by players or GM, so that their reported weight drops to 0 in your inventory (only bags with a capacity other than 0 can be unequipped). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.
 
-**Feature: Enable item transfer:** Know that you can temporarily disable the transfer feature by pressing the alt key while you move the item.
-
-**[Only with 'Feature: Enable item transfer' enabled] Enable currency transfer:** When moving an object named \"Currency\" is transferer it will open a dialog to transfer money instead of transferring the actual item.",
-
-**[Only with 'Feature: Enable item transfer' enabled] Enable for actors of the same type**: If disabled you will have to rely on the pairs you can define by hand.
-
-**[Only with 'Feature: Enable item transfer' enabled] Compatible Actor Types:** The body of a JSON map of compatible actor type key-value pairs allowing transfer. By default this module only works between actor sheets of the same type, but some game systems may have other combinations that work. Example 1: \"character\":\"synthetic\",\"synthetic\":\"vehicles\",\"vehicles\":\"character\". Example 2 (for DnD5e): \"character\":\"vehicle\",\"vehicle\":\"character\" that would enable moving item between characters and vehicles. You can also have multiple actor types as value, example 3: \"character\":[\"vehicle\", \"character\"],\"vehicle\":\"character\" would enable transfer from character to vehicle, from character to character and from vehicle to character but NOT from vehicle to vehicle (providing that the \"actors of the same type\" checkbox is unchecked).",
+**Feature: Enable item transfer:** This feature is been removed in favor of a external module [Transfer stuff](https://github.com/p4535992/foundryvtt-transfer-stuff), you can install with this json:
+[https://raw.githubusercontent.com/p4535992/foundryvtt-transfer-stuff/master/src/module.json](https://raw.githubusercontent.com/p4535992/foundryvtt-transfer-stuff/master/src/module.json)
 
 **Feature: Enable inventory sorter:** Automatically sorts all actors' items (inventory, features, and spells) alphabetically (within each category).
 
