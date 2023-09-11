@@ -1,13 +1,13 @@
 {
-	"inventory-plus.setting.reset.label": "Przywróć ustawienia domyślne",
-	"inventory-plus.setting.debug.name": "Włącz debugowanie",
-	"inventory-plus.setting.debug.hint": " ",
-	"inventory-plus.setting.enableItemTransfer.name": "Funkcjonalność: Włącz przekazywania przedmiotów",
-	"inventory-plus.setting.actorTransferSame.hint": "Jeśli wyłączone, będziesz musiał polegać na parach, które możesz zdefiniować ręcznie.",
-	"inventory-plus.setting.enableInventorySorter.name": "Funkcjonalność: Włącz sortowanie przedmiotów w inwentarzu",
-	"inventory-plus.setting.enableInventorySorter.hint": "Automatycznie sortuje wszystkie przedmioty aktorów (ekwipunek, cechy i zaklęcia) alfabetycznie (w obrębie każdej kategorii).",
-	"inventory-plus.setting.enableEquipmentMultiplier.name": "Funkcjonalność: Multiplikator wyposażenia",
-	"inventory-plus.setting.reset.name": "Przywróć ustawienia domyślne",
-	"inventory-plus.setting.reset.hint": "Spowoduje to przywrócenie wszystkich ustawień domyślnych dla aktywnego systemu gry.",
-	"inventory-plus.setting.enableCurrencyTransfer.hint": "Podczas przenoszenia obiektu o nazwie \"Waluta\" zostanie otwarte okno dialogowe do przeniesienia pieniędzy zamiast rzeczywistego przedmiotu."
+  "inventory-plus.setting.reset.label": "Przywróć ustawienia domyślne",
+  "inventory-plus.setting.debug.name": "Włącz debugowanie",
+  "inventory-plus.setting.debug.hint": " ",
+  "inventory-plus.setting.enableItemTransfer.name": "Funkcjonalność: Włącz przekazywania przedmiotów",
+  "inventory-plus.setting.actorTransferSame.hint": "Jeśli wyłączone, będziesz musiał polegać na parach, które możesz zdefiniować ręcznie.",
+  "inventory-plus.setting.enableInventorySorter.name": "Funkcjonalność: Włącz sortowanie przedmiotów w inwentarzu",
+  "inventory-plus.setting.enableInventorySorter.hint": "Automatycznie sortuje wszystkie przedmioty aktorów (ekwipunek, cechy i zaklęcia) alfabetycznie (w obrębie każdej kategorii).",
+  "inventory-plus.setting.enableEquipmentMultiplier.name": "Funkcjonalność: Multiplikator wyposażenia",
+  "inventory-plus.setting.reset.name": "Przywróć ustawienia domyślne",
+  "inventory-plus.setting.reset.hint": "Spowoduje to przywrócenie wszystkich ustawień domyślnych dla aktywnego systemu gry.",
+  "inventory-plus.setting.enableCurrencyTransfer.hint": "Podczas przenoszenia obiektu o nazwie \"Waluta\" zostanie otwarte okno dialogowe do przeniesienia pieniędzy zamiast rzeczywistego przedmiotu."
 }

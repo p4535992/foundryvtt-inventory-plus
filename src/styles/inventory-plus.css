@@ -1,5 +1,5 @@
 .inventory-filters .filter-list {
-	max-width: 100%;
+  max-width: 100%;
 }
 
 /* .inventory-filters .filter-list .custom-category {
@@ -11,97 +11,97 @@
 } */
 
 .inventory-list .item-controls a.remove-category {
-	flex: 0 0 20px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  flex: 0 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .inventory-list .item-controls a.remove-category i::before {
-	font-size: 14px;
+  font-size: 14px;
 }
 
 .inventory-list .item-controls a.item-create-2 {
-	flex: 0 0 20px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  flex: 0 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .inventory-list .item-controls a.item-create-2 i::before {
-	font-size: 14px;
+  font-size: 14px;
 }
 
 .inventory-list .inv-plus-stuff {
-	flex: inherit;
-	opacity: 0.5;
+  flex: inherit;
+  opacity: 0.5;
 }
 
 .inventory-list .inv-plus-stuff:hover,
 .inventory-list .toggle-collapse:hover {
-	opacity: 1;
+  opacity: 1;
 }
 
 .inventory-list .toggle-collapse {
-	flex: 0;
-	opacity: 0.5;
-	font-size: 18px;
-	margin-left: 4px;
+  flex: 0;
+  opacity: 0.5;
+  font-size: 18px;
+  margin-left: 4px;
 }
 
 .inventory-list .inv-plus-stuff div {
-	flex-grow: 1;
-	max-width: 120px;
+  flex-grow: 1;
+  max-width: 120px;
 }
 
 .inventory-list .inv-plus-stuff a {
-	flex-grow: 0;
-	margin-right: 2px;
+  flex-grow: 0;
+  margin-right: 2px;
 }
 
 .inventory-list .inv-plus-stuff input {
-	height: 16px;
-	width: 16px;
+  height: 16px;
+  width: 16px;
 }
 
 .inventory-list .category-weight {
-	margin-left: 5px;
-	opacity: 0.5;
-	font-size: small;
+  margin-left: 5px;
+  opacity: 0.5;
+  font-size: small;
 }
 
 .inventory-list .category-weight:hover {
-	opacity: 1;
+  opacity: 1;
 }
 
 .inventory-list .category-weight .fa-weight-hanging {
-	color: darkred;
-	text-shadow: 0 0 8px darkred;
+  color: darkred;
+  text-shadow: 0 0 8px darkred;
 }
 
 .inventory-list .category-weight .fa-balance-scale-right {
-	color: darkorange;
-	text-shadow: 0 0 8px darkorange;
+  color: darkorange;
+  text-shadow: 0 0 8px darkorange;
 }
 
 .inventory-list .category-weight .fa-feather {
-	color: darkgreen;
-	text-shadow: 0 0 8px darkgreen;
+  color: darkgreen;
+  text-shadow: 0 0 8px darkgreen;
 }
 
 .inventory-list .category-weight .fa-bold {
-	color: #f6ff33;
-	text-shadow: 0 0 8px #f6ff33;
+  color: #f6ff33;
+  text-shadow: 0 0 8px #f6ff33;
 }
 
 .inventory-list .category-weight .fa-balance-scale-left {
-	color: #ffe033;
-	text-shadow: 0 0 8px #ffe033;
+  color: #ffe033;
+  text-shadow: 0 0 8px #ffe033;
 }
 
 .inventory-list .category-weight .fa-feather-alt {
-	color: #beff33;
-	text-shadow: 0 0 8px #beff33;
+  color: #beff33;
+  text-shadow: 0 0 8px #beff33;
 }
 
 .inventory-list .category-weight .fa-times-circle,
@@ -111,81 +111,81 @@
 .inventory-list .category-weight .fa-scroll,
 .inventory-list .category-weight .fa-toolbox,
 .inventory-list .category-weight .fa-box {
-	color: darkslategrey;
-	text-shadow: 0 0 8px black;
-	background-color: ghostwhite;
-	padding-left: 1px;
-	padding-right: 1px;
+  color: darkslategrey;
+  text-shadow: 0 0 8px black;
+  background-color: ghostwhite;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 
 .inv-plus-dialog {
-	margin: 5px;
+  margin: 5px;
 }
 
 .inv-plus-dialog dl {
-	margin: 0 0 5px 0;
+  margin: 0 0 5px 0;
 }
 .inv-plus-dialog dt {
-	display: inline-block;
-	width: 40%;
-	line-height: 27px;
-	vertical-align: bottom;
+  display: inline-block;
+  width: 40%;
+  line-height: 27px;
+  vertical-align: bottom;
 }
 .inv-plus-dialog dd {
-	display: inline-block;
-	margin-left: 5px;
-	width: calc(60% - 10px);
+  display: inline-block;
+  margin-left: 5px;
+  width: calc(60% - 10px);
 }
 
 /* Transfer stuff */
 
 .dialog .inventory-plus input:invalid {
-	background-color: red;
+  background-color: red;
 }
 .dialog .inventory-plus input[type="number"]::-webkit-inner-spin-button,
 .dialog .inventory-plus input[type="number"]::-webkit-outer-spin-button {
-	-webkit-appearance: auto;
+  -webkit-appearance: auto;
 }
 .dialog .inventory-plus.item .form-group > * {
-	flex: none;
-	width: auto;
-	margin-right: 0.2em;
+  flex: none;
+  width: auto;
+  margin-right: 0.2em;
 }
 .dialog .inventory-plus.item .form-group > *:last-child {
-	margin-right: 0;
+  margin-right: 0;
 }
 .dialog .inventory-plus.item .transferedQuantity {
-	width: 8em;
+  width: 8em;
 }
 .dialog .inventory-plus.currency {
-	flex: 1;
+  flex: 1;
 }
 .dialog .inventory-plus.currency .form-group {
-	flex-wrap: nowrap;
+  flex-wrap: nowrap;
 }
 .dialog .inventory-plus.currency .currency {
-	margin-right: 0.2em;
-	flex: unset;
+  margin-right: 0.2em;
+  flex: unset;
 }
 .dialog .inventory-plus.currency .currency:last-child {
-	margin-right: 0;
+  margin-right: 0;
 }
 .dialog .inventory-plus.currency .currency .fa-coins {
-	margin-right: 0.2em;
-	text-shadow: 0px 1px 1px black;
+  margin-right: 0.2em;
+  text-shadow: 0px 1px 1px black;
 }
 .dialog .inventory-plus.currency .currency.pp .fa-coins {
-	color: #e5e4e2;
+  color: #e5e4e2;
 }
 .dialog .inventory-plus.currency .currency.gp .fa-coins {
-	color: #ffd700;
+  color: #ffd700;
 }
 .dialog .inventory-plus.currency .currency.ep .fa-coins {
-	color: #f2e279;
+  color: #f2e279;
 }
 .dialog .inventory-plus.currency .currency.sp .fa-coins {
-	color: #c0c0c0;
+  color: #c0c0c0;
 }
 .dialog .inventory-plus.currency .currency.cp .fa-coins {
-	color: #b87333;
+  color: #b87333;
 }
