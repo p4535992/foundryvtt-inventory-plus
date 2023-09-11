@@ -1,396 +1,390 @@
-import type { ItemData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
-import CONSTANTS from "./constants";
-import { InventoryPlus } from "./inventory-plus";
+import CONSTANTS from "./constants.js";
+import { InventoryPlus } from "./inventory-plus.js";
 import {
-	Category,
-	EncumbranceData,
-	EncumbranceDnd5e,
-	InventoryPlusFlags,
-	InventoryPlusItemType,
-} from "./inventory-plus-models";
-import { calcWeight, debug, is_real_number, retrieveSectionIdFromItemType, warn } from "./lib/lib";
+  Category,
+  EncumbranceData,
+  EncumbranceDnd5e,
+  InventoryPlusFlags,
+  InventoryPlusItemType,
+} from "./inventory-plus-models.js";
+import { calcWeight, debug, is_real_number, retrieveSectionIdFromItemType, warn } from "./lib/lib.js";
 
 const API = {
-	inventoryPlus: <InventoryPlus>{},
+  inventoryPlus: {},
 
-	calculateWeightFromActorId(actorIdOrName: string): EncumbranceDnd5e | undefined {
-		const actorEntity = game.actors?.get(actorIdOrName) || game.actors?.getName(actorIdOrName);
-		if (!actorEntity) {
-			warn(`No actor found for id '${actorIdOrName}'`, true);
-			return undefined;
-		}
-		return this.calculateWeightFromActor(actorEntity);
-	},
+  calculateWeightFromActorId(actorIdOrName) {
+    const actorEntity = game.actors?.get(actorIdOrName) || game.actors?.getName(actorIdOrName);
+    if (!actorEntity) {
+      warn(`No actor found for id '${actorIdOrName}'`, true);
+      return undefined;
+    }
+    return this.calculateWeightFromActor(actorEntity);
+  },
 
-	calculateWeightFromActor(actorEntity: Actor): EncumbranceDnd5e | undefined {
-		if (!actorEntity) {
-			warn(`No actor is passed`, true);
-			return undefined;
-		}
-		// Integration with Variant Encumbrance
-		if (
-			game.modules.get("variant-encumbrance-dnd5e")?.active &&
-			game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance")
-		) {
-			const encumbranceData =
-				//@ts-ignore
-				<EncumbranceData>game.modules.get("variant-encumbrance-dnd5e")?.api.calculateWeightOnActor(actorEntity);
-			const encumbrane5e = encumbranceData.encumbrance;
-			return encumbrane5e;
-		}
+  calculateWeightFromActor(actorEntity) {
+    if (!actorEntity) {
+      warn(`No actor is passed`, true);
+      return undefined;
+    }
+    // Integration with Variant Encumbrance
+    if (
+      game.modules.get("variant-encumbrance-dnd5e")?.active &&
+      game.settings.get(CONSTANTS.MODULE_NAME, "enableIntegrationWithVariantEncumbrance")
+    ) {
+      const encumbranceData = game.modules.get("variant-encumbrance-dnd5e")?.api.calculateWeightOnActor(actorEntity);
+      const encumbrane5e = encumbranceData.encumbrance;
+      return encumbrane5e;
+    }
 
-		const inventoryItems: Item[] = [];
-		// const isAlreadyInActor = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
-		const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
-		for (const im of actorEntity.items.contents) {
-			if (im && physicalItems.includes(im.type)) {
-				inventoryItems.push(im);
-			}
-		}
+    const inventoryItems = [];
+    // const isAlreadyInActor = <Item>actorEntity.items?.find((itemTmp: Item) => itemTmp.id === currentItemId);
+    const physicalItems = ["weapon", "equipment", "consumable", "tool", "backpack", "loot"];
+    for (const im of actorEntity.items.contents) {
+      if (im && physicalItems.includes(im.type)) {
+        inventoryItems.push(im);
+      }
+    }
 
-		const invPlusActive = true;
+    const invPlusActive = true;
 
-		// =====================================================
-		// THIS CODE IS FROM THE MODULE 'Variant Encumbrance'
-		// =====================================================
+    // =====================================================
+    // THIS CODE IS FROM THE MODULE 'Variant Encumbrance'
+    // =====================================================
 
-		const invPlusCategoriesWeightToAdd = new Map<string, number>();
+    const invPlusCategoriesWeightToAdd = new Map();
 
-		// START TOTAL WEIGHT
-		// Get the total weight from items
-		// const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
-		// let totalWeight: number = actorEntity.items.reduce((weight, item) => {
-		let totalWeight: number = inventoryItems.reduce((weight, item) => {
-			if (!physicalItems.includes(item.type)) {
-				return weight;
-			}
+    // START TOTAL WEIGHT
+    // Get the total weight from items
+    // const physicalItems = ['weapon', 'equipment', 'consumable', 'tool', 'backpack', 'loot'];
+    // let totalWeight = actorEntity.items.reduce((weight, item) => {
+    let totalWeight = inventoryItems.reduce((weight, item) => {
+      if (!physicalItems.includes(item.type)) {
+        return weight;
+      }
 
-			let itemQuantity =
-				//@ts-ignore
-				is_real_number(item.system.quantity) ? item.system.quantity : 0;
+      let itemQuantity =
+        //@ts-ignore
+        is_real_number(item.system.quantity) ? item.system.quantity : 0;
 
-			let itemWeight =
-				//@ts-ignore
-				is_real_number(item.system.weight) ? item.system.weight : 0;
+      let itemWeight =
+        //@ts-ignore
+        is_real_number(item.system.weight) ? item.system.weight : 0;
 
-			let ignoreEquipmentCheck = false;
+      let ignoreEquipmentCheck = false;
 
-			// External modules calculation
+      // External modules calculation
 
-			// Start Item container check
-			if (
-				getProperty(item, "flags.itemcollection.bagWeight") !== null &&
-				getProperty(item, "flags.itemcollection.bagWeight") !== undefined
-			) {
-				const weightless = getProperty(item, "system.capacity.weightless") ?? false;
-				if (weightless) {
-					itemWeight = getProperty(item, "flags.itemcollection.bagWeight");
-				} else {
-					// itemWeight = calcItemWeight(item) + getProperty(item, 'flags.itemcollection.bagWeight');
-					// MOD 4535992 Removed variant encumbrance take care of this
-					const useEquippedUnequippedItemCollectionFeature = <boolean>(
-						game.settings.get(CONSTANTS.MODULE_NAME, "useEquippedUnequippedItemCollectionFeature")
-					);
-					itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature, false);
-					//@ts-ignore
-					if (useEquippedUnequippedItemCollectionFeature) {
-						ignoreEquipmentCheck = true;
-					}
-				}
-			}
-			// End Item container check
-			// Start inventory+ module is active
-			if (invPlusActive) {
-				// Retrieve flag 'categorys' from inventory plus module
-				const inventoryPlusCategories = <any[]>(
-					actorEntity.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS)
-				);
-				if (inventoryPlusCategories) {
-					// "weapon", "equipment", "consumable", "tool", "backpack", "loot"
-					let actorHasCustomCategories = false;
-					for (const categoryId in inventoryPlusCategories) {
-						const section = inventoryPlusCategories[categoryId];
-						if (
-							// This is a error from the inventory plus developer flags stay on 'item' not on the 'item'
-							//@ts-ignore
-							item.flags &&
-							//@ts-ignore
-							item.flags[CONSTANTS.MODULE_NAME]?.category === categoryId
-						) {
-							// Ignore weight
-							if (section?.ignoreWeight === true) {
-								itemWeight = 0;
-								ignoreEquipmentCheck = true;
-							}
-							// EXIT FOR
-							actorHasCustomCategories = true;
-						}
+      // Start Item container check
+      if (
+        getProperty(item, "flags.itemcollection.bagWeight") !== null &&
+        getProperty(item, "flags.itemcollection.bagWeight") !== undefined
+      ) {
+        const weightless = getProperty(item, "system.capacity.weightless") ?? false;
+        if (weightless) {
+          itemWeight = getProperty(item, "flags.itemcollection.bagWeight");
+        } else {
+          // itemWeight = calcItemWeight(item) + getProperty(item, 'flags.itemcollection.bagWeight');
+          // MOD 4535992 Removed variant encumbrance take care of this
+          const useEquippedUnequippedItemCollectionFeature = game.settings.get(
+            CONSTANTS.MODULE_NAME,
+            "useEquippedUnequippedItemCollectionFeature"
+          );
+          itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature, false);
+          //@ts-ignore
+          if (useEquippedUnequippedItemCollectionFeature) {
+            ignoreEquipmentCheck = true;
+          }
+        }
+      }
+      // End Item container check
+      // Start inventory+ module is active
+      if (invPlusActive) {
+        // Retrieve flag 'categorys' from inventory plus module
+        const inventoryPlusCategories = actorEntity.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
+        if (inventoryPlusCategories) {
+          // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
+          let actorHasCustomCategories = false;
+          for (const categoryId in inventoryPlusCategories) {
+            const section = inventoryPlusCategories[categoryId];
+            if (
+              // This is a error from the inventory plus developer flags stay on 'item' not on the 'item'
+              //@ts-ignore
+              item.flags &&
+              //@ts-ignore
+              item.flags[CONSTANTS.MODULE_NAME]?.category === categoryId
+            ) {
+              // Ignore weight
+              if (section?.ignoreWeight === true) {
+                itemWeight = 0;
+                ignoreEquipmentCheck = true;
+              }
+              // EXIT FOR
+              actorHasCustomCategories = true;
+            }
 
-						// Inherent weight
-						if (Number(section?.ownWeight) > 0) {
-							if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-								invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
-							}
-						}
-						if (actorHasCustomCategories) {
-							break;
-						}
-					}
-					if (!actorHasCustomCategories) {
-						for (const categoryId in inventoryPlusCategories) {
-							if (item.type === categoryId) {
-								const section = inventoryPlusCategories[categoryId];
-								// Ignore weight
-								if (section?.ignoreWeight === true) {
-									itemWeight = 0;
-									ignoreEquipmentCheck = true;
-								}
-								// Inherent weight
-								if (Number(section?.ownWeight) > 0) {
-									if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
-										invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
-									}
-								}
-								// EXIT FOR
-								break;
-							}
-						}
-					}
-				}
-			}
-			// End Inventory+ module is active
+            // Inherent weight
+            if (Number(section?.ownWeight) > 0) {
+              if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
+                invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
+              }
+            }
+            if (actorHasCustomCategories) {
+              break;
+            }
+          }
+          if (!actorHasCustomCategories) {
+            for (const categoryId in inventoryPlusCategories) {
+              if (item.type === categoryId) {
+                const section = inventoryPlusCategories[categoryId];
+                // Ignore weight
+                if (section?.ignoreWeight === true) {
+                  itemWeight = 0;
+                  ignoreEquipmentCheck = true;
+                }
+                // Inherent weight
+                if (Number(section?.ownWeight) > 0) {
+                  if (!invPlusCategoriesWeightToAdd.has(categoryId)) {
+                    invPlusCategoriesWeightToAdd.set(categoryId, Number(section.ownWeight));
+                  }
+                }
+                // EXIT FOR
+                break;
+              }
+            }
+          }
+        }
+      }
+      // End Inventory+ module is active
 
-			// End External modules calculation
+      // End External modules calculation
 
-			if (game.settings.get(CONSTANTS.MODULE_NAME, "doNotIncreaseWeightByQuantityForNoAmmunition")) {
-				//@ts-ignore
-				if (item.system.consumableType !== "ammo") {
-					itemQuantity = 1;
-				}
-			}
+      if (game.settings.get(CONSTANTS.MODULE_NAME, "doNotIncreaseWeightByQuantityForNoAmmunition")) {
+        //@ts-ignore
+        if (item.system.consumableType !== "ammo") {
+          itemQuantity = 1;
+        }
+      }
 
-			let appliedWeight = itemQuantity * itemWeight;
-			if (ignoreEquipmentCheck) {
-				return weight + appliedWeight;
-			}
-			const isEquipped: boolean =
-				//@ts-ignore
-				item.system.equipped ? true : false;
-			if (isEquipped) {
-				let eqpMultiplyer = 1;
-				if (game.settings.get(CONSTANTS.MODULE_NAME, "enableEquipmentMultiplier")) {
-					eqpMultiplyer = <number>game.settings.get(CONSTANTS.MODULE_NAME, "equipmentMultiplier") || 1;
-				}
-				//@ts-ignore
-				appliedWeight *= eqpMultiplyer;
-			} else {
-				appliedWeight *= 1; //<number>game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
-			}
-			return weight + appliedWeight;
-		}, 0);
+      let appliedWeight = itemQuantity * itemWeight;
+      if (ignoreEquipmentCheck) {
+        return weight + appliedWeight;
+      }
+      const isEquipped =
+        //@ts-ignore
+        item.system.equipped ? true : false;
+      if (isEquipped) {
+        let eqpMultiplyer = 1;
+        if (game.settings.get(CONSTANTS.MODULE_NAME, "enableEquipmentMultiplier")) {
+          eqpMultiplyer = game.settings.get(CONSTANTS.MODULE_NAME, "equipmentMultiplier") || 1;
+        }
+        //@ts-ignore
+        appliedWeight *= eqpMultiplyer;
+      } else {
+        appliedWeight *= 1; //game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
+      }
+      return weight + appliedWeight;
+    }, 0);
 
-		// Start inventory+ module is active 2
-		if (invPlusActive) {
-			for (const [key, value] of invPlusCategoriesWeightToAdd) {
-				totalWeight = totalWeight + value;
-			}
-		}
-		// End inventory+ module is active 2
-		// END TOTAL WEIGHT
+    // Start inventory+ module is active 2
+    if (invPlusActive) {
+      for (const [key, value] of invPlusCategoriesWeightToAdd) {
+        totalWeight = totalWeight + value;
+      }
+    }
+    // End inventory+ module is active 2
+    // END TOTAL WEIGHT
 
-		// [Optional] add Currency Weight (for non-transformed actors)
-		//@ts-ignore
-		if (game.settings.get("dnd5e", "currencyWeight") && actorEntity.system.currency) {
-			//@ts-ignore
-			const currency = actorEntity.system.currency;
-			const numCoins = <number>(
-				Object.values(currency).reduce((val: any, denom: any) => (val += Math.max(denom, 0)), 0)
-			);
+    // [Optional] add Currency Weight (for non-transformed actors)
+    //@ts-ignore
+    if (game.settings.get("dnd5e", "currencyWeight") && actorEntity.system.currency) {
+      //@ts-ignore
+      const currency = actorEntity.system.currency;
+      const numCoins = Object.values(currency).reduce((val, denom) => (val += Math.max(denom, 0)), 0);
 
-			let currencyPerWeight = 0;
-			if (game.settings.get("dnd5e", "metricWeightUnits")) {
-				//@ts-ignore
-				currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.metric;
-			} else {
-				//@ts-ignore
-				currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
-			}
+      let currencyPerWeight = 0;
+      if (game.settings.get("dnd5e", "metricWeightUnits")) {
+        //@ts-ignore
+        currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.metric;
+      } else {
+        //@ts-ignore
+        currencyPerWeight = CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+      }
 
-			totalWeight += numCoins / currencyPerWeight;
-		}
+      totalWeight += numCoins / currencyPerWeight;
+    }
 
-		// Compute Encumbrance percentage
-		//@ts-ignore
-		const max = actorEntity.system.attributes.encumbrance.max;
-		const pct = Math.clamped((totalWeight * 100) / max, 0, 100);
-		const value = totalWeight && is_real_number(totalWeight) ? totalWeight.toNearest(0.1) : 0;
-		const encumbered = pct > 200 / 3;
+    // Compute Encumbrance percentage
+    //@ts-ignore
+    const max = actorEntity.system.attributes.encumbrance.max;
+    const pct = Math.clamped((totalWeight * 100) / max, 0, 100);
+    const value = totalWeight && is_real_number(totalWeight) ? totalWeight.toNearest(0.1) : 0;
+    const encumbered = pct > 200 / 3;
 
-		//@ts-ignore
-		return ((<EncumbranceDnd5e>actorEntity.system.attributes.encumbrance) = {
-			value: value,
-			//@ts-ignore
-			max: max,
-			pct: pct,
-			encumbered: encumbered,
-		});
-	},
+    //@ts-ignore
+    return (actorEntity.system.attributes.encumbrance = {
+      value: value,
+      //@ts-ignore
+      max: max,
+      pct: pct,
+      encumbered: encumbered,
+    });
+  },
 
-	isCategoryFulled(actor: Actor, categoryType: string, itemData: Item): boolean {
-		//@ts-ignore
-		const inventoryPlus = actor.sheet?.inventoryPlus;
-		const currentCategory = inventoryPlus.customCategorys[categoryType];
-		if (currentCategory.maxWeight > 0) {
-			return this.isCategoryFulledByWeight(actor, categoryType, itemData);
-		} else if (currentCategory.maxBulk > 0) {
-			return this.isCategoryFulledByBulk(actor, categoryType, itemData);
-		} else {
-			return false;
-		}
-	},
+  isCategoryFulled(actor, categoryType, itemData) {
+    //@ts-ignore
+    const inventoryPlus = actor.sheet?.inventoryPlus;
+    const currentCategory = inventoryPlus.customCategorys[categoryType];
+    if (currentCategory.maxWeight > 0) {
+      return this.isCategoryFulledByWeight(actor, categoryType, itemData);
+    } else if (currentCategory.maxBulk > 0) {
+      return this.isCategoryFulledByBulk(actor, categoryType, itemData);
+    } else {
+      return false;
+    }
+  },
 
-	isCategoryFulledByWeight(actor: Actor, categoryType: string, itemData: Item): boolean {
-		//@ts-ignore
-		const inventoryPlus = actor.sheet?.inventoryPlus;
-		const categoryWeight = inventoryPlus.getCategoryItemWeight(categoryType);
-		//@ts-ignore
-		const itemWeight = itemData.system.weight * itemData.system.quantity;
-		const maxWeight = Number(
-			inventoryPlus.customCategorys[categoryType].maxWeight
-				? inventoryPlus.customCategorys[categoryType].maxWeight
-				: 0
-		);
+  isCategoryFulledByWeight(actor, categoryType, itemData) {
+    //@ts-ignore
+    const inventoryPlus = actor.sheet?.inventoryPlus;
+    const categoryWeight = inventoryPlus.getCategoryItemWeight(categoryType);
+    //@ts-ignore
+    const itemWeight = itemData.system.weight * itemData.system.quantity;
+    const maxWeight = Number(
+      inventoryPlus.customCategorys[categoryType].maxWeight ? inventoryPlus.customCategorys[categoryType].maxWeight : 0
+    );
 
-		if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
-			return false;
-		} else {
-			return true;
-		}
-	},
+    if (isNaN(maxWeight) || maxWeight <= 0 || maxWeight >= categoryWeight + itemWeight) {
+      return false;
+    } else {
+      return true;
+    }
+  },
 
-	isCategoryFulledByBulk(actor: Actor, categoryType: string, itemData: Item): boolean {
-		//@ts-ignore
-		const inventoryPlus = actor.sheet?.inventoryPlus;
-		const categoryBulk = inventoryPlus.getCategoryItemBulk(categoryType);
-		//@ts-ignore
-		const itemBulk = itemData.system.bulk * itemData.system.quantity;
-		const maxBulk = Number(
-			inventoryPlus.customCategorys[categoryType].maxBulk
-				? inventoryPlus.customCategorys[categoryType].maxBulk
-				: 0
-		);
+  isCategoryFulledByBulk(actor, categoryType, itemData) {
+    //@ts-ignore
+    const inventoryPlus = actor.sheet?.inventoryPlus;
+    const categoryBulk = inventoryPlus.getCategoryItemBulk(categoryType);
+    //@ts-ignore
+    const itemBulk = itemData.system.bulk * itemData.system.quantity;
+    const maxBulk = Number(
+      inventoryPlus.customCategorys[categoryType].maxBulk ? inventoryPlus.customCategorys[categoryType].maxBulk : 0
+    );
 
-		if (isNaN(maxBulk) || maxBulk <= 0 || maxBulk >= categoryBulk + itemBulk) {
-			return false;
-		} else {
-			return true;
-		}
-	},
+    if (isNaN(maxBulk) || maxBulk <= 0 || maxBulk >= categoryBulk + itemBulk) {
+      return false;
+    } else {
+      return true;
+    }
+  },
 
-	isAcceptableType(categoryRef: Category, itemData: Item) {
-		if (categoryRef.explicitTypes && categoryRef.explicitTypes.length > 0) {
-			const acceptableTypes = categoryRef.explicitTypes.filter((i) => {
-				return i.isSelected;
-			});
-			if (acceptableTypes && acceptableTypes.length === 0) {
-				return true;
-			}
-			if (acceptableTypes && acceptableTypes.length === 1 && acceptableTypes[0]?.id === "") {
-				return true;
-			}
-			let isOk = false;
-			for (const acc of acceptableTypes) {
-				if (acc.id === itemData.type) {
-					isOk = true;
-					break;
-				}
-			}
-			return isOk;
-		} else {
-			return true;
-		}
-	},
+  isAcceptableType(categoryRef, itemData) {
+    if (categoryRef.explicitTypes && categoryRef.explicitTypes.length > 0) {
+      const acceptableTypes = categoryRef.explicitTypes.filter((i) => {
+        return i.isSelected;
+      });
+      if (acceptableTypes && acceptableTypes.length === 0) {
+        return true;
+      }
+      if (acceptableTypes && acceptableTypes.length === 1 && acceptableTypes[0]?.id === "") {
+        return true;
+      }
+      let isOk = false;
+      for (const acc of acceptableTypes) {
+        if (acc.id === itemData.type) {
+          isOk = true;
+          break;
+        }
+      }
+      return isOk;
+    } else {
+      return true;
+    }
+  },
 
-	getItemsFromCategory(actor: Actor, categoryDatasetType: string, customCategorys: Record<string, any>): Item[] {
-		return actor.items.filter((item) => {
-			// Ripreso da getItemType
-			let sectionCategoryId = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-			// if (!sectionCategoryId) {
-			// 	sectionCategoryId = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
-			// }
-			if (sectionCategoryId === undefined || customCategorys[sectionCategoryId] === undefined) {
-				sectionCategoryId = categoryDatasetType;
-			}
-			if (sectionCategoryId === undefined || customCategorys[sectionCategoryId] === undefined) {
-				sectionCategoryId = item.type;
-			}
-			// return categoryDatasetType === type;
-			let sectionId = <string>(
-				retrieveSectionIdFromItemType(actor.type, customCategorys, item.type, undefined, sectionCategoryId)
-			);
-			return categoryDatasetType === sectionId;
-		});
-	},
+  getItemsFromCategory(actor, categoryDatasetType, customCategorys) {
+    return actor.items.filter((item) => {
+      // Ripreso da getItemType
+      let sectionCategoryId = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+      // if (!sectionCategoryId) {
+      // 	sectionCategoryId = getProperty(item, `flags.${CONSTANTS.MODULE_NAME}.${InventoryPlusFlags.CATEGORY}`);
+      // }
+      if (sectionCategoryId === undefined || customCategorys[sectionCategoryId] === undefined) {
+        sectionCategoryId = categoryDatasetType;
+      }
+      if (sectionCategoryId === undefined || customCategorys[sectionCategoryId] === undefined) {
+        sectionCategoryId = item.type;
+      }
+      // return categoryDatasetType === type;
+      let sectionId = retrieveSectionIdFromItemType(
+        actor.type,
+        customCategorys,
+        item.type,
+        undefined,
+        sectionCategoryId
+      );
+      return categoryDatasetType === sectionId;
+    });
+  },
 
-	async addCategory(
-		actorId: string,
-		categoryLabel: string,
-		ignoreWeight: boolean | undefined,
-		maxWeight: number | undefined,
-		ownWeight: number | undefined,
-		items: Item[] | undefined,
-		explicitTypes: InventoryPlusItemType[] | undefined,
-		ignoreBulk: boolean | undefined,
-		maxBulk: number | undefined,
-		ownBulk: number | undefined
-	): Promise<void> {
-		if (!actorId) {
-			warn(`No actor id is been passed`);
-			return;
-		}
-		const actorEntityTmp = game.actors?.get(actorId);
-		if (!actorEntityTmp) {
-			warn(`No actor found with id '${actorId}'`);
-			return;
-		}
-		if (!categoryLabel) {
-			warn(`No category label is been passed`);
-			return;
-		}
-		const inventoryPlus = new InventoryPlus();
-		inventoryPlus.init(actorEntityTmp);
+  async addCategory(
+    actorId,
+    categoryLabel,
+    ignoreWeight,
+    maxWeight,
+    ownWeight,
+    items,
+    explicitTypes,
+    ignoreBulkd,
+    maxBulkd,
+    ownBulk
+  ) {
+    if (!actorId) {
+      warn(`No actor id is been passed`);
+      return;
+    }
+    const actorEntityTmp = game.actors?.get(actorId);
+    if (!actorEntityTmp) {
+      warn(`No actor found with id '${actorId}'`);
+      return;
+    }
+    if (!categoryLabel) {
+      warn(`No category label is been passed`);
+      return;
+    }
+    const inventoryPlus = new InventoryPlus();
+    inventoryPlus.init(actorEntityTmp);
 
-		const key = inventoryPlus.generateCategoryId();
-		const newCategory = new Category();
-		newCategory.label = categoryLabel;
-		newCategory.dataset = { type: key };
-		newCategory.ignoreWeight = ignoreWeight ?? false;
-		newCategory.maxWeight = maxWeight ?? 0;
-		newCategory.ownWeight = ownWeight ?? 0;
-		newCategory.collapsed = false;
-		newCategory.sortFlag = inventoryPlus.getHighestSortFlag() + 1000;
-		if (explicitTypes) {
-			newCategory.explicitTypes = explicitTypes;
-		}
-		newCategory.ignoreBulk = ignoreBulk ?? false;
-		newCategory.maxBulk = maxBulk ?? 0;
-		newCategory.ownBulk = ownBulk ?? 0;
-		inventoryPlus.customCategorys[key] = newCategory;
-		inventoryPlus.saveCategorys();
-		if (items && items.length > 0) {
-			for (const itmData of items) {
-				let itemOnActor = <Item>actorEntityTmp.items.find((itemEntity: Item) => {
-					return itemEntity.id === itmData.id;
-				});
-				if (!itemOnActor) {
-					//@ts-ignore
-					itemOnActor = await actorEntityTmp?.createEmbeddedDocuments("Item", [itmData]);
-				}
-				await itemOnActor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, key);
-			}
-			//newCategory.items = items;
-		}
-	},
+    const key = inventoryPlus.generateCategoryId();
+    const newCategory = new Category();
+    newCategory.label = categoryLabel;
+    newCategory.dataset = { type: key };
+    newCategory.ignoreWeight = ignoreWeight ?? false;
+    newCategory.maxWeight = maxWeight ?? 0;
+    newCategory.ownWeight = ownWeight ?? 0;
+    newCategory.collapsed = false;
+    newCategory.sortFlag = inventoryPlus.getHighestSortFlag() + 1000;
+    if (explicitTypes) {
+      newCategory.explicitTypes = explicitTypes;
+    }
+    newCategory.ignoreBulk = ignoreBulk ?? false;
+    newCategory.maxBulk = maxBulk ?? 0;
+    newCategory.ownBulk = ownBulk ?? 0;
+    inventoryPlus.customCategorys[key] = newCategory;
+    inventoryPlus.saveCategorys();
+    if (items && items.length > 0) {
+      for (const itmData of items) {
+        let itemOnActor = actorEntityTmp.items.find((itemEntity) => {
+          return itemEntity.id === itmData.id;
+        });
+        if (!itemOnActor) {
+          //@ts-ignore
+          itemOnActor = await actorEntityTmp?.createEmbeddedDocuments("Item", [itmData]);
+        }
+        await itemOnActor.setFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORY, key);
+      }
+      //newCategory.items = items;
+    }
+  },
 };
 
 export default API;

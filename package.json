@@ -1,8 +1,8 @@
 {
-    "name": "item-link-tree",
-    "title": "Items Link Tree",
-    "description": "A module that allows specific items to be attached to other Items, Features, etc  for Build a tree hierarchy for your items to link together and use the logic you create to do weird things with other modules.",
-    "version": "0.0.9",
+	"name": "inventory-plus",
+	"title": "Inventory+",
+	"description": "Enhances the default dnd5e sheets inventory to allow for reorganization",
+	"version": "0.6.24",
 	"main": "module.js",
 	"license": "SEE LICENSE IN LICENSE",
 	"private": true,
