@@ -7,7 +7,14 @@ import {
   InventoryPlusFlags,
   InventoryPlusItemType,
 } from "./inventory-plus-models.js";
-import { calcWeight, debug, is_real_number, retrieveSectionIdFromItemType, warn } from "./lib/lib.js";
+import {
+  calcWeight,
+  calcWeightItemCollection,
+  debug,
+  is_real_number,
+  retrieveSectionIdFromItemType,
+  warn,
+} from "./lib/lib.js";
 
 const API = {
   inventoryPlus: {},
@@ -62,45 +69,126 @@ const API = {
         return weight;
       }
 
-      let itemQuantity =
-        //@ts-ignore
-        is_real_number(item.system.quantity) ? item.system.quantity : 0;
+      let itemQuantity = getItemQuantity(item);
+      let itemWeight = getItemWeight(item);
 
-      let itemWeight =
-        //@ts-ignore
-        is_real_number(item.system.weight) ? item.system.weight : 0;
+      let backpackManager = retrieveBackPackManagerItem(item);
+      if (backpackManager) {
+        // Does the weight of the items in the container carry over to the actor?
+        const weightless = getProperty(item, "system.capacity.weightless") ?? false;
+        // const backpackManagerWeight =
+        // 	API.calculateWeightOnActor(backpackManager)?.totalWeight ?? itemWeight;
+        const backpackManagerWeight = calculateBackPackManagerWeight(item, backpackManager, ignoreCurrency);
+        itemWeight = weightless ? itemWeight : itemWeight + backpackManagerWeight;
 
-      let ignoreEquipmentCheck = false;
+        debug(
+          `Is BackpackManager! Actor '${actorEntity.name}', Item '${item.name}' : Quantity = ${itemQuantity}, Weight = ${itemWeight}`
+        );
+        mapItemEncumbrance[item.id] = itemQuantity * itemWeight;
+        return weight + itemQuantity * itemWeight;
+      }
+
+      const isEquipped =
+        //@ts-ignore
+        item.system.equipped ? true : false;
+      const isProficient =
+        //@ts-ignore
+        item.system.proficient ? item.system.proficient : false;
+
+      debug(`Actor '${actorEntity.name}', Item '${item.name}' : Quantity = ${itemQuantity}, Weight = ${itemWeight}`);
+
+      // let ignoreEquipmentCheck = false;
 
       // External modules calculation
-
+      let ignoreQuantityCheckForItemCollection = false;
       // Start Item container check
-      if (
-        getProperty(item, "flags.itemcollection.bagWeight") !== null &&
-        getProperty(item, "flags.itemcollection.bagWeight") !== undefined
-      ) {
+      if (hasProperty(item, `flags.itemcollection`) && itemContainerActive) {
+        itemWeight = calcWeightItemCollection(
+          item,
+          useEquippedUnequippedItemCollectionFeature,
+          doNotApplyWeightForEquippedArmor,
+          ignoreCurrency,
+          doNotIncreaseWeightByQuantityForNoAmmunition
+        );
+        ignoreQuantityCheckForItemCollection = true;
+      }
+      // End Item container check
+      else {
+        // Does the weight of the items in the container carry over to the actor?
+        // TODO  wait for 2.2.0
         const weightless = getProperty(item, "system.capacity.weightless") ?? false;
-        if (weightless) {
-          itemWeight = getProperty(item, "flags.itemcollection.bagWeight");
-        } else {
-          // itemWeight = calcItemWeight(item) + getProperty(item, 'flags.itemcollection.bagWeight');
-          // MOD 4535992 Removed variant encumbrance take care of this
-          const useEquippedUnequippedItemCollectionFeature = game.settings.get(
-            CONSTANTS.MODULE_NAME,
-            "useEquippedUnequippedItemCollectionFeature"
-          );
-          itemWeight = calcWeight(item, useEquippedUnequippedItemCollectionFeature, false);
+
+        const itemArmorTypes = ["clothing", "light", "medium", "heavy", "natural"];
+        if (
+          isEquipped &&
+          doNotApplyWeightForEquippedArmor &&
           //@ts-ignore
-          if (useEquippedUnequippedItemCollectionFeature) {
-            ignoreEquipmentCheck = true;
+          itemArmorTypes.includes(item.system.armor?.type)
+        ) {
+          const applyWeightMultiplierForEquippedArmorClothing =
+            game.settings.get(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorClothing") || 0;
+          const applyWeightMultiplierForEquippedArmorLight =
+            game.settings.get(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorLight") || 0;
+          const applyWeightMultiplierForEquippedArmorMedium =
+            game.settings.get(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorMedium") || 0;
+          const applyWeightMultiplierForEquippedArmorHeavy =
+            game.settings.get(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorHeavy") || 0;
+          const applyWeightMultiplierForEquippedArmorNatural =
+            game.settings.get(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorNatural") || 0;
+          //@ts-ignore
+          if (item.system.armor?.type === "clothing") {
+            itemWeight *= applyWeightMultiplierForEquippedArmorClothing;
+          }
+          //@ts-ignore
+          else if (item.system.armor?.type === "light") {
+            itemWeight *= applyWeightMultiplierForEquippedArmorLight;
+          }
+          //@ts-ignore
+          else if (item.system.armor?.type === "medium") {
+            itemWeight *= applyWeightMultiplierForEquippedArmorMedium;
+          }
+          //@ts-ignore
+          else if (item.system.armor?.type === "heavy") {
+            itemWeight *= applyWeightMultiplierForEquippedArmorHeavy;
+          }
+          //@ts-ignore
+          else if (item.system.armor?.type === "natural") {
+            itemWeight *= applyWeightMultiplierForEquippedArmorNatural;
+          }
+          //@ts-ignore
+          else {
+            itemWeight *= 0;
+          }
+        } else if (isEquipped) {
+          if (isProficient) {
+            itemWeight *= game.settings.get(CONSTANTS.MODULE_NAME, "profEquippedMultiplier");
+          } else {
+            const applyWeightMultiplierForEquippedContainer =
+              item.type === "backpack"
+                ? game.settings.get(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedContainer") || -1
+                : -1;
+            if (applyWeightMultiplierForEquippedContainer > -1) {
+              itemWeight *= applyWeightMultiplierForEquippedContainer;
+            } else {
+              itemWeight *= game.settings.get(CONSTANTS.MODULE_NAME, "equippedMultiplier");
+            }
+          }
+        } else {
+          itemWeight *= game.settings.get(CONSTANTS.MODULE_NAME, "unequippedMultiplier");
+        }
+
+        // Feature: Do Not increase weight by quantity for no ammunition item
+        if (doNotIncreaseWeightByQuantityForNoAmmunition) {
+          //@ts-ignore
+          if (item.system?.consumableType !== "ammo") {
+            itemQuantity = 1;
           }
         }
       }
-      // End Item container check
       // Start inventory+ module is active
-      if (invPlusActive) {
+      if (invPlusActiveTmp) {
         // Retrieve flag 'categorys' from inventory plus module
-        const inventoryPlusCategories = actorEntity.getFlag(CONSTANTS.MODULE_NAME, InventoryPlusFlags.CATEGORYS);
+        const inventoryPlusCategories = actorEntity.getFlag(CONSTANTS.MODULE_NAME, "categorys");
         if (inventoryPlusCategories) {
           // "weapon", "equipment", "consumable", "tool", "backpack", "loot"
           let actorHasCustomCategories = false;
@@ -116,7 +204,7 @@ const API = {
               // Ignore weight
               if (section?.ignoreWeight === true) {
                 itemWeight = 0;
-                ignoreEquipmentCheck = true;
+                // ignoreEquipmentCheck = true;
               }
               // EXIT FOR
               actorHasCustomCategories = true;
@@ -139,7 +227,7 @@ const API = {
                 // Ignore weight
                 if (section?.ignoreWeight === true) {
                   itemWeight = 0;
-                  ignoreEquipmentCheck = true;
+                  // ignoreEquipmentCheck = true;
                 }
                 // Inherent weight
                 if (Number(section?.ownWeight) > 0) {
@@ -158,30 +246,18 @@ const API = {
 
       // End External modules calculation
 
-      if (game.settings.get(CONSTANTS.MODULE_NAME, "doNotIncreaseWeightByQuantityForNoAmmunition")) {
-        //@ts-ignore
-        if (item.system.consumableType !== "ammo") {
-          itemQuantity = 1;
-        }
+      let appliedWeight = 0;
+      if (ignoreQuantityCheckForItemCollection) {
+        appliedWeight = itemWeight;
+      } else {
+        appliedWeight = itemQuantity * itemWeight;
       }
 
-      let appliedWeight = itemQuantity * itemWeight;
-      if (ignoreEquipmentCheck) {
-        return weight + appliedWeight;
-      }
-      const isEquipped =
-        //@ts-ignore
-        item.system.equipped ? true : false;
-      if (isEquipped) {
-        let eqpMultiplyer = 1;
-        if (game.settings.get(CONSTANTS.MODULE_NAME, "enableEquipmentMultiplier")) {
-          eqpMultiplyer = game.settings.get(CONSTANTS.MODULE_NAME, "equipmentMultiplier") || 1;
-        }
-        //@ts-ignore
-        appliedWeight *= eqpMultiplyer;
-      } else {
-        appliedWeight *= 1; //game.settings.get(CONSTANTS.MODULE_NAME, 'unequippedMultiplier');
-      }
+      debug(
+        `Actor '${actorEntity.name}', Item '${item.name}', Equipped '${isEquipped}', Proficient ${isProficient} :
+                 ${itemQuantity} * ${itemWeight} = ${appliedWeight} on total ${weight} => ${weight + appliedWeight}`
+      );
+      mapItemEncumbrance[item.id] = appliedWeight;
       return weight + appliedWeight;
     }, 0);
 

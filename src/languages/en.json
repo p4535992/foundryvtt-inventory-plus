@@ -31,6 +31,25 @@
   "inventory-plus.setting.doNotIncreaseWeightByQuantityForNoAmmunition.hint": "This is a homebrew rule, for non-ammunition items, so they don't increase weight by quantity (e.g. 5 potions = 1 item's weight). ATTENTION: If the module 'Variant Encumbrance' is present and active this feature is disabled by default if the module settings 'Feature: Integration with Variant Encumbrance' is enabled.",
   "inventory-plus.setting.doNotApplyWeightForEquippedArmor.name": "Feature: Do Not apply weight for equipped armor items",
   "inventory-plus.setting.doNotApplyWeightForEquippedArmor.hint": "This is a homebrew rule, for equipped armor types (clothing, light, medium, heavy, natural). Their weight is set to 0 and not applied. ATTENTION: If the module 'Variant Encumbrance' is present and active, this feature is disabled by default, if the module's setting 'Feature: Integration with Variant Encumbrance' is enabled.",
+
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorClothing.name": "Feature: Equipped Armor Weight Multiplier for 'Clothing Armor'",
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorClothing.hint": "This is a homebrew rule, and is mostly an upgrade of the existing feature 'Do Not apply weight for equipped armor item' for equipped armor types 'clothing', a specific multiplier is applied to the weight value. NOTE: This setting is working only with the feature from 'Do Not apply weight for equipped armor item' ENABLED, the value by default the value is 0.",
+
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorLight.name": "Feature: Equipped Armor Weight Multiplier for 'Light Armor'",
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorLight.hint": "This is a homebrew rule, and is mostly an upgrade of the existing feature 'Do Not apply weight for equipped armor item' for equipped armor types 'light', a specific multiplier is applied to the weight value. NOTE: This setting is working only with the feature from 'Do Not apply weight for equipped armor item' ENABLED, the value by default the value is 0.",
+
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorMedium.name": "Feature: Equipped Armor Weight Multiplier for 'Medium Armor'",
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorMedium.hint": "This is a homebrew rule, and is mostly an upgrade of the existing feature 'Do Not apply weight for equipped armor item' for equipped armor types 'medium', a specific multiplier is applied to the weight value. NOTE: This setting is working only with the feature from 'Do Not apply weight for equipped armor item' ENABLED, the value by default the value is 0.",
+
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorHeavy.name": "Feature: Equipped Armor Weight Multiplier for 'Heavy Armor'",
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorHeavy.hint": "This is a homebrew rule, and is mostly an upgrade of the existing feature 'Do Not apply weight for equipped armor item' for equipped armor types 'heavy', a specific multiplier is applied to the weight value. NOTE: This setting is working only with the feature from 'Do Not apply weight for equipped armor item' ENABLED, the value by default the value is 0.",
+
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorNatural.name": "Feature: Equipped Armor Weight Multiplier for 'Natural Armor'",
+  "inventory-plus.setting.applyWeightMultiplierForEquippedArmorNatural.hint": "This is a homebrew rule, and is mostly an upgrade of the existing feature 'Do Not apply weight for equipped armor item' for equipped armor types 'natural', a specific multiplier is applied to the weight value. NOTE: This setting is working only with the feature from 'Do Not apply weight for equipped armor item' ENABLED, the value by default the value is 0.",
+
+  "inventory-plus.setting.applyWeightMultiplierForEquippedContainer.name": "Feature: Equipped Container/Backpack Weight Multiplier",
+  "inventory-plus.setting.applyWeightMultiplierForEquippedContainer.hint": "This is a homebrew rule, for equipped container/backpack types, if the weight is set to -1 is not applied, this will override the setting from 'Equipped Item Weight Multiplier'.",
+
   "inventory-plus.setting.hideButtonDefaultCategories.name": "Hide button to manage default categories",
   "inventory-plus.setting.hideButtonDefaultCategories.hint": "By default only the GM can see this button, but if you enable this module settings the button is hidden for everyone.",
   "inventory-plus.dialogs.resetsettings.title": "Reset Module Settings",

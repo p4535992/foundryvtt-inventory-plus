@@ -166,6 +166,60 @@ export const registerSettings = function () {
     type: Boolean,
   });
 
+  game.settings.register(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorClothing", {
+    name: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorClothing.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorClothing.hint`,
+    scope: "world",
+    config: true,
+    default: 0,
+    type: Number,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorLight", {
+    name: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorLight.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorLight.hint`,
+    scope: "world",
+    config: true,
+    default: 0,
+    type: Number,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorMedium", {
+    name: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorMedium.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorMedium.hint`,
+    scope: "world",
+    config: true,
+    default: 0,
+    type: Number,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorHeavy", {
+    name: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorHeavy.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorHeavy.hint`,
+    scope: "world",
+    config: true,
+    default: 0,
+    type: Number,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedArmorNatural", {
+    name: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorNatural.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedArmorNatural.hint`,
+    scope: "world",
+    config: true,
+    default: 0,
+    type: Number,
+  });
+
+  game.settings.register(CONSTANTS.MODULE_NAME, "applyWeightMultiplierForEquippedContainer", {
+    name: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedContainer.name`,
+    hint: `${CONSTANTS.MODULE_NAME}.setting.applyWeightMultiplierForEquippedContainer.hint`,
+    scope: "world",
+    config: true,
+    default: -1,
+    type: Number,
+  });
+
   // ===================================================================
 
   game.settings.register(CONSTANTS.MODULE_NAME, "debug", {
