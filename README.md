@@ -25,8 +25,6 @@ A Foundry VTT module to enhance the dnd5e inventory. Allows to customize your In
 
 ![example](./wiki/preview.jpg)
 
-## NOTE: If you are a javascript developer and not a typescript developer, you can just use the javascript files under the dist folder
-
 ## NOTE: This module is **under maintenance**, I have no plans to update or add features. However, I will try to fix any bugs as possible. Any contribution is welcome.
 
 # Installation
@@ -252,6 +250,3 @@ This package is under an [GPL-3.0 License](LICENSE) and the [Foundry Virtual Tab
 - [kandashi](https://github.com/kandashi) for the module [Encumbrance calculator 5e](https://github.com/kandashi/encumbrance-calculator-5e)
 - [illandril](https://github.com/illandril) for the module [Illandril's Inventory Sorter (5e)](https://github.com/illandril/FoundryVTT-inventory-sorter)
 
-## Acknowledgements
-
-Bootstrapped with League of Extraordinary FoundryVTT Developers  [foundry-vtt-types](https://github.com/League-of-Foundry-Developers/foundry-vtt-types).
